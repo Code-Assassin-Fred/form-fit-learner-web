@@ -319,41 +319,39 @@ export default function DashboardPage() {
           {activeTab === 'dashboard' && (
             <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
               {/* Premium Welcome Banner */}
-              <div className="p-12 rounded-[40px] bg-slate-900 text-white overflow-hidden relative shadow-2xl shadow-slate-200">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-primary/10 blur-[120px] rounded-full pointer-events-none -z-0"></div>
-                <div className="relative z-10 max-w-[70%]">
-                  <div className="flex items-center gap-3 mb-6">
-                     <span className="px-4 py-1.5 rounded-full bg-brand-primary/20 text-brand-primary text-[10px] font-black uppercase tracking-[3px]">Next-Gen Ergonomics</span>
+              <div className="p-8 rounded-3xl bg-slate-900 text-white overflow-hidden relative shadow-lg">
+                <div className="relative z-10 max-w-[80%]">
+                  <div className="flex items-center gap-3 mb-4">
+                     <span className="px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-[8px] font-bold uppercase tracking-widest">Next-Gen Ergonomics</span>
                   </div>
-                  <h1 className="text-5xl font-outfit font-black mb-6 leading-none lowercase tracking-tighter">Empowering Inclusive Learning with AI</h1>
-                  <p className="text-slate-400 text-xl mb-10 leading-relaxed font-medium">Advanced kinematic analysis directly synchronized with your school&apos;s 3D printer. Bridging the physical gap in educational engagement.</p>
-                  <div className="flex gap-4">
-                    <button className="px-8 py-4 rounded-2xl bg-brand-primary text-white font-black text-lg hover:shadow-xl hover:shadow-brand-primary/30 transition-all active:scale-95 flex items-center gap-3" onClick={() => setActiveTab('assessments')}>
-                       New Assessment <ArrowRight size={20} />
+                  <h1 className="text-3xl font-outfit font-bold mb-4 leading-none lowercase tracking-tight">Empowering Inclusive Learning with AI</h1>
+                  <p className="text-slate-400 text-base mb-6 leading-relaxed font-medium">Advanced kinematic analysis directly synchronized with your school&apos;s 3D printer.</p>
+                  <div className="flex gap-3">
+                    <button className="px-5 py-2.5 rounded-xl bg-brand-primary text-white font-bold text-sm hover:brightness-105 transition-all flex items-center gap-2" onClick={() => setActiveTab('assessments')}>
+                       New Assessment <ArrowRight size={16} />
                     </button>
-                    <button className="px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-md text-white font-bold text-lg hover:bg-white/20 transition-all" onClick={() => setActiveTab('reports')}>
+                    <button className="px-5 py-2.5 rounded-xl bg-white/10 text-white font-semibold text-sm hover:bg-white/20 transition-all" onClick={() => setActiveTab('reports')}>
                        Review Reports
                     </button>
                   </div>
                 </div>
-                <div className="absolute right-12 bottom-0 text-[200px] leading-none opacity-20 select-none translate-y-20 rotate-12 transition-transform duration-1000 group-hover:rotate-0">🚀</div>
               </div>
 
               {/* Stats Box */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Registered Learners', value: learners.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },
-                  { label: 'AI Assessments', value: assessments.length, icon: Zap, color: 'text-brand-secondary', bg: 'bg-brand-secondary/10' },
-                  { label: '3D Tools Generated', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/10' },
-                  { label: 'Active Classes', value: classes.length || 0, icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+                  { label: 'Learners', value: learners.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/5' },
+                  { label: 'Assessments', value: assessments.length, icon: Zap, color: 'text-brand-secondary', bg: 'bg-brand-secondary/5' },
+                  { label: '3D Tools', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/5' },
+                  { label: 'Classes', value: classes.length || 0, icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-border-main rounded-[32px] p-8 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-start gap-4">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
-                       <stat.icon size={28} />
+                  <div key={i} className="bg-white border border-border-main rounded-2xl p-5 shadow-sm flex flex-col items-start gap-3">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
+                       <stat.icon size={20} />
                     </div>
                     <div>
-                       <h3 className="text-4xl font-black text-slate-900 leading-none">{stat.value}</h3>
-                       <p className="text-slate-400 text-sm font-bold uppercase tracking-widest mt-2">{stat.label}</p>
+                       <h3 className="text-2xl font-bold text-slate-900 leading-none">{stat.value}</h3>
+                       <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">{stat.label}</p>
                     </div>
                   </div>
                 ))}
@@ -378,19 +376,21 @@ export default function DashboardPage() {
                           </thead>
                           <tbody className="divide-y divide-slate-50">
                              {assessments.slice(0, 5).map(a => (
-                               <tr key={a.id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => {setActiveTab('reports'); setExpandedReportId(a.id);}}>
-                                  <td className="px-8 py-6 flex items-center gap-4">
-                                     <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400">👤</div>
-                                     <div>
-                                        <p className="font-bold text-slate-900 leading-none">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
-                                        <p className="text-xs text-slate-400 mt-1">Learner #{a.learnerId.substring(0, 6)}</p>
+                               <tr key={a.id} className="hover:bg-slate-50 transition-colors group cursor-pointer text-sm" onClick={() => {setActiveTab('reports'); setExpandedReportId(a.id);}}>
+                                  <td className="px-6 py-4">
+                                     <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400 text-xs">U</div>
+                                        <div>
+                                           <p className="font-bold text-slate-900 leading-none">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
+                                           <p className="text-[10px] text-slate-400 mt-1">ID: {a.learnerId.substring(0, 6)}</p>
+                                        </div>
                                      </div>
                                   </td>
-                                  <td className="px-8 py-6">
-                                     <p className="text-sm font-medium text-slate-600 line-clamp-1 italic">&quot;{a.analysisResults?.issue || 'Processing kinematic data...'}&quot;</p>
+                                  <td className="px-6 py-4">
+                                     <p className="text-xs font-medium text-slate-500 line-clamp-1 italic">{a.analysisResults?.issue || 'Processing...'}</p>
                                   </td>
-                                  <td className="px-8 py-6 text-right">
-                                     <span className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">
+                                  <td className="px-6 py-4 text-right">
+                                     <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
                                         Completed
                                      </span>
                                   </td>
@@ -405,26 +405,25 @@ export default function DashboardPage() {
                  </div>
                  
                  {/* Right Column: Mini Cards */}
-                 <div className="space-y-6">
-                    <h3 className="text-2xl font-outfit font-black text-slate-900 px-4 lowercase tracking-tighter">Live feedback</h3>
-                    <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-[40px] p-8 text-white shadow-xl shadow-indigo-200 group overflow-hidden relative">
+                 <div className="space-y-4">
+                    <h3 className="text-xl font-outfit font-bold text-slate-900 px-2 lowercase tracking-tight">Live feedback</h3>
+                    <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-md relative overflow-hidden group">
                        <div className="relative z-10">
-                          <Clock size={32} className="mb-4 text-indigo-300" />
-                          <h4 className="text-2xl font-bold mb-2">Workstation Uptime</h4>
-                          <p className="text-indigo-200 text-sm font-medium leading-relaxed">System is running at 99.9% capacity. AI inferences are currently sub-300ms.</p>
+                          <Clock size={24} className="mb-3 text-brand-primary" />
+                          <h4 className="text-lg font-bold mb-1">System Uptime</h4>
+                          <p className="text-slate-400 text-xs font-medium leading-relaxed">System is running at 99.9% capacity.</p>
                        </div>
-                       <div className="absolute -right-5 -bottom-5 text-8xl opacity-10 group-hover:scale-110 transition-transform">⚡</div>
                     </div>
-                    <div className="bg-white border border-border-main rounded-[40px] p-8 shadow-sm">
-                       <h4 className="font-black text-slate-400 uppercase tracking-widest text-xs mb-6">Printer Connection</h4>
-                       <div className="flex items-center justify-between mb-4">
-                          <span className="font-bold text-slate-900">Lab-1 PRINTER</span>
-                          <span className="text-emerald-500 font-black text-xs uppercase">ONLINE</span>
+                    <div className="bg-white border border-border-main rounded-3xl p-6 shadow-sm">
+                       <h4 className="font-bold text-slate-400 uppercase tracking-widest text-[9px] mb-4">Printer Connection</h4>
+                       <div className="flex items-center justify-between mb-3">
+                          <span className="font-bold text-slate-900 text-sm">Lab-1 PRINTER</span>
+                          <span className="text-emerald-500 font-bold text-[10px] uppercase">ONLINE</span>
                        </div>
-                       <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                       <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                           <div className="h-full bg-emerald-500 w-[75%]"></div>
                        </div>
-                       <p className="text-[10px] font-bold text-slate-400 mt-3 italic text-right">75% filament remaining</p>
+                       <p className="text-[9px] font-bold text-slate-400 mt-2 italic text-right">75% filament</p>
                     </div>
                  </div>
               </div>
@@ -433,45 +432,46 @@ export default function DashboardPage() {
 
           {activeTab === 'learners' && (
             <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-               <div className="flex justify-between items-end">
-                  <div>
-                    <h1 className="text-5xl font-outfit font-black text-slate-900 tracking-tighter lowercase leading-none">Learner core</h1>
-                    <p className="text-slate-400 text-xl font-medium mt-4">Management of student profiles and physical constraints.</p>
-                  </div>
-                  <button 
-                    className="px-8 py-4 rounded-2xl bg-brand-primary text-white font-black text-lg shadow-xl shadow-brand-primary/20 hover:brightness-105 active:scale-95 transition-all" 
-                    onClick={() => setShowAddLearner(true)}
-                  >
-                    + Registry Learner
-                  </button>
-               </div>
+                <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
+                   <div>
+                     <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">Learner Core</h1>
+                     <p className="text-slate-400 text-sm font-medium mt-1">Management of student profiles and physical constraints.</p>
+                   </div>
+                   <button 
+                     className="px-6 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-md hover:brightness-105 transition-all text-center" 
+                     onClick={() => setShowAddLearner(true)}
+                   >
+                     + Registry Learner
+                   </button>
+                </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                  {learners.map(l => (
-                    <div key={l.id} className="bg-white border border-border-main rounded-[32px] p-8 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden">
-                       <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[100px] -z-0 transition-all group-hover:bg-brand-primary/10"></div>
-                       <div className="relative z-10">
-                          <div className="flex justify-between items-start mb-6">
-                             <div className="w-16 h-16 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-3xl shadow-sm group-hover:rotate-6 transition-transform">👤</div>
-                             <button className="p-2.5 text-slate-200 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all" onClick={() => {setLearnerToDelete(l); setShowDeleteConfirm(true);}}>
-                               <Trash2 size={24} />
-                             </button>
-                          </div>
-                          <h4 className="text-2xl font-black text-slate-900 mb-1 lowercase tracking-tight">{l.name}</h4>
-                          <p className="text-slate-400 font-black text-xs uppercase tracking-widest italic mb-6">Age {l.age} Year Old</p>
-                          
-                          <div className="space-y-4 pt-6 border-t border-slate-50">
-                             <div>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] mb-2 leading-none">Physical constraint</p>
-                                <p className="text-sm font-medium text-slate-600 line-clamp-3 leading-relaxed">{l.disabilityInfo || 'Physical Accessibility Review required.'}</p>
-                             </div>
-                             <button className="w-full py-3.5 rounded-xl border border-slate-100 text-slate-400 font-bold text-sm hover:border-brand-primary hover:text-brand-primary transition-all flex items-center justify-center gap-2 group/btn" onClick={() => {setSelectedLearnerId(l.id); setShowNewAssessment(true);}}>
-                                Start Analysis <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-                             </button>
-                          </div>
-                       </div>
-                    </div>
-                  ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                   {learners.map(l => (
+                     <div key={l.id} className="bg-white border border-border-main rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group relative overflow-hidden text-left">
+                        <div className="relative z-10">
+                           <div className="flex justify-between items-start mb-4">
+                              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-xl font-bold text-brand-primary uppercase">
+                                {l.name[0]}
+                              </div>
+                              <button className="p-2 text-slate-300 hover:text-red-500 rounded-lg transition-all" onClick={() => {setLearnerToDelete(l); setShowDeleteConfirm(true);}}>
+                                <Trash2 size={20} />
+                              </button>
+                           </div>
+                           <h4 className="text-lg font-bold text-slate-900 mb-1 lowercase tracking-tight">{l.name}</h4>
+                           <p className="text-slate-400 font-bold text-[9px] uppercase tracking-widest italic mb-4">Age {l.age}</p>
+                           
+                           <div className="space-y-4 pt-4 border-t border-slate-50">
+                              <div>
+                                 <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Constraints</p>
+                                 <p className="text-xs font-medium text-slate-600 line-clamp-2 leading-relaxed">{l.disabilityInfo || 'Review required.'}</p>
+                              </div>
+                              <button className="w-full py-2.5 rounded-lg border border-slate-100 text-slate-500 font-bold text-[10px] hover:border-brand-primary hover:text-brand-primary transition-all flex items-center justify-center gap-2 group/btn uppercase tracking-widest text-center" onClick={() => {setSelectedLearnerId(l.id); setShowNewAssessment(true);}}>
+                                 Start Analysis <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform" />
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                   ))}
                   {learners.length === 0 && (
                     <div className="col-span-full py-24 bg-slate-50 rounded-[40px] border-2 border-dashed border-slate-100 flex flex-col items-center justify-center gap-6">
                        <GraduationCap size={64} className="text-slate-200" />
@@ -518,27 +518,27 @@ export default function DashboardPage() {
                       </thead>
                       <tbody className="divide-y divide-slate-50">
                         {assessments.map(a => (
-                          <tr key={a.id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => {setExpandedReportId(a.id); setActiveTab('reports');}}>
-                            <td className="px-10 py-8">
-                               <div className="flex items-center gap-4">
-                                  <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center font-bold text-slate-300 group-hover:rotate-3 transition-transform">📹</div>
+                          <tr key={a.id} className="hover:bg-slate-50 transition-colors group cursor-pointer text-sm" onClick={() => {setExpandedReportId(a.id); setActiveTab('reports');}}>
+                            <td className="px-6 py-5">
+                               <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center font-bold text-brand-primary">L</div>
                                   <div>
                                      <p className="font-bold text-slate-900 leading-none">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
-                                     <p className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-widest">ID {a.id.substring(0, 8)}</p>
+                                     <p className="text-[9px] text-slate-400 font-bold mt-1 uppercase tracking-widest">ID {a.id.substring(0, 8)}</p>
                                   </div>
                                </div>
                             </td>
-                            <td className="px-10 py-8">
-                               <p className="text-sm font-semibold text-slate-600 max-w-[300px] leading-relaxed italic">&quot;{a.analysisResults?.issue || 'Analysis processing...'}&quot;</p>
+                            <td className="px-6 py-5">
+                               <p className="text-xs font-semibold text-slate-500 max-w-[240px] leading-relaxed italic line-clamp-2">{a.analysisResults?.issue || 'Analysis processing...'}</p>
                             </td>
-                            <td className="px-10 py-8">
-                               <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-1.5 rounded-xl text-xs font-bold border border-indigo-100 uppercase tracking-widest">
-                                  {a.toolDescription || a.recommendedToolId || 'Evaluating solution...'}
+                            <td className="px-6 py-5">
+                               <div className="inline-flex items-center gap-2 bg-slate-50 text-brand-primary px-3 py-1 rounded-lg text-[10px] font-bold border border-slate-100 uppercase tracking-widest">
+                                  {a.toolDescription || a.recommendedToolId || 'Evaluating...'}
                                </div>
                             </td>
-                            <td className="px-10 py-8 text-right">
-                               <span className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest border border-emerald-100">
-                                  <CheckCircle size={14} /> Completed
+                            <td className="px-6 py-5 text-right">
+                               <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest">
+                                  <CheckCircle size={12} /> Completed
                                </span>
                             </td>
                           </tr>
@@ -552,29 +552,26 @@ export default function DashboardPage() {
 
           {activeTab === 'tools' && (
             <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-               <div className="flex justify-between items-end">
+               <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
                   <div>
-                    <h1 className="text-5xl font-outfit font-black text-slate-900 tracking-tighter lowercase leading-none">3D Library</h1>
-                    <p className="text-slate-400 text-xl font-medium mt-4">Download custom generated STL blueprints for immediate 3D printing.</p>
+                    <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">3D Library</h1>
+                    <p className="text-slate-400 text-sm font-medium mt-1">Download custom generated STL blueprints.</p>
                   </div>
                </div>
 
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                   {assessments.filter(a => a.recommendedToolId).map(a => (
-                    <div key={`tool-${a.id}`} className="bg-white border border-border-main rounded-[40px] p-8 shadow-sm hover:shadow-2xl transition-all group overflow-hidden relative">
-                       <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 flex items-center justify-center -z-0 group-hover:bg-brand-primary/10 transition-colors">
-                          <Printer size={80} className="text-slate-100 -rotate-12 translate-x-6 translate-y-6" />
-                       </div>
+                    <div key={`tool-${a.id}`} className="bg-white border border-border-main rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group overflow-hidden relative text-left">
                        <div className="relative z-10 h-full flex flex-col">
-                          <div className="w-16 h-16 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-3xl shadow-sm mb-6">🖨️</div>
-                          <h4 className="text-2xl font-black text-slate-900 mb-2 lowercase tracking-tight leading-tight">{a.toolDescription || a.recommendedToolId.replace('_', ' ')}</h4>
-                          <p className="text-slate-400 font-bold text-xs uppercase tracking-widest italic mb-auto pb-8">Optimized For: {learners.find(l => l.id === a.learnerId)?.name || 'Custom Adaptation'}</p>
+                          <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-xl font-bold text-brand-primary mb-4">T</div>
+                          <h4 className="text-lg font-bold text-slate-900 mb-2 lowercase tracking-tight leading-tight">{a.toolDescription || a.recommendedToolId.replace('_', ' ')}</h4>
+                          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-widest italic mb-auto pb-6">For: {learners.find(l => l.id === a.learnerId)?.name || 'Custom'}</p>
                           
                           <button 
-                            className="w-full py-4 rounded-2xl bg-slate-900 text-white font-black text-lg flex items-center justify-center gap-3 hover:bg-black active:scale-95 transition-all shadow-xl shadow-slate-200"
+                            className="w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-black transition-all"
                             onClick={() => handleDownloadSTL(a.recommendedToolId, a.toolDescription)}
                           >
-                            <Download size={22} /> Download STL
+                            <Download size={16} /> Download STL
                           </button>
                        </div>
                     </div>
@@ -585,13 +582,13 @@ export default function DashboardPage() {
 
           {activeTab === 'reports' && (
             <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-               <div className="flex justify-between items-end">
+               <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
                   <div>
-                    <h1 className="text-5xl font-outfit font-black text-slate-900 tracking-tighter lowercase leading-none">Inclusion reports</h1>
-                    <p className="text-slate-400 text-xl font-medium mt-4">Full documentation of ergonomic assessments and adaptive strategies.</p>
+                    <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">Inclusion Reports</h1>
+                    <p className="text-slate-400 text-sm font-medium mt-1">Full documentation of ergonomic assessments.</p>
                   </div>
-                  <button className="px-8 py-4 rounded-2xl bg-slate-900 text-white font-black text-lg shadow-xl shadow-slate-200 hover:bg-black transition-all flex items-center gap-3" onClick={() => window.print()}>
-                    <Printer size={20} /> Print All Work
+                  <button className="px-6 py-3 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-md hover:bg-black transition-all flex items-center gap-2 justify-center" onClick={() => window.print()}>
+                    <Printer size={16} /> Print All
                   </button>
                </div>
 
@@ -649,29 +646,26 @@ export default function DashboardPage() {
 
         {/* New Assessment Modal */}
         {showNewAssessment && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="bg-white border border-border-main rounded-[40px] p-10 shadow-2xl w-full max-w-[600px] relative animate-in zoom-in-95 duration-300 overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-slate-50">
-                 <div className="h-full bg-brand-primary transition-all duration-1000" style={{ width: `${analyzing ? analysisProgress : 0}%` }}></div>
-              </div>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-white border border-border-main rounded-2xl p-6 shadow-2xl w-full max-w-[500px] relative animate-in zoom-in-95">
               <button 
-                className="absolute top-8 right-8 text-slate-400 hover:text-red-500 transition-colors" 
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600" 
                 onClick={() => setShowNewAssessment(false)}
               >
-                <X size={32} />
+                <X size={24} />
               </button>
               
-              <div className="mb-10 text-center">
-                 <h3 className="text-4xl font-outfit font-black text-slate-900 mb-2 lowercase tracking-tighter">AI Assessment Core</h3>
-                 <p className="text-slate-400 font-medium">Kinematic analysis for custom adaptive tooling.</p>
+              <div className="mb-6">
+                 <h3 className="text-xl font-bold text-slate-900 tracking-tight">AI Assessment Core</h3>
+                 <p className="text-slate-400 text-xs font-medium uppercase tracking-widest mt-1">Kinematic Analysis Station</p>
               </div>
 
               {!analyzing ? (
-                <div className="flex flex-col gap-8">
-                  <div className="flex flex-col gap-3">
-                    <label className="text-[10px] font-black text-slate-400 ml-1 uppercase tracking-[3px]">Target Student</label>
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target Student</label>
                     <select 
-                      className="w-full bg-slate-100 border border-slate-200 rounded-2xl py-4.5 px-6 text-slate-900 font-bold text-lg focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all appearance-none cursor-pointer" 
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary" 
                       value={selectedLearnerId}
                       onChange={e => setSelectedLearnerId(e.target.value)}
                     >
@@ -680,68 +674,86 @@ export default function DashboardPage() {
                     </select>
                   </div>
                   
-                  <div className="flex flex-col gap-3">
-                    <label className="text-[10px] font-black text-slate-400 ml-1 uppercase tracking-[3px]">Media Ingestion</label>
-                    <div className="grid grid-cols-2 gap-4">
-                      <label className="flex flex-col items-center justify-center gap-4 p-10 border-2 border-dashed border-slate-200 rounded-[30px] hover:border-brand-primary hover:bg-brand-primary/5 cursor-pointer transition-all group/upload">
-                        <Upload size={48} className="text-slate-300 group-hover/upload:text-brand-primary transition-colors" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover/upload:text-brand-primary">Upload Video/Image</span>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Media Source</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="flex flex-col items-center justify-center gap-3 p-6 border-2 border-dashed border-slate-100 rounded-xl hover:border-brand-primary hover:bg-slate-50 cursor-pointer transition-all">
+                        <Upload size={24} className="text-slate-300" />
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Upload Media</span>
                         <input type="file" className="hidden" onChange={e => setAssessmentFile(e.target.files[0])} />
                       </label>
-                      <button className="flex flex-col items-center justify-center gap-4 p-10 border-2 border-slate-200 rounded-[30px] hover:border-brand-primary hover:bg-brand-primary/5 transition-all text-slate-300 hover:text-brand-primary group/cam">
-                        <Camera size={48} className="group-hover/cam:scale-110 transition-transform" />
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover/cam:text-brand-primary">Live Session</span>
+                      <button className="flex flex-col items-center justify-center gap-3 p-6 border border-slate-100 rounded-xl hover:border-brand-primary hover:bg-slate-50 transition-all text-slate-300">
+                        <Camera size={24} />
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Live Feed</span>
                       </button>
                     </div>
                   </div>
 
                   {assessmentFile && (
-                    <div className="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl flex items-center justify-between animate-in zoom-in-95">
-                      <div className="flex items-center gap-4 overflow-hidden">
-                        <div className="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center text-white shadow-lg">
-                           <CheckCircle size={24} />
+                    <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl flex items-center justify-between">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <div className="w-8 h-8 bg-brand-primary/10 rounded-lg flex items-center justify-center text-brand-primary">
+                           <CheckCircle size={18} />
                         </div>
                         <div className="flex flex-col">
-                           <span className="text-sm font-black text-emerald-900 truncate uppercase tracking-tighter">{assessmentFile.name}</span>
-                           <span className="text-[10px] font-bold text-emerald-600 uppercase">File Verified</span>
+                           <span className="text-[10px] font-bold text-slate-900 truncate uppercase tracking-tight">{assessmentFile.name}</span>
+                           <span className="text-[8px] font-bold text-emerald-500 uppercase">Ready</span>
                         </div>
                       </div>
-                      <button className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-red-50 hover:text-red-500 transition-all flex items-center justify-center" onClick={() => setAssessmentFile(null)}><X size={20} /></button>
+                      <button className="text-slate-400 hover:text-red-500" onClick={() => setAssessmentFile(null)}><X size={16} /></button>
                     </div>
                   )}
 
-                  <div className="flex gap-4 mt-4 pt-8 border-t border-slate-50">
+                  <div className="flex gap-3 mt-2 pt-6 border-t border-slate-50">
                     <button 
-                      className="flex-1 py-5 rounded-3xl bg-brand-primary text-white font-black text-xl shadow-2xl shadow-brand-primary/20 hover:brightness-105 active:scale-95 transition-all disabled:opacity-30 disabled:grayscale" 
+                      className="flex-1 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-md hover:brightness-105 disabled:opacity-50" 
                       onClick={runAssessment}
                       disabled={!selectedLearnerId || !assessmentFile}
                     >
                       Process Workstation
                     </button>
                     <button 
-                      className="px-10 py-5 rounded-3xl bg-slate-100 text-slate-500 font-bold hover:bg-slate-200 transition-all font-outfit" 
+                      className="px-6 py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-sm hover:bg-slate-100" 
                       onClick={() => setShowNewAssessment(false)}
                     >
-                      Abort
+                      Cancel
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center gap-10 py-10 animate-pulse">
-                  <div className="relative w-40 h-40 flex items-center justify-center">
-                    <div className="absolute inset-0 border-[10px] border-slate-100 rounded-full"></div>
-                    <div className="absolute inset-0 border-[10px] border-transparent border-t-brand-primary rounded-full animate-spin"></div>
-                    <div className="absolute inset-4 border border-brand-primary/20 rounded-full animate-ping"></div>
-                    <span className="text-3xl font-black text-brand-primary font-outfit">{Math.round(analysisProgress)}%</span>
+                <div className="flex flex-col items-center gap-8 py-4">
+                  <div className="w-full space-y-4">
+                    <div className="flex justify-between items-end mb-1">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full bg-brand-primary led-indicator`}></div>
+                        <span className="text-[10px] font-bold text-brand-primary uppercase tracking-[0.2em]">{fakeStep}</span>
+                      </div>
+                      <span className="text-sm font-bold text-slate-900">{Math.round(analysisProgress)}%</span>
+                    </div>
+                    
+                    <div className="relative p-1">
+                      <div className="absolute inset-0 border-2 border-brand-primary/20 rounded-lg marching-ants"></div>
+                      <div className="h-6 bg-slate-50 rounded-md overflow-hidden p-1 relative">
+                        <div 
+                          className="h-full bg-brand-primary rounded-sm transition-all duration-500" 
+                          style={{ width: `${analysisProgress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl text-center">
+                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Operation</p>
+                       <p className="text-sm font-bold text-slate-700">{analysisStep || 'Initializing kinematic model...'}</p>
+                    </div>
                   </div>
-                  <div className="text-center space-y-3">
-                    <span className="text-3xl font-outfit font-black text-brand-primary tracking-[0.3em] uppercase">{fakeStep}</span>
-                    <p className="text-slate-400 font-bold text-lg uppercase tracking-widest">{analysisStep}</p>
+
+                  <div className="flex gap-2 items-center text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">
+                    {[1,2,3,4,5].map(i => (
+                      <div key={i} className={`w-1.5 h-1.5 rounded-full ${i*20 <= analysisProgress ? 'bg-brand-primary led-indicator' : 'bg-slate-200'}`}></div>
+                    ))}
                   </div>
-                  <div className="w-full h-3 bg-slate-50 rounded-full overflow-hidden shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-brand-primary via-indigo-500 to-indigo-700 transition-all duration-700" style={{ width: `${analysisProgress}%` }}></div>
-                  </div>
-                  <button className="text-red-500 font-black uppercase text-xs tracking-widest hover:underline hover:scale-110 transition-transform" onClick={() => setAnalyzing(false)}>Abort sequence</button>
+
+                  <button className="text-red-500 font-bold uppercase text-[10px] tracking-widest hover:underline" onClick={() => setAnalyzing(false)}>Abort Diagnostic</button>
                 </div>
               )}
             </div>
@@ -750,25 +762,27 @@ export default function DashboardPage() {
 
         {/* Add Learner Modal */}
         {showAddLearner && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-300">
-            <div className="bg-white border border-border-main rounded-[40px] p-12 shadow-2xl w-full max-w-[600px] animate-in zoom-in-95 duration-300">
-              <div className="flex justify-between items-center mb-10">
-                <h3 className="text-4xl font-outfit font-black text-slate-900 lowercase tracking-tighter">Student Registry</h3>
-                <button onClick={() => setShowAddLearner(false)} className="text-slate-400 hover:text-red-500 transition-colors"><X size={32} /></button>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
+            <div className="bg-white border border-border-main rounded-2xl p-8 shadow-2xl w-full max-w-[500px] animate-in zoom-in-95">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">Student Registry</h3>
+                <button onClick={() => setShowAddLearner(false)} className="text-slate-400 hover:text-red-500 transition-colors"><X size={24} /></button>
               </div>
-              <form onSubmit={handleAddLearner} className="flex flex-col gap-8">
+              <form onSubmit={handleAddLearner} className="flex flex-col gap-6">
                 <div className="space-y-4">
-                  <label className="text-[10px] font-black text-slate-400 ml-1 uppercase tracking-[3px]">Personal Profile</label>
-                  <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4.5 px-6 text-slate-900 font-bold text-lg focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all placeholder:text-slate-300 placeholder:italic" placeholder="Student Full Name" onChange={e => setNewLearnerData({ ...newLearnerData, name: e.target.value })} required />
-                  <input className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4.5 px-6 text-slate-900 font-bold text-lg focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all placeholder:text-slate-300 placeholder:italic" type="number" placeholder="Biological Age" onChange={e => setNewLearnerData({ ...newLearnerData, age: e.target.value })} required />
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Personal Profile</label>
+                    <input className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all" placeholder="Full Name" onChange={e => setNewLearnerData({ ...newLearnerData, name: e.target.value })} required />
+                    <input className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all" type="number" placeholder="Age" onChange={e => setNewLearnerData({ ...newLearnerData, age: e.target.value })} required />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Kinematic constraints</label>
+                    <textarea className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all min-h-[120px] resize-none" placeholder="Detailed physical needs..." onChange={e => setNewLearnerData({ ...newLearnerData, disabilityInfo: e.target.value })} required />
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  <label className="text-[10px] font-black text-slate-400 ml-1 uppercase tracking-[3px]">Kinematic constraints</label>
-                  <textarea className="w-full bg-slate-50 border border-slate-200 rounded-3xl py-6 px-6 text-slate-900 font-bold text-lg focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary outline-none transition-all min-h-[160px] resize-none placeholder:text-slate-300 placeholder:italic" placeholder="Detailed physical needs (e.g., limited forearm supination, proximal instability)" onChange={e => setNewLearnerData({ ...newLearnerData, disabilityInfo: e.target.value })} required />
-                </div>
-                <div className="flex gap-4 mt-4">
-                  <button className="flex-1 py-5 rounded-3xl bg-brand-primary text-white font-black text-xl shadow-2xl shadow-brand-primary/20 hover:brightness-105 active:scale-95 transition-all" type="submit">Complete Registry</button>
-                  <button className="px-10 py-5 rounded-3xl bg-slate-50 border border-slate-200 text-slate-500 font-bold hover:bg-slate-100 transition-all" type="button" onClick={() => setShowAddLearner(false)}>Cancel</button>
+                <div className="flex gap-3 mt-2">
+                  <button className="flex-1 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-md hover:brightness-105 active:scale-95 transition-all" type="submit">Complete Registry</button>
+                  <button className="px-6 py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-sm hover:bg-slate-100 transition-all font-outfit" type="button" onClick={() => setShowAddLearner(false)}>Cancel</button>
                 </div>
               </form>
             </div>

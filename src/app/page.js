@@ -62,14 +62,14 @@ export default function LandingPage() {
             <p className="text-lg md:text-2xl text-text-muted max-w-[800px] mx-auto mb-12 leading-relaxed font-medium px-4">
               Advanced AI analyzes physical inabilities and constrictions to generate custom, 3D-printable assistive tools. Empowering every learner to reach their full potential.
             </p>
-            <div className="flex flex-wrap gap-5 justify-center">
+            <div className="flex flex-wrap gap-4 justify-center">
               <button 
                 onClick={() => router.push('/login')}
-                className="px-12 py-5 rounded-2xl font-outfit font-bold text-xl bg-brand-primary text-white shadow-2xl shadow-brand-primary/30 hover:shadow-brand-primary/50 hover:-translate-y-1 transition-all active:scale-95"
+                className="px-8 py-3.5 rounded-xl font-bold text-base bg-brand-primary text-white shadow-lg shadow-brand-primary/20 hover:brightness-105 transition-all active:scale-95"
               >
                 Start Assessment Free
               </button>
-              <button className="px-12 py-5 rounded-2xl font-outfit font-bold text-xl bg-white border border-border-main text-text-main shadow-xl shadow-slate-200/50 hover:bg-slate-50 transition-all font-inter">
+              <button className="px-8 py-3.5 rounded-xl font-bold text-base bg-white border border-border-main text-text-main shadow-sm hover:bg-slate-50 transition-all">
                 See How It Works
               </button>
             </div>
@@ -137,7 +137,7 @@ export default function LandingPage() {
               <p>Traditional ergonomic tools are expensive, slow to arrive, and rarely fit perfectly. A growing student needs solutions that adapt as fast as they do.</p>
               <p>By combining mobile video capture with generative AI, we skip the supply chain entirely. What used to take months now takes minutes. From classroom recording directly to your school's 3D printer.</p>
             </div>
-            <button className="mt-14 w-full md:w-auto px-10 py-5 rounded-2xl bg-slate-900 text-white hover:bg-black shadow-xl transition-all font-bold text-xl active:scale-95">
+            <button className="mt-10 w-full md:w-auto px-8 py-3.5 rounded-xl bg-slate-900 text-white hover:bg-black shadow-md transition-all font-bold text-base active:scale-95">
               Read the Whitepaper
             </button>
           </div>
