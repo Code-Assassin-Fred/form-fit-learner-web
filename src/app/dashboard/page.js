@@ -241,15 +241,13 @@ export default function DashboardPage() {
       )}
 
       {/* Sidebar */}
-      <aside className="w-[280px] bg-white border-r border-border-main flex flex-col h-full z-50">
-        <div className="p-10 flex items-center gap-4">
-          <div className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20">
-             <img src="/logo.png" alt="Logo" className="w-7 h-7 object-contain brightness-0 invert" />
-          </div>
-          <h2 className="font-outfit font-black text-2xl text-slate-900 tracking-tight lowercase">Form-Fit</h2>
+      <aside className="hidden lg:flex w-[240px] bg-white border-r border-border-main flex-col h-full z-50">
+        <div className="p-6 flex items-center gap-3">
+          <img src="/logo.png" alt="Logo" className="w-6 h-6 object-contain" />
+          <h2 className="font-outfit font-bold text-lg text-slate-900 tracking-tight lowercase">Form-Fit</h2>
         </div>
         
-        <nav className="flex-1 px-6 py-4 flex flex-col gap-2">
+        <nav className="flex-1 px-4 py-2 flex flex-col gap-1">
           {[
             { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
             { id: 'learners', label: 'Learners', icon: Users },
@@ -259,29 +257,29 @@ export default function DashboardPage() {
           ].map((item) => (
             <button
               key={item.id}
-              className={`flex items-center gap-4 px-5 py-4 rounded-2xl font-bold transition-all duration-300 ${
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 ${
                 activeTab === item.id 
-                  ? 'bg-brand-primary/10 text-brand-primary shadow-sm' 
-                  : 'text-slate-400 hover:bg-slate-50 hover:text-text-main'
+                  ? 'bg-brand-primary/10 text-brand-primary' 
+                  : 'text-slate-500 hover:bg-slate-50 hover:text-text-main'
               }`}
               onClick={() => setActiveTab(item.id)}
             >
-              <item.icon size={22} className={activeTab === item.id ? 'animate-pulse' : ''} /> 
-              <span className="text-[0.95rem]">{item.label}</span>
+              <item.icon size={18} /> 
+              <span className="text-[0.85rem]">{item.label}</span>
             </button>
           ))}
         </nav>
 
-        <div className="p-8 border-t border-slate-50">
-          <div className="bg-slate-50 p-6 rounded-3xl mb-6">
-             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Cloud Status</p>
+        <div className="p-4 border-t border-slate-50">
+          <div className="bg-slate-50 p-4 rounded-2xl mb-4">
+             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Cloud Status</p>
              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                <span className="text-xs font-bold text-slate-600">Gemini Pro connected</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 led-indicator"></div>
+                <span className="text-[10px] font-bold text-slate-600">Gemini Pro connected</span>
              </div>
           </div>
-          <button className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-red-500 font-bold transition-all hover:bg-red-50 active:scale-95" onClick={handleLogout}>
-            <LogOut size={22} /> Logout
+          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-red-500 font-semibold transition-all hover:bg-red-50 text-sm" onClick={handleLogout}>
+            <LogOut size={18} /> Logout
           </button>
         </div>
       </aside>
@@ -289,26 +287,26 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full overflow-y-auto no-scrollbar scroll-smooth">
         {/* Custom Nav Bar */}
-        <header className="h-[90px] px-10 flex items-center justify-between bg-white/80 backdrop-blur-xl border-b border-border-main sticky top-0 z-40">
-          <div className="flex items-center gap-4 bg-slate-100 rounded-2xl px-5 py-3 w-[400px] border border-slate-200 transition-all focus-within:ring-4 focus-within:ring-brand-primary/10 focus-within:border-brand-primary">
-            <Search size={20} className="text-slate-400" />
-            <input type="text" placeholder="Search learners, tools or reports..." className="bg-transparent border-none outline-none text-[0.95rem] font-medium w-full text-slate-900 placeholder:text-slate-400" />
+        <header className="h-[64px] px-6 flex items-center justify-between bg-white border-b border-border-main sticky top-0 z-40">
+          <div className="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2 w-full max-w-[320px] border border-slate-200">
+            <Search size={16} className="text-slate-400" />
+            <input type="text" placeholder="Search..." className="bg-transparent border-none outline-none text-[0.85rem] font-medium w-full text-slate-900 placeholder:text-slate-400" />
           </div>
           
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <div className="relative cursor-pointer group">
-              <Bell size={24} className="text-slate-400 group-hover:text-brand-primary transition-colors" />
-              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-brand-secondary rounded-full border-2 border-white"></div>
+              <Bell size={20} className="text-slate-400 group-hover:text-brand-primary" />
+              <div className="absolute top-0 right-0 w-2 h-2 bg-brand-secondary rounded-full border-2 border-white"></div>
             </div>
             
-            <div className="h-10 w-[2px] bg-slate-100 mx-2"></div>
+            <div className="h-8 w-[1px] bg-slate-200 mx-1"></div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-black text-slate-900 leading-none">{user?.email?.split('@')[0]}</p>
-                <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest leading-none mt-1">Administrator</p>
+                <p className="text-xs font-bold text-slate-900 leading-none">{user?.email?.split('@')[0]}</p>
+                <p className="text-[9px] font-bold text-brand-primary uppercase tracking-widest leading-none mt-1">Admin</p>
               </div>
-              <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center font-black text-brand-primary text-xl overflow-hidden shadow-sm">
+              <div className="w-8 h-8 rounded-lg bg-brand-primary/10 flex items-center justify-center font-bold text-brand-primary text-sm">
                 {user?.email?.[0].toUpperCase()}
               </div>
             </div>
