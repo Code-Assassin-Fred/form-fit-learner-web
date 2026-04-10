@@ -3,18 +3,41 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-primary: #00BCD4;
-  --color-brand-secondary: #FF5722;
-  --color-brand-accent: #FFC107;
-  --color-bg-main: #F8FAFC;
-  --color-bg-card: #FFFFFF;
-  --color-text-main: #0F172A;
+  --color-brand-primary: #2563EB;
+  --color-brand-secondary: #DC2626;
+  --color-brand-accent: #F59E0B;
+  --color-bg-main: #FFFFFF;
+  --color-bg-card: #F8FAFC;
+  --color-text-main: #1E293B;
   --color-text-muted: #64748B;
   --color-border-main: #E2E8F0;
 
   --font-outfit: var(--font-outfit), sans-serif;
   --font-inter: var(--font-inter), sans-serif;
 }
+
+@keyframes marching-ants {
+  0% { background-position: 0 0, 0 100%, 0 0, 100% 0; }
+  100% { background-position: 40px 0, -40px 100%, 0 -40px, 100% 40px; }
+}
+
+@keyframes led-blink {
+  0%, 100% { opacity: 1; filter: brightness(1.2) drop-shadow(0 0 2px currentColor); }
+  50% { opacity: 0.4; filter: brightness(0.8); }
+}
+
+.marching-ants {
+  background-image: linear-gradient(90deg, currentColor 50%, transparent 50%), linear-gradient(90deg, currentColor 50%, transparent 50%), linear-gradient(0deg, currentColor 50%, transparent 50%), linear-gradient(0deg, currentColor 50%, transparent 50%);
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-size: 20px 2px, 20px 2px, 2px 20px, 2px 20px;
+  background-position: 0 0, 0 100%, 0 0, 100% 0;
+  animation: marching-ants 1s infinite linear;
+}
+
+.led-indicator {
+  animation: led-blink 1.5s infinite ease-in-out;
+}
+
 
 :root {
   --font-inter: 'Inter', sans-serif;

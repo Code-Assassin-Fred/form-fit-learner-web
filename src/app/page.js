@@ -51,15 +51,15 @@ export default function LandingPage() {
 
         <div className="max-w-[1400px] w-full flex flex-col items-center">
           <div className="text-center max-w-[1000px] mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/10 text-brand-primary border border-brand-primary/20 mb-8 animate-bounce">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/10 text-brand-primary border border-brand-primary/20 mb-8">
               <Zap size={16} />
               <span className="text-sm font-bold uppercase tracking-wider">Education 2.0</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-outfit font-black leading-[0.95] mb-8 tracking-tighter text-slate-900 lowercase">
+            <h1 className="text-4xl md:text-8xl font-outfit font-black leading-tight mb-8 tracking-tighter text-slate-900 lowercase px-4">
               Inclusive Classrooms.<br />
-              <span className="bg-gradient-to-r from-brand-primary via-blue-500 to-indigo-600 bg-clip-text text-transparent">AI-Driven Comfort.</span>
+              <span className="text-brand-primary">AI-Driven Comfort.</span>
             </h1>
-            <p className="text-xl md:text-2xl text-text-muted max-w-[800px] mx-auto mb-12 leading-relaxed font-medium">
+            <p className="text-lg md:text-2xl text-text-muted max-w-[800px] mx-auto mb-12 leading-relaxed font-medium px-4">
               Advanced AI analyzes physical inabilities and constrictions to generate custom, 3D-printable assistive tools. Empowering every learner to reach their full potential.
             </p>
             <div className="flex flex-wrap gap-5 justify-center">
@@ -87,21 +87,23 @@ export default function LandingPage() {
                </div>
                
                {/* Floating Info Cards */}
-               <div className="absolute -left-12 bottom-[20%] bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 animate-float">
-                  <div className="flex flex-col items-start">
-                    <h4 className="text-sm font-bold text-text-muted uppercase tracking-widest mb-1">Analysis</h4>
-                    <p className="text-3xl font-black text-brand-primary">99.8% Accuracy</p>
-                  </div>
-               </div>
-               <div className="absolute -right-10 top-[20%] bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 animate-float delay-1000">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center font-bold text-xl">🚀</div>
-                    <div className="flex flex-col">
-                       <h4 className="font-bold text-text-main text-lg uppercase">STL Ready</h4>
-                       <p className="text-sm font-medium text-text-muted">Click to Download</p>
-                    </div>
-                  </div>
-               </div>
+                <div className="absolute -left-4 md:-left-12 bottom-[20%] bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-xl border border-slate-100">
+                   <div className="flex flex-col items-start text-left">
+                     <h4 className="text-[10px] md:text-sm font-bold text-text-muted uppercase tracking-widest mb-1">Analysis</h4>
+                     <p className="text-xl md:text-3xl font-black text-brand-primary">99.8% Accuracy</p>
+                   </div>
+                </div>
+                <div className="absolute -right-4 md:-right-10 top-[20%] bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-xl border border-slate-100">
+                   <div className="flex items-center gap-3 md:gap-4">
+                     <div className="w-10 h-10 md:w-12 md:h-12 bg-slate-100 text-brand-primary rounded-xl md:rounded-2xl flex items-center justify-center">
+                        <Zap size={20} />
+                     </div>
+                     <div className="flex flex-col text-left">
+                        <h4 className="font-bold text-text-main text-sm md:text-lg uppercase">STL Ready</h4>
+                        <p className="text-[10px] md:text-sm font-medium text-text-muted">Click to Download</p>
+                     </div>
+                   </div>
+                </div>
             </div>
           </div>
         </div>
@@ -130,18 +132,17 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
           <div>
             <div className="w-20 h-2 bg-brand-primary mb-10 rounded-full"></div>
-            <h2 className="text-6xl md:text-8xl font-outfit font-black leading-[0.9] mb-12 tracking-tighter text-slate-900 lowercase">One assessment.<br/><span className="bg-gradient-to-r from-brand-primary to-blue-600 bg-clip-text text-transparent italic leading-[1.2]">Endless potential.</span></h2>
-            <div className="space-y-8 text-xl text-text-muted leading-relaxed font-medium">
+            <h2 className="text-4xl md:text-8xl font-outfit font-black leading-tight mb-12 tracking-tighter text-slate-900 lowercase">One assessment.<br/><span className="text-brand-primary italic leading-[1.2]">Endless potential.</span></h2>
+            <div className="space-y-8 text-lg md:text-xl text-text-muted leading-relaxed font-medium">
               <p>Traditional ergonomic tools are expensive, slow to arrive, and rarely fit perfectly. A growing student needs solutions that adapt as fast as they do.</p>
               <p>By combining mobile video capture with generative AI, we skip the supply chain entirely. What used to take months now takes minutes. From classroom recording directly to your school's 3D printer.</p>
             </div>
-            <button className="mt-14 px-10 py-5 rounded-2xl bg-slate-900 text-white hover:bg-black shadow-xl transition-all font-bold text-xl active:scale-95">
+            <button className="mt-14 w-full md:w-auto px-10 py-5 rounded-2xl bg-slate-900 text-white hover:bg-black shadow-xl transition-all font-bold text-xl active:scale-95">
               Read the Whitepaper
             </button>
           </div>
-          <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl border-4 border-white group">
-             <img src="/Image 2.jpg" alt="Mission" className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
-             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+          <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl border-4 border-white">
+             <img src="/replace with this.jpeg" alt="Mission" className="w-full h-full object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-1000" />
           </div>
         </div>
       </section>
@@ -161,9 +162,9 @@ export default function LandingPage() {
                 <p className="text-text-muted text-xl leading-relaxed max-w-[90%] font-medium">Our algorithms identify physical inabilities and constrictions from simple video captures in real-time, calculating precise anatomical adjustments for custom tooling.</p>
               </div>
               <div className="pt-10 flex justify-center items-center h-80 relative">
-                 <div className="w-[300px] h-[300px] rounded-full bg-brand-primary/10 blur-[60px] group-hover:bg-brand-primary/20 transition-all duration-700"></div>
+                 <div className="w-[300px] h-[300px] rounded-full bg-brand-primary/5 transition-all duration-700"></div>
                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-48 h-48 border-4 border-brand-primary/20 rounded-full animate-[ping_3s_infinite] opacity-50"></div>
+                    <div className="w-48 h-48 border-4 border-brand-primary/10 rounded-full"></div>
                  </div>
               </div>
             </div>
@@ -183,7 +184,9 @@ export default function LandingPage() {
                 <h3 className="text-4xl font-outfit font-black mb-6 tracking-tighter lowercase leading-none">Mass Personalization</h3>
                 <p className="text-slate-400 text-xl leading-relaxed font-medium">Scalable software solutions for special-ed departments to provide individualized support at the cost of mass production.</p>
               </div>
-              <div className="absolute -right-10 -bottom-10 text-[200px] opacity-10 group-hover:scale-110 transition-transform duration-700">🛠️</div>
+              <div className="absolute -right-10 -bottom-10 opacity-10 transition-transform duration-700">
+                <Zap size={200} />
+              </div>
             </div>
           </div>
         </div>
@@ -217,13 +220,10 @@ export default function LandingPage() {
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between gap-20">
           <div className="max-w-[400px]">
             <div className="flex items-center gap-3 mb-8">
-              <img src="/logo.png" alt="Logo" className="h-10 w-auto brightness-0 invert" />
+              <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
               <span className="font-outfit font-black text-2xl tracking-tighter lowercase">Form-Fit Learner</span>
             </div>
             <p className="text-slate-400 text-lg leading-relaxed mb-6 font-medium italic">&copy; 2026 Form-Fit Learner. Advanced Assistive Technology developed with compassion and code.</p>
-            <div className="flex gap-4">
-               {[1,2,3].map(i => <div key={i} className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 hover:bg-brand-primary transition-colors cursor-pointer"></div>)}
-            </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-16">
             <div className="flex flex-col gap-5">

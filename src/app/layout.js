@@ -14,6 +14,9 @@ const outfit = Outfit({
 export const metadata = {
   title: "Form-Fit Learner | AI Ergonomics",
   description: "Advanced AI-driven ergonomic assessment for inclusive classrooms.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }) {
