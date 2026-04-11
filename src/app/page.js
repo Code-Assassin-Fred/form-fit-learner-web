@@ -88,7 +88,7 @@ export default function LandingPage() {
                     <div className="w-3 h-3 rounded-full bg-slate-700"></div>
                     <div className="w-3 h-3 rounded-full bg-slate-700"></div>
                   </div>
-                  <img src="/hero-premium.png" alt="Inclusive Education" className="w-full h-auto object-cover transition-all duration-1000 group-hover:scale-[1.05]" />
+                  <img src="/Image 1.jpg" alt="Inclusive Education" className="w-full h-auto object-cover transition-all duration-1000 group-hover:scale-[1.05]" />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent pointer-events-none"></div>
                </div>
                

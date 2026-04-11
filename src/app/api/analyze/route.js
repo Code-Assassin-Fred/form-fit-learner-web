@@ -75,46 +75,58 @@ Analysis: "${analysis}"
 
 Your task:
 1. Recommend exactly ONE specific 3D printable assistive tool tailored to this learner's specific physical inability or constriction.
-2. Generate a comprehensive "Inclusion & Kinematic Research Report".
+2. Generate a comprehensive "Inclusion & Kinematic Research Report" in a professional layout.
 
 REPORT DEPTH REQUIREMENT:
-- This MUST be a high-fidelity research report.
-- Narrative sections like "Executive Summary" and "Research-Based Barrier Analysis" MUST consist of at least 3-5 detailed paragraphs each.
+- This MUST be a deep, doctoral-level research report.
+- Narrative sections MUST be exhaustive (3-5 detailed paragraphs each).
 - Use a professional, academic, and empathetic tone.
-- CRITICAL: Do NOT provide one-paragraph summaries. Provide deep, evidence-based reasoning.
 
-CRITICAL FORMATTING RULES:
-- Use MARKDOWN for document structure.
-- DO NOT use LaTeX commands like \\section, \\textbf, \\documentclass, etc.
-- Use ## **Heading Name** for all major sections (ensure they are **BOLDED**).
-- Use ### **Subheading Name** for subsections.
-- ONLY use LaTeX for mathematical measurements, angles, or geometric notations (e.g., $45^{\circ}$, $15cm$), wrapped in single $.
-- Focus heavily on the **Human Challenges**, **Kinematic Constrictions**, and how to overcome them.
+FORMATTING RULES (IMPORTANT):
+- Use Markdown Headers for structure: # for the main title, ## for major sections, ### for subsections.
+- DO NOT use LaTeX structural commands like \\section or \\subsection.
+- ONLY use LaTeX for mathematical formulas, angles, measurements, and scientific notation (using $ for inline and $$ for blocks).
+- Example: "The flexion angle is $45^{\circ}$" or "Formula: $$F = m \cdot a$$".
+- Use Markdown lists (- item) and Markdown tables (| Header |) for data.
 
 The report MUST include:
-1. # Inclusion & Kinematic Research Report
-2. ## **Executive Summary**: A multi-paragraph overview of core findings and humanitarian impact.
-3. ## **Physical Observation Table**: A Markdown table [Category, Detailed Observation, Inclusion Impact].
-4. ## **Research-Based Barrier Analysis**: A deep-dive (3+ paragraphs) into why standard tools are failing, referencing kinematic constrictions.
-5. ## **3D Printable Specification**: Detailed description of the proposed tool with rationale.
-6. ## **Technical Specifications Table**: A Markdown table [Metric, Specification, Rationale].
-7. ## **Implementation Strategy & Longitudinal Monitoring**: A multi-paragraph guide for educators.
+# Inclusion & Kinematic Research Report
+## Executive Summary
+Multi-paragraph humanitarian impact overview.
+## Physical Observation Table
+Markdown table [Category, Detailed Observation, Inclusion Impact].
+## Research-Based Barrier Analysis
+Deep-dive (3+ paragraphs) into kinematic failures of standard tools.
+## 3D Printable Specification
+Description of the proposed tool with mathematical rationale in LaTeX.
+## Technical Specifications Table
+Markdown table [Metric, Specification, Rationale].
+## Implementation Strategy & Longitudinal Monitoring
+Multi-paragraph educator guide.
 
-Return a JSON object with:
-"issue": Concise 1-sentence primary constraint.
-"details": THE FULL MARKDOWN RESEARCH REPORT (must be long, academic, and detailed).
-"recommendedToolId": A snake_case machine-friendly ID.
-"toolDescription": Simple name for the assistive tool (MAX 5 words).
-"category": One of: 'grip', 'posture', 'stability', 'accessibility'.`;
+Return ONLY a valid JSON object with:
+{
+  "issue": "Concise 1-sentence primary constraint.",
+  "details": "THE FULL REPORT (using Markdown for headers/lists and LaTeX for math).",
+  "recommendedToolId": "snake_case_id",
+  "toolDescription": "Simple tool name (MAX 5 words)",
+  "category": "one of: 'grip', 'posture', 'stability', 'accessibility'"
+}`;
 
         const solutionsResult = await model.generateContent(solutionsPrompt);
         const solutionsText = await solutionsResult.response.text();
-        const cleanJsonTxt = solutionsText.replace(/```json/g, '').replace(/```/g, '').trim();
         
+        // Robust JSON extraction using Regex
         let finalResults;
         try {
-          finalResults = JSON.parse(cleanJsonTxt);
+          const jsonMatch = solutionsText.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            finalResults = JSON.parse(jsonMatch[0]);
+          } else {
+            throw new Error('No JSON object found in response');
+          }
         } catch (e) {
+          console.error('[JSON PARSE ERROR]', e);
           finalResults = {
             issue: 'Inclusive Assessment',
             details: solutionsText,
@@ -123,6 +135,19 @@ Return a JSON object with:
             category: 'accessibility'
           };
         }
+
+        // Utility: Split text into chunks to avoid Firestore 1MB limit
+        const chunkContent = (text, size = 500000) => {
+          if (!text) return [];
+          const chunks = [];
+          for (let i = 0; i < text.length; i += size) {
+            chunks.push(text.substring(i, i + size));
+          }
+          return chunks;
+        };
+
+        const reportContent = finalResults?.details || 'Analysis completed with no detailed report.';
+        const reportChunks = chunkContent(reportContent);
 
         // Save to Firestore with defensive mapping to avoid undefined properties
         const assessmentRef = adminDb.collection('assessments').doc();
@@ -134,7 +159,8 @@ Return a JSON object with:
           mediaType: mediaType || 'image',
           timestamp: new Date().toISOString(),
           analysisResults: finalResults || {},
-          reportSummary: finalResults?.details || 'Analysis completed with no detailed report.',
+          reportSummary: reportContent.substring(0, 500), // Short summary for quick list views
+          reportChunks: reportChunks, // Full report stored in chunks for Firestore safety
           recommendedToolId: finalResults?.recommendedToolId || 'custom_adaptation',
           toolDescription: finalResults?.toolDescription || 'Custom Assistive Adaptation',
           status: 'completed'
