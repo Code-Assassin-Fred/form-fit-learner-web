@@ -54,17 +54,13 @@ if (!admin.apps.length) {
 }
 
 export const adminAuth = admin.apps.length ? admin.auth() : null;
-export const adminDb = admin.apps.length ? admin.firestore() : null;
+export const adminDb = (() => {
+  if (!admin.apps.length) return null;
+  const db = admin.firestore();
+  try { db.settings({ ignoreUndefinedProperties: true }); } catch (e) {}
+  return db;
+})();
 export const adminStorage = admin.apps.length ? admin.storage() : null;
-
-// Ignore undefined fields in writes to avoid Firestore validation errors
-if (adminDb) {
-  try {
-    adminDb.settings({ ignoreUndefinedProperties: true });
-  } catch (settingsError) {
-    console.warn("[firebaseAdmin] Could not set ignoreUndefinedProperties:", settingsError.message);
-  }
-}
 
 export const FieldValue = admin.firestore.FieldValue;
 export default admin;

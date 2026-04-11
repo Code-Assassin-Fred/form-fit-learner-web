@@ -6,6 +6,7 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import {
@@ -98,11 +99,20 @@ export default function DashboardPage() {
       setFakeStep('thinking...');
       return;
     }
-    const messages = ['thinking...', 'generating...', 'verifying...'];
-    const interval = setInterval(() => {
-      setFakeStep(prev => messages[(messages.indexOf(prev) + 1) % messages.length]);
-    }, 1500);
-    return () => clearInterval(interval);
+    
+    let timeoutId;
+    const messages = ['thinking...', 'generating...', 'verifying...', 'analyzing...', 'processing...'];
+    
+    const updateStep = () => {
+      const nextMsg = messages[Math.floor(Math.random() * messages.length)];
+      setFakeStep(nextMsg);
+      // Random interval between 800ms and 2500ms
+      const nextInterval = Math.floor(Math.random() * 1700) + 800;
+      timeoutId = setTimeout(updateStep, nextInterval);
+    };
+    
+    updateStep();
+    return () => clearTimeout(timeoutId);
   }, [analyzing]);
 
   const handleLogout = async () => {
@@ -148,6 +158,9 @@ export default function DashboardPage() {
   };
 
   const runAssessment = async () => {
+    if (abortControllerRef.current) abortControllerRef.current.abort();
+    abortControllerRef.current = new AbortController();
+
     setAnalyzing(true);
     setAnalysisProgress(10);
     const arrayBuffer = await assessmentFile.arrayBuffer();
@@ -163,6 +176,7 @@ export default function DashboardPage() {
         mediaType: assessmentFile.type.includes('video') ? 'video' : 'image',
         learnerId: selectedLearnerId
       }),
+      signal: abortControllerRef.current.signal
     });
 
     if (!response.ok) {
@@ -173,16 +187,28 @@ export default function DashboardPage() {
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value);
-      const lines = chunk.split('\n');
-      for (const line of lines) {
-        if (line.startsWith('data: ')) {
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop(); // Keep partial line in buffer
+
+        for (const line of lines) {
+          const trimmedLine = line.trim();
+          if (!trimmedLine || !trimmedLine.startsWith('data: ')) continue;
+          
           try {
-            const data = JSON.parse(line.substring(6));
-            if (data.type === 'progress') {
+            const data = JSON.parse(trimmedLine.substring(6));
+            if (data.type === 'error') {
+              showToast(data.message || "AI core failed.", "error");
+              setAnalyzing(false);
+              return;
+            } else if (data.type === 'progress') {
               setAnalysisStep(data.message);
               setAnalysisProgress(data.progress);
             } else if (data.type === 'complete') {
@@ -195,11 +221,29 @@ export default function DashboardPage() {
                 fetchAllData(user);
               }, 1000);
             }
-          } catch(e) {}
+          } catch(e) {
+            console.error("Malformed stream chunk:", e);
+          }
         }
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        console.log('Analysis aborted by user');
+      } else {
+        showToast("Connection lost.", "error");
+        setAnalyzing(false);
       }
     }
   };
+
+  const handleAbort = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setAnalyzing(false);
+    showToast("Analysis aborted.", "error");
+  }, []);
 
   const handleDownloadSTL = (toolId, toolName) => {
     showToast(`Downloading STL: ${toolId}...`);
@@ -242,7 +286,7 @@ export default function DashboardPage() {
 
       {/* Sidebar */}
       <aside className="hidden lg:flex w-[240px] bg-white border-r border-border-main flex-col h-full z-50">
-        <div className="p-6 flex items-center gap-3">
+        <div className="pt-10 pb-6 px-6 flex items-center gap-3">
           <img src="/logo.png" alt="Logo" className="w-6 h-6 object-contain" />
           <h2 className="font-outfit font-bold text-lg text-slate-900 tracking-tight lowercase">Form-Fit</h2>
         </div>
@@ -287,26 +331,29 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full overflow-y-auto no-scrollbar scroll-smooth">
         {/* Custom Nav Bar */}
-        <header className="h-[64px] px-6 flex items-center justify-between bg-white border-b border-border-main sticky top-0 z-40">
-          <div className="flex items-center gap-3 bg-slate-50 rounded-xl px-4 py-2 w-full max-w-[320px] border border-slate-200">
-            <Search size={16} className="text-slate-400" />
-            <input type="text" placeholder="Search..." className="bg-transparent border-none outline-none text-[0.85rem] font-medium w-full text-slate-900 placeholder:text-slate-400" />
+        <header className="h-[110px] md:h-[130px] pt-8 md:pt-10 px-8 md:px-12 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 transition-all duration-500">
+          <div className="flex items-center gap-4 bg-slate-50/50 rounded-2xl px-6 py-3.5 w-full max-w-[440px] border border-slate-100 focus-within:border-brand-primary/30 focus-within:bg-white focus-within:shadow-xl focus-within:shadow-brand-primary/5 transition-all group">
+            <Search size={18} className="text-slate-400 group-focus-within:text-brand-primary" />
+            <input type="text" placeholder="Search workstation..." className="bg-transparent border-none outline-none text-[0.9rem] font-medium w-full text-slate-900 placeholder:text-slate-400" />
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="relative cursor-pointer group">
-              <Bell size={20} className="text-slate-400 group-hover:text-brand-primary" />
-              <div className="absolute top-0 right-0 w-2 h-2 bg-brand-secondary rounded-full border-2 border-white"></div>
+          <div className="flex items-center gap-6">
+            <div className="relative cursor-pointer group p-2 hover:bg-slate-50 rounded-xl transition-all">
+              <Bell size={22} className="text-slate-400 group-hover:text-brand-primary" />
+              <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-brand-secondary rounded-full border-2 border-white ring-2 ring-transparent group-hover:ring-brand-secondary/20 transition-all"></div>
             </div>
             
-            <div className="h-8 w-[1px] bg-slate-200 mx-1"></div>
+            <div className="h-10 w-[1px] bg-slate-100 mx-1"></div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4 pl-2 group cursor-pointer">
               <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-slate-900 leading-none">{user?.email?.split('@')[0]}</p>
-                <p className="text-[9px] font-bold text-brand-primary uppercase tracking-widest leading-none mt-1">Admin</p>
+                <p className="text-[0.9rem] font-bold text-slate-900 leading-tight group-hover:text-brand-primary transition-colors">{user?.email?.split('@')[0]}</p>
+                <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Admin</p>
+                </div>
               </div>
-              <div className="w-8 h-8 rounded-lg bg-brand-primary/10 flex items-center justify-center font-bold text-brand-primary text-sm">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center font-bold text-white text-base shadow-lg shadow-brand-primary/20 group-hover:scale-105 transition-all">
                 {user?.email?.[0].toUpperCase()}
               </div>
             </div>
@@ -314,7 +361,7 @@ export default function DashboardPage() {
         </header>
 
         {/* Dynamic Pages */}
-        <div className="p-10 max-w-[1500px] mx-auto w-full">
+        <div className="px-8 py-12 md:px-12 md:py-16 max-w-[1500px] mx-auto w-full">
           
           {activeTab === 'dashboard' && (
             <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -324,8 +371,8 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-3 mb-4">
                      <span className="px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-[8px] font-bold uppercase tracking-widest">Next-Gen Ergonomics</span>
                   </div>
-                  <h1 className="text-3xl font-outfit font-bold mb-4 leading-none lowercase tracking-tight">Empowering Inclusive Learning with AI</h1>
-                  <p className="text-slate-400 text-base mb-6 leading-relaxed font-medium">Advanced kinematic analysis directly synchronized with your school&apos;s 3D printer.</p>
+                  <h1 className="text-4xl font-outfit font-black mb-4 leading-[1.1] lowercase tracking-tight">Empowering Inclusive Learning with AI</h1>
+                  <p className="text-slate-300 text-lg mb-8 leading-relaxed font-medium">Advanced kinematic analysis directly synchronized with your school&apos;s 3D printer workstation.</p>
                   <div className="flex gap-3">
                     <button className="px-5 py-2.5 rounded-xl bg-brand-primary text-white font-bold text-sm hover:brightness-105 transition-all flex items-center gap-2" onClick={() => setActiveTab('assessments')}>
                        New Assessment <ArrowRight size={16} />
@@ -340,13 +387,13 @@ export default function DashboardPage() {
               {/* Stats Box */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Learners', value: learners.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/5' },
-                  { label: 'Assessments', value: assessments.length, icon: Zap, color: 'text-brand-secondary', bg: 'bg-brand-secondary/5' },
-                  { label: '3D Tools', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/5' },
+                  { label: 'Learners', value: learners.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },
+                  { label: 'Assessments', value: assessments.length, icon: Zap, color: 'text-brand-secondary', bg: 'bg-brand-secondary/10' },
+                  { label: '3D Tools', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/10' },
                   { label: 'Classes', value: classes.length || 0, icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-border-main rounded-2xl p-5 shadow-sm flex flex-col items-start gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color}`}>
+                  <div key={i} className="premium-card !rounded-2xl p-6 flex flex-col items-start gap-4">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color} shadow-sm transition-transform group-hover:scale-110`}>
                        <stat.icon size={20} />
                     </div>
                     <div>
@@ -559,23 +606,58 @@ export default function DashboardPage() {
                   </div>
                </div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                  {assessments.filter(a => a.recommendedToolId).map(a => (
-                    <div key={`tool-${a.id}`} className="bg-white border border-border-main rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group overflow-hidden relative text-left">
-                       <div className="relative z-10 h-full flex flex-col">
-                          <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-xl font-bold text-brand-primary mb-4">T</div>
-                          <h4 className="text-lg font-bold text-slate-900 mb-2 lowercase tracking-tight leading-tight">{a.toolDescription || a.recommendedToolId.replace('_', ' ')}</h4>
-                          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-widest italic mb-auto pb-6">For: {learners.find(l => l.id === a.learnerId)?.name || 'Custom'}</p>
-                          
-                          <button 
-                            className="w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center gap-2 hover:bg-black transition-all"
-                            onClick={() => handleDownloadSTL(a.recommendedToolId, a.toolDescription)}
-                          >
-                            <Download size={16} /> Download STL
-                          </button>
-                       </div>
-                    </div>
-                  ))}
+               <div className="bg-white border border-border-main rounded-[32px] overflow-hidden shadow-sm">
+                  <div className="overflow-x-auto no-scrollbar">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-50">
+                          <th className="px-10 py-6">Inclusion Tool</th>
+                          <th className="px-10 py-6">Assigned Learner</th>
+                          <th className="px-10 py-6">Category</th>
+                          <th className="px-10 py-6 text-right">Resource</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {assessments.filter(a => a.recommendedToolId).map(a => (
+                          <tr key={`tool-${a.id}`} className="hover:bg-slate-50/50 transition-colors group text-sm">
+                            <td className="px-10 py-6">
+                               <div className="flex items-center gap-4">
+                                  <div className="w-10 h-10 rounded-xl bg-brand-primary/5 text-brand-primary flex items-center justify-center font-bold">T</div>
+                                  <div>
+                                     <p className="font-bold text-slate-900 leading-tight lowercase truncate max-w-[200px]">{a.toolDescription || a.recommendedToolId.replace('_', ' ')}</p>
+                                     <p className="text-[10px] text-slate-400 font-medium mt-1">v2.1 Stable</p>
+                                  </div>
+                               </div>
+                            </td>
+                            <td className="px-10 py-6">
+                               <span className="font-semibold text-slate-600">{learners.find(l => l.id === a.learnerId)?.name || 'General Access'}</span>
+                            </td>
+                            <td className="px-10 py-6">
+                               <span className="inline-flex items-center px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest">{a.analysisResults?.category || 'Accessibility'}</span>
+                            </td>
+                            <td className="px-10 py-6 text-right">
+                               <button 
+                                 className="px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-2 ml-auto"
+                                 onClick={() => handleDownloadSTL(a.recommendedToolId, a.toolDescription)}
+                               >
+                                 <Download size={14} /> Export STL
+                               </button>
+                            </td>
+                          </tr>
+                        ))}
+                        {assessments.filter(a => a.recommendedToolId).length === 0 && (
+                          <tr>
+                            <td colSpan="4" className="px-10 py-20 text-center">
+                               <div className="flex flex-col items-center gap-3 text-slate-300">
+                                  <Printer size={48} />
+                                  <p className="font-bold text-lg lowercase">No tools generated yet</p>
+                               </div>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
                </div>
             </div>
           )}
@@ -620,7 +702,7 @@ export default function DashboardPage() {
                             <div className="p-10 md:p-16 border-t border-border-main bg-white">
                                <div className="prose prose-slate max-w-none prose-headings:font-outfit prose-headings:font-black prose-headings:tracking-tighter prose-headings:lowercase prose-h2:text-4xl prose-h3:text-2xl prose-p:text-lg prose-p:leading-relaxed prose-p:font-medium prose-p:text-slate-600 prose-strong:text-slate-900 prose-li:text-slate-600 prose-li:font-medium">
                                   <ReactMarkdown 
-                                    remarkPlugins={[remarkMath]} 
+                                    remarkPlugins={[remarkMath, remarkGfm]} 
                                     rehypePlugins={[rehypeKatex]}
                                   >
                                     {cleanReportContent(a.reportSummary || a.analysisResults?.details || 'Retrieving assessment data from AI core...')}
@@ -632,7 +714,7 @@ export default function DashboardPage() {
                                   <button className="px-8 py-4 rounded-2xl bg-brand-primary text-white font-black text-lg shadow-lg shadow-brand-primary/20 hover:brightness-105 transition-all">Export PDF</button>
                                   <button className="px-8 py-4 rounded-2xl bg-white border border-slate-200 text-slate-900 font-bold hover:bg-slate-50 transition-all" onClick={() => setExpandedReportId(null)}>Collapse Focus</button>
                                </div>
-                               <p className="text-xs font-black text-slate-300 uppercase tracking-widest uppercase">Verified by Form-Fit AI CORE v1.5</p>
+                               <p className="text-xs font-black text-slate-300 uppercase tracking-widest">Verified by Form-Fit AI CORE v2.5 FLASH</p>
                             </div>
                           </div>
                         )}
@@ -753,7 +835,7 @@ export default function DashboardPage() {
                     ))}
                   </div>
 
-                  <button className="text-red-500 font-bold uppercase text-[10px] tracking-widest hover:underline" onClick={() => setAnalyzing(false)}>Abort Diagnostic</button>
+                  <button className="text-red-500 font-bold uppercase text-[10px] tracking-widest hover:underline" onClick={handleAbort}>Abort Diagnostic</button>
                 </div>
               )}
             </div>

@@ -3,18 +3,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-primary: #2563EB;
-  --color-brand-secondary: #DC2626;
-  --color-brand-accent: #F59E0B;
-  --color-bg-main: #FFFFFF;
-  --color-bg-card: #F8FAFC;
-  --color-text-main: #1E293B;
-  --color-text-muted: #64748B;
+  --color-brand-primary: #0F172A; /* Deep Navy Blue */
+  --color-brand-secondary: #3B82F6; /* Bright Blue */
+  --color-brand-accent: #F97316; /* Vibrant Orange */
+  --color-bg-main: #F8FAFC; /* Light Slate / Off-White */
+  --color-bg-card: #FFFFFF;
+  --color-text-main: #0F172A;
+  --color-text-muted: #475569;
   --color-border-main: #E2E8F0;
 
   --font-outfit: var(--font-outfit), sans-serif;
   --font-inter: var(--font-inter), sans-serif;
 }
+
+.glass-morphism {
+  @apply bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)];
+}
+
+.premium-card {
+  @apply bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2;
+}
+
+.orange-gradient {
+  @apply bg-gradient-to-br from-[#F97316] to-[#FB923C];
+}
+
+.navy-gradient {
+  @apply bg-gradient-to-br from-[#0F172A] to-[#1E293B];
+}
+
 
 @keyframes marching-ants {
   0% { background-position: 0 0, 0 100%, 0 0, 100% 0; }
