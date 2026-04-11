@@ -15,7 +15,7 @@ import {
   Printer, FileText, Upload,
   Camera, X, CheckCircle, AlertCircle, Info,
   ChevronDown, ChevronUp, Trash2, Globe, Clock,
-  ArrowRight, Download, Filter
+  ArrowRight, Download, Filter, Menu
 } from 'lucide-react';
 
 export default function DashboardPage() {

@@ -186,10 +186,10 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
            {[
-             { step: '01', title: 'Record', desc: 'Capture a 30-second mobile video of the learner performing standard movements.', icon: Camera, color: 'bg-orange-500' },
+             { step: '01', title: 'Record', desc: 'Capture high-resolution images or videos of the learner performing physical tasks.', icon: Camera, color: 'bg-orange-500' },
              { step: '02', title: 'Analyze', desc: 'Our AI workstation identifies anatomical constraints and kinematic offsets.', icon: Zap, color: 'bg-brand-primary' },
-             { step: '03', title: 'Generate', desc: 'Custom STL blueprints are automatically designed to fit the specific body geometry.', icon: Layout, color: 'bg-brand-secondary' },
-             { step: '04', title: 'Fabricate', desc: 'Instantly export files to any 3D printer for classroom-ready assistive tools.', icon: Printer, color: 'bg-slate-900' }
+             { step: '03', title: 'Generate', desc: 'Custom STL blueprints and doctoral-level kinematic reports are automatically designed.', icon: Layout, color: 'bg-brand-secondary' },
+             { step: '04', title: 'Fabricate', desc: 'Export STL files to any 3D printer and download professional inclusion reports.', icon: Printer, color: 'bg-slate-900' }
            ].map((item, i) => (
              <div key={i} className="group relative p-10 rounded-[40px] bg-white border border-slate-100 hover:shadow-2xl hover:shadow-brand-primary/5 transition-all duration-500 hover:-translate-y-2">
                 <div className="absolute top-8 right-8 text-4xl font-outfit font-black text-slate-100 group-hover:text-brand-primary/10 transition-colors uppercase tracking-widest">

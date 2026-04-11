@@ -10,6 +10,7 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -21,6 +22,11 @@ export default function LoginPage() {
     console.log('Attempting authentication...', { isSignUp, email });
     try {
       if (isSignUp) {
+        if (password !== confirmPassword) {
+          setError('Passwords do not match.');
+          setLoading(false);
+          return;
+        }
         console.log('Creating user...');
         await createUserWithEmailAndPassword(auth, email, password);
       } else {
@@ -60,15 +66,15 @@ export default function LoginPage() {
           <span>Back to Home</span>
         </button>
 
-        <div className="w-full max-w-[450px] space-y-10">
+        <div className="w-full max-w-[420px] space-y-7">
           <div className="text-center">
-            <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-inner shadow-slate-200/50">
-              <img src="/logo.png" alt="Logo" className="w-12 h-12 object-contain" />
+            <div className="w-14 h-14 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner shadow-slate-200/50">
+              <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
             </div>
-            <h1 className="text-4xl font-outfit font-black text-slate-900 tracking-tighter lowercase mb-2">
+            <h1 className="text-3xl font-outfit font-black text-slate-900 tracking-tighter lowercase mb-2">
               {isSignUp ? 'Join the future.' : 'Welcome back.'}
             </h1>
-            <p className="text-text-muted font-medium text-lg italic">
+            <p className="text-text-muted font-medium text-base italic">
               {isSignUp ? 'Create your professional account.' : 'Sign in to your AI workstation.'}
             </p>
           </div>
@@ -82,7 +88,7 @@ export default function LoginPage() {
                   type="email" 
                   id="email" 
                   placeholder="name@example.com" 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-12 text-text-main focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all font-medium"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-10 text-text-main focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all font-medium text-sm"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required 
@@ -98,13 +104,31 @@ export default function LoginPage() {
                   type="password" 
                   id="password" 
                   placeholder="••••••••" 
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-12 text-text-main focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all font-medium"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-10 text-text-main focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all font-medium text-sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required 
                 />
               </div>
             </div>
+ 
+            {isSignUp && (
+              <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
+                <label className="text-xs font-black text-slate-400 ml-1 uppercase tracking-widest" htmlFor="confirmPassword">Confirm Password</label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brand-primary transition-colors" size={20} />
+                  <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    placeholder="••••••••" 
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-10 text-text-main focus:outline-none focus:ring-4 focus:ring-brand-primary/10 focus:border-brand-primary transition-all font-medium text-sm"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required 
+                  />
+                </div>
+              </div>
+            )}
 
             {error && (
               <div className="bg-red-50 border border-red-100 text-red-500 text-sm py-4 px-5 rounded-2xl text-center font-bold animate-shake">
@@ -115,7 +139,7 @@ export default function LoginPage() {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full py-5 rounded-2xl bg-brand-primary text-white font-black text-xl flex items-center justify-center gap-3 shadow-xl shadow-brand-primary/20 hover:brightness-105 active:scale-[0.98] transition-all disabled:opacity-50"
+              className="w-full py-3.5 rounded-xl bg-brand-primary text-white font-black text-base flex items-center justify-center gap-3 shadow-xl shadow-brand-primary/20 hover:brightness-105 active:scale-[0.98] transition-all disabled:opacity-50"
             >
               {loading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
               {isSignUp ? <UserPlus size={22} /> : <LogIn size={22} />}
@@ -129,16 +153,25 @@ export default function LoginPage() {
 
           <button 
             onClick={handleGoogleLogin}
-            className="w-full py-5 rounded-2xl bg-white border border-slate-200 text-slate-700 font-bold text-lg flex items-center justify-center gap-3 hover:bg-slate-50 active:scale-[0.98] transition-all shadow-sm"
+            className="w-full py-3.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-base flex items-center justify-center gap-3 hover:bg-slate-50 active:scale-[0.98] transition-all shadow-sm"
           >
-            <Globe size={22} className="text-brand-primary" />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.28 1.07-3.71 1.07-2.85 0-5.27-1.92-6.13-4.51H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.87 14.13c-.22-.67-.35-1.39-.35-2.13s.13-1.46.35-2.13V7.03H2.18C1.43 8.53 1 10.22 1 12s.43 3.47 1.18 4.97l3.69-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.03l3.69 2.84c.86-2.59 3.28-4.51 6.13-4.51z" fill="#EA4335"/>
+            </svg>
             Continue with Google
           </button>
 
           <p className="text-center text-text-muted font-medium">
             {isSignUp ? 'Already have an account?' : "Don't have an account?"} 
             <button 
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError('');
+                setConfirmPassword('');
+              }}
               className="text-brand-primary font-black ml-2 hover:underline decoration-2"
             >
               {isSignUp ? 'Sign In' : 'Sign Up'}
