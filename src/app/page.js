@@ -17,29 +17,29 @@ export default function LandingPage() {
   return (
     <div className="bg-bg-main text-text-main font-inter selection:bg-brand-accent selection:text-white">
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 h-20 z-[100] flex items-center transition-all duration-700 ${scrolled ? 'glass-morphism border-b border-slate-200/50' : 'bg-transparent'}`}>
+      <nav className={`fixed top-0 left-0 right-0 h-20 z-[100] flex items-center transition-all duration-700 ${scrolled ? 'navy-gradient border-b border-slate-800' : 'bg-transparent'}`}>
         <div className="w-full max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[0.9rem]">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => router.push('/')}>
-            <div className="w-10 h-10 bg-brand-primary rounded-xl flex items-center justify-center shadow-2xl shadow-brand-primary/20 group-hover:scale-105 transition-transform duration-500">
-              <img src="/logo.png" alt="Logo" className="h-6 w-auto brightness-0 invert" />
+            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform duration-500">
+              <img src="/logo.png" alt="Logo" className="h-6 w-auto" />
             </div>
-            <span className="font-outfit font-black text-2xl text-brand-primary tracking-tighter">form-fit</span>
+            <span className={`font-outfit font-black text-2xl tracking-tighter transition-colors ${scrolled ? 'text-white' : 'text-brand-primary'}`}>form-fit</span>
           </div>
           
           <div className="hidden md:flex items-center gap-10">
-            <a href="#mission" className="text-text-muted hover:text-brand-accent transition-colors font-semibold">Mission</a>
-            <a href="#features" className="text-text-muted hover:text-brand-accent transition-colors font-semibold">Features</a>
-            <a href="#creator" className="text-text-muted hover:text-brand-accent transition-colors font-semibold">About</a>
-            <div className="h-4 w-[1px] bg-slate-200 mx-2"></div>
+            <a href="#mission" className={`transition-colors font-semibold ${scrolled ? 'text-slate-300 hover:text-white' : 'text-text-muted hover:text-brand-accent'}`}>Mission</a>
+            <a href="#features" className={`transition-colors font-semibold ${scrolled ? 'text-slate-300 hover:text-white' : 'text-text-muted hover:text-brand-accent'}`}>Features</a>
+            <a href="#creator" className={`transition-colors font-semibold ${scrolled ? 'text-slate-300 hover:text-white' : 'text-text-muted hover:text-brand-accent'}`}>About</a>
+            <div className={`h-4 w-[1px] mx-2 ${scrolled ? 'bg-slate-700' : 'bg-slate-200'}`}></div>
             <button 
               onClick={() => router.push('/login')}
-              className="px-6 py-2.5 rounded-full text-brand-primary hover:text-brand-accent transition-all font-bold"
+              className={`px-6 py-2.5 rounded-full transition-all font-bold ${scrolled ? 'text-slate-300 hover:text-white' : 'text-brand-primary hover:text-brand-accent'}`}
             >
               Sign In
             </button>
             <button 
               onClick={() => router.push('/dashboard')}
-              className="px-7 py-2.5 rounded-full bg-brand-primary text-white hover:bg-slate-800 shadow-xl shadow-brand-primary/10 transition-all font-bold"
+              className={`px-7 py-2.5 rounded-full shadow-xl transition-all font-bold ${scrolled ? 'bg-white text-brand-primary hover:bg-slate-100' : 'bg-brand-primary text-white hover:bg-slate-800 shadow-brand-primary/10'}`}
             >
               Dashboard
             </button>
@@ -55,11 +55,6 @@ export default function LandingPage() {
 
         <div className="max-w-[1400px] w-full flex flex-col items-center">
           <div className="text-center max-w-[900px] mb-20 relative z-10">
-            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-10 group cursor-default">
-              <div className="w-2 h-2 rounded-full bg-brand-accent animate-ping"></div>
-              <span className="text-[0.75rem] font-black uppercase tracking-[0.2em] text-slate-500">Education 2.0 • AI-Driven Kinematics</span>
-            </div>
-            
             <h1 className="text-5xl md:text-[5.5rem] font-outfit font-black leading-[1] mb-10 tracking-tighter text-brand-primary lowercase px-4">
               inclusive classrooms.<br />
               <span className="text-transparent bg-clip-text orange-gradient">ai-driven comfort.</span>
@@ -170,7 +165,7 @@ export default function LandingPage() {
           <div className="relative p-4">
              <div className="absolute inset-0 orange-gradient blur-[80px] opacity-10 -z-10 group-hover:opacity-20 transition-opacity"></div>
              <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl border border-white/50 group">
-                <img src="/replace with this.jpeg" alt="Mission" className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000" />
+                <img src="/Image 1.jpg" alt="Mission" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/40 to-transparent"></div>
              </div>
           </div>
@@ -260,7 +255,7 @@ export default function LandingPage() {
             <div className="absolute -right-8 bottom-12 bg-white p-6 rounded-3xl shadow-2xl border border-slate-100 z-20 animate-float translate-x-4">
                <div className="flex items-center gap-3">
                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
-                    <img src="/logo.png" alt="Mini Logo" className="w-5 grayscale" />
+                     <img src="/logo.png" alt="Mini Logo" className="w-5" />
                  </div>
                  <div>
                    <p className="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">Visionary</p>
