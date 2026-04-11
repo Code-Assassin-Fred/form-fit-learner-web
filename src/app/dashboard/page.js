@@ -33,6 +33,7 @@ export default function DashboardPage() {
   const [showAssessmentDeleteConfirm, setShowAssessmentDeleteConfirm] = useState(false);
   const [learnerToDelete, setLearnerToDelete] = useState(null);
   const [assessmentToDelete, setAssessmentToDelete] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
   const fileInputRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -342,11 +343,21 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Sidebar */}
-      <aside className="hidden lg:flex w-[240px] bg-white border-r border-border-main flex-col h-full z-50">
-        <div className="pt-10 pb-6 px-6 flex items-center gap-3">
-          <img src="/logo.png" alt="Logo" className="w-6 h-6 object-contain" />
-          <h2 className="font-outfit font-bold text-lg text-slate-900 tracking-tight lowercase">Form-Fit</h2>
+      {/* Mobile Drawer Backdrop */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100]" onClick={() => setIsMobileMenuOpen(false)}></div>
+      )}
+
+      {/* Sidebar / Mobile Drawer */}
+      <aside className={`${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} fixed lg:static inset-y-0 left-0 w-[280px] lg:w-[240px] bg-white border-r border-border-main flex-col h-full z-[110] transition-transform duration-300 ease-in-out flex`}>
+        <div className="pt-10 pb-6 px-6 flex items-center justify-between lg:justify-start gap-3">
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Logo" className="w-6 h-6 object-contain" />
+            <h2 className="font-outfit font-bold text-lg text-slate-900 tracking-tight lowercase">Form-Fit</h2>
+          </div>
+          <button className="lg:hidden p-2 text-slate-400" onClick={() => setIsMobileMenuOpen(false)}>
+            <X size={20} />
+          </button>
         </div>
         
         <nav className="flex-1 px-4 py-2 flex flex-col gap-1">
@@ -364,12 +375,20 @@ export default function DashboardPage() {
                   ? 'bg-brand-primary/10 text-brand-primary' 
                   : 'text-slate-500 hover:bg-slate-50 hover:text-text-main'
               }`}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }}
             >
               <item.icon size={18} /> 
               <span className="text-[0.85rem]">{item.label}</span>
             </button>
           ))}
+          <div className="h-[1px] bg-slate-50 my-2 mx-4"></div>
+          <button 
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-brand-accent transition-all"
+            onClick={() => { router.push('/#how-it-works'); setIsMobileMenuOpen(false); }}
+          >
+            <Info size={18} />
+            <span className="text-[0.85rem]">How it Works</span>
+          </button>
         </nav>
 
         <div className="p-4 border-t border-slate-50">
@@ -389,10 +408,15 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full overflow-y-auto no-scrollbar scroll-smooth">
         {/* Custom Nav Bar */}
-        <header className="h-[110px] md:h-[130px] pt-8 md:pt-10 px-8 md:px-12 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 transition-all duration-500">
-          <div className="flex items-center gap-4 bg-slate-50/50 rounded-2xl px-6 py-3.5 w-full max-w-[440px] border border-slate-100 focus-within:border-brand-primary/30 focus-within:bg-white focus-within:shadow-xl focus-within:shadow-brand-primary/5 transition-all group">
-            <Search size={18} className="text-slate-400 group-focus-within:text-brand-primary" />
-            <input type="text" placeholder="Search workstation..." className="bg-transparent border-none outline-none text-[0.9rem] font-medium w-full text-slate-900 placeholder:text-slate-400" />
+        <header className="h-[80px] md:h-[130px] pt-0 md:pt-10 px-6 md:px-12 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 transition-all duration-500">
+          <div className="flex items-center gap-4">
+            <button className="lg:hidden p-2 -ml-2 text-slate-600" onClick={() => setIsMobileMenuOpen(true)}>
+              <Menu size={24} />
+            </button>
+            <div className="flex items-center gap-4 bg-slate-50/20 md:bg-slate-50/50 rounded-2xl px-4 md:px-6 py-2.5 md:py-3.5 w-[50px] md:w-full md:max-w-[440px] border border-transparent md:border-slate-100 focus-within:border-brand-primary/30 focus-within:bg-white focus-within:shadow-xl focus-within:shadow-brand-primary/5 transition-all group overflow-hidden">
+              <Search size={18} className="text-slate-400 group-focus-within:text-brand-primary flex-shrink-0" />
+              <input type="text" placeholder="Search..." className="hidden md:block bg-transparent border-none outline-none text-[0.9rem] font-medium w-full text-slate-900 placeholder:text-slate-400" />
+            </div>
           </div>
           
           <div className="flex items-center gap-6">
@@ -425,19 +449,19 @@ export default function DashboardPage() {
         </header>
 
         {/* Dynamic Pages */}
-        <div className="px-8 py-12 md:px-12 md:py-16 max-w-[1500px] mx-auto w-full">
+        <div className="px-6 py-8 md:px-12 md:py-16 max-w-[1500px] mx-auto w-full">
           
           {activeTab === 'dashboard' && (
-            <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex flex-col gap-6 md:gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
               {/* Premium Welcome Banner */}
-              <div className="p-8 rounded-3xl bg-slate-900 text-white overflow-hidden relative shadow-lg">
-                <div className="relative z-10 max-w-[80%]">
+              <div className="p-6 md:p-8 rounded-3xl bg-slate-900 text-white overflow-hidden relative shadow-lg">
+                <div className="relative z-10 max-w-full md:max-w-[80%]">
                   <div className="flex items-center gap-3 mb-4">
-                     <span className="px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-[8px] font-bold uppercase tracking-widest">Next-Gen Ergonomics</span>
+                     <span className="px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary text-[8px] font-bold uppercase tracking-widest text-center">Next-Gen Ergonomics</span>
                   </div>
-                  <h1 className="text-4xl font-outfit font-black mb-4 leading-[1.1] lowercase tracking-tight">Empowering Inclusive Learning with AI</h1>
-                  <p className="text-slate-300 text-lg mb-8 leading-relaxed font-medium">Advanced kinematic analysis directly synchronized with your school&apos;s 3D printer workstation.</p>
-                  <div className="flex gap-3">
+                  <h1 className="text-2xl md:text-4xl font-outfit font-black mb-4 leading-[1.1] lowercase tracking-tight">Empowering Inclusive Learning with AI</h1>
+                  <p className="text-slate-300 text-sm md:text-lg mb-8 leading-relaxed font-medium">Advanced kinematic analysis directly synchronized with your workstation.</p>
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <button className="px-5 py-2.5 rounded-xl bg-brand-primary text-white font-bold text-sm hover:brightness-105 transition-all flex items-center gap-2" onClick={() => setActiveTab('assessments')}>
                        New Assessment <ArrowRight size={16} />
                     </button>
