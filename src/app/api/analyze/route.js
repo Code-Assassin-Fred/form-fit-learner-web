@@ -116,10 +116,16 @@ Return ONLY a valid JSON object with:
         const solutionsResult = await model.generateContent(solutionsPrompt);
         const solutionsText = await solutionsResult.response.text();
         
-        // Robust JSON extraction using Regex
+        // Robust JSON extraction using Regex and sanitization
         let finalResults;
         try {
-          const jsonMatch = solutionsText.match(/\{[\s\S]*\}/);
+          // Remove potential Markdown code fences and leading/trailing chatter
+          const sanitizedText = solutionsText
+            .replace(/```json\s*/g, '')
+            .replace(/```\s*/g, '')
+            .trim();
+          
+          const jsonMatch = sanitizedText.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
             finalResults = JSON.parse(jsonMatch[0]);
           } else {
@@ -127,8 +133,9 @@ Return ONLY a valid JSON object with:
           }
         } catch (e) {
           console.error('[JSON PARSE ERROR]', e);
+          // Secondary fallback: if the whole thing is text, treat it as the report
           finalResults = {
-            issue: 'Inclusive Assessment',
+            issue: 'Inclusion Assessment',
             details: solutionsText,
             recommendedToolId: 'custom_adaptation',
             toolDescription: 'Custom Adaptation',

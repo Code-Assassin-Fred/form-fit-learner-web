@@ -17,7 +17,7 @@ export default function LandingPage() {
   return (
     <div className="bg-bg-main text-text-main font-inter selection:bg-brand-accent selection:text-white">
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 h-20 z-[100] flex items-center transition-all duration-700 ${scrolled ? 'navy-gradient border-b border-slate-800' : 'bg-transparent'}`}>
+      <nav className={`fixed top-0 left-0 right-0 h-20 z-[100] flex items-center transition-all duration-700 ${scrolled ? 'bg-gradient-to-br from-[#0F172A] to-[#1E293B] border-b border-slate-800' : 'bg-transparent'}`}>
         <div className="w-full max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[0.9rem]">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => router.push('/')}>
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform duration-500">
@@ -57,7 +57,7 @@ export default function LandingPage() {
           <div className="text-center max-w-[900px] mb-20 relative z-10">
             <h1 className="text-5xl md:text-[5.5rem] font-outfit font-black leading-[1] mb-10 tracking-tighter text-brand-primary lowercase px-4">
               inclusive classrooms.<br />
-              <span className="text-transparent bg-clip-text orange-gradient">ai-driven comfort.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#F97316] to-[#FB923C]">ai-driven comfort.</span>
             </h1>
             
             <p className="text-lg md:text-xl text-text-muted max-w-[700px] mx-auto mb-14 leading-relaxed font-medium px-4">
@@ -67,7 +67,7 @@ export default function LandingPage() {
             <div className="flex flex-wrap gap-5 justify-center">
               <button 
                 onClick={() => router.push('/login')}
-                className="group px-10 py-4 rounded-2xl font-black text-[0.9rem] orange-gradient text-white shadow-2xl shadow-brand-accent/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+                className="group px-10 py-4 rounded-2xl font-black text-[0.9rem] bg-gradient-to-br from-[#F97316] to-[#FB923C] text-white shadow-2xl shadow-brand-accent/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
               >
                 Start Assessment Free
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -88,12 +88,12 @@ export default function LandingPage() {
                     <div className="w-3 h-3 rounded-full bg-slate-700"></div>
                     <div className="w-3 h-3 rounded-full bg-slate-700"></div>
                   </div>
-                  <img src="/Image 1.jpg" alt="Inclusive Education" className="w-full h-auto object-cover transition-all duration-1000 group-hover:scale-[1.05]" />
+                  <img src="/hero-premium.png" alt="Inclusive Education" className="w-full h-auto object-cover transition-all duration-1000 group-hover:scale-[1.05]" />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent pointer-events-none"></div>
                </div>
                
                {/* Floating Badges */}
-                <div className="absolute -left-6 md:-left-12 bottom-[15%] glass-morphism p-6 md:p-8 rounded-[32px] shadow-2xl animate-float">
+                <div className="absolute -left-6 md:-left-12 bottom-[15%] bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)] p-6 md:p-8 rounded-[32px] shadow-2xl animate-float">
                    <div className="flex flex-col items-start gap-1">
                      <span className="text-[0.65rem] font-black text-brand-accent uppercase tracking-widest">Kinematics</span>
                      <p className="text-2xl md:text-4xl font-black text-brand-primary">99.8%</p>
@@ -101,9 +101,9 @@ export default function LandingPage() {
                    </div>
                 </div>
                 
-                <div className="absolute -right-6 md:-right-12 top-[15%] glass-morphism p-6 md:p-8 rounded-[32px] shadow-2xl animate-float-delayed">
+                <div className="absolute -right-6 md:-right-12 top-[15%] bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)] p-6 md:p-8 rounded-[32px] shadow-2xl animate-float-delayed">
                    <div className="flex items-center gap-5">
-                     <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl orange-gradient text-white flex items-center justify-center shadow-lg shadow-brand-accent/20">
+                     <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-[#F97316] to-[#FB923C] text-white flex items-center justify-center shadow-lg shadow-brand-accent/20">
                         <Cpu size={28} />
                      </div>
                      <div className="flex flex-col">
@@ -139,10 +139,10 @@ export default function LandingPage() {
       <section id="mission" className="py-32 px-8 max-w-[1400px] mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <div className="relative group">
-            <div className="w-16 h-1.5 orange-gradient mb-10 rounded-full"></div>
+            <div className="w-16 h-1.5 bg-gradient-to-br from-[#F97316] to-[#FB923C] mb-10 rounded-full"></div>
             <h2 className="text-4xl md:text-6xl font-outfit font-black leading-[1.1] mb-10 tracking-tighter text-brand-primary lowercase">
               One assessment.<br/>
-              <span className="text-transparent bg-clip-text orange-gradient italic">Endless potential.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#F97316] to-[#FB923C] italic">Endless potential.</span>
             </h2>
             <div className="space-y-6 text-base md:text-[1.05rem] text-text-muted leading-relaxed font-medium max-w-[500px]">
               <p>Traditional ergonomic tools are expensive, slow to arrive, and rarely fit perfectly. A growing student needs solutions that adapt as fast as they do.</p>
@@ -163,7 +163,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="relative p-4">
-             <div className="absolute inset-0 orange-gradient blur-[80px] opacity-10 -z-10 group-hover:opacity-20 transition-opacity"></div>
+             <div className="absolute inset-0 bg-gradient-to-br from-[#F97316] to-[#FB923C] blur-[80px] opacity-10 -z-10 group-hover:opacity-20 transition-opacity"></div>
              <div className="relative aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl border border-white/50 group">
                 <img src="/Image 1.jpg" alt="Mission" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/40 to-transparent"></div>
@@ -191,8 +191,8 @@ export default function LandingPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[240px]">
             {/* Main Feature */}
-            <div className="md:col-span-8 md:row-span-2 premium-card p-12 flex flex-col justify-between overflow-hidden relative group border-none shadow-[0_40px_80px_-15px_rgba(15,23,42,0.05)]">
-               <div className="absolute top-0 right-0 w-[400px] h-[400px] orange-gradient opacity-5 blur-[100px] -z-10 group-hover:opacity-10 transition-opacity"></div>
+            <div className="md:col-span-8 md:row-span-2 bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 p-12 flex flex-col justify-between overflow-hidden relative group border-none shadow-[0_40px_80px_-15px_rgba(15,23,42,0.05)]">
+               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br from-[#F97316] to-[#FB923C] opacity-5 blur-[100px] -z-10 group-hover:opacity-10 transition-opacity"></div>
                <div className="relative z-10">
                  <div className="w-14 h-14 rounded-2xl bg-brand-primary text-white flex items-center justify-center mb-8 shadow-xl shadow-brand-primary/10">
                    <Cpu size={28} />
@@ -209,7 +209,7 @@ export default function LandingPage() {
             </div>
             
             {/* Small Features */}
-            <div className="md:col-span-4 md:row-span-1 premium-card p-8 group border-none shadow-[0_30px_60px_-12px_rgba(15,23,42,0.04)]">
+            <div className="md:col-span-4 md:row-span-1 bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 p-8 group border-none shadow-[0_30px_60px_-12px_rgba(15,23,42,0.04)]">
               <div className="w-12 h-12 rounded-xl bg-slate-100 text-brand-primary flex items-center justify-center mb-6 group-hover:bg-brand-accent group-hover:text-white transition-all">
                 <Shield size={22} />
               </div>
@@ -217,7 +217,7 @@ export default function LandingPage() {
               <p className="text-text-muted text-[0.95rem] leading-relaxed font-medium">Enterprise-grade security ensures student data is handled with maximum privacy.</p>
             </div>
             
-            <div className="md:col-span-4 md:row-span-1 premium-card p-8 group border-none shadow-[0_30px_60px_-12px_rgba(15,23,42,0.04)]">
+            <div className="md:col-span-4 md:row-span-1 bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 p-8 group border-none shadow-[0_30px_60px_-12px_rgba(15,23,42,0.04)]">
               <div className="w-12 h-12 rounded-xl bg-slate-100 text-brand-accent flex items-center justify-center mb-6 group-hover:bg-brand-primary group-hover:text-white transition-all">
                 <Layout size={22} />
               </div>
@@ -226,7 +226,7 @@ export default function LandingPage() {
             </div>
 
             {/* Wide Feature */}
-            <div className="md:col-span-12 md:row-span-1 premium-card navy-gradient p-12 flex flex-col md:flex-row justify-between items-center group overflow-hidden border-none">
+            <div className="md:col-span-12 md:row-span-1 bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 bg-gradient-to-br from-[#0F172A] to-[#1E293B] p-12 flex flex-col md:flex-row justify-between items-center group overflow-hidden border-none">
                <div className="md:max-w-xl text-center md:text-left">
                  <h3 className="text-3xl font-outfit font-black mb-4 tracking-tighter text-white lowercase">Mass Personalized Education</h3>
                  <p className="text-slate-400 text-lg leading-relaxed font-medium">Scalable software solutions for special-ed departments to provide individualized support at a fraction of standard costs.</p>
@@ -246,7 +246,7 @@ export default function LandingPage() {
       <section id="creator" className="py-32 px-8 max-w-[1400px] mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <div className="relative aspect-square max-w-[500px] mx-auto w-full group">
-            <div className="absolute inset-0 orange-gradient rounded-[64px] rotate-12 blur-[60px] opacity-10 group-hover:rotate-6 transition-transform duration-700"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#F97316] to-[#FB923C] rounded-[64px] rotate-12 blur-[60px] opacity-10 group-hover:rotate-6 transition-transform duration-700"></div>
             <div className="w-full h-full rounded-[64px] overflow-hidden border-[12px] border-white shadow-[0_40px_80px_-15px_rgba(15,23,42,0.1)] relative z-10">
               <img src="/Image 5.png" alt="Founder" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/20 to-transparent"></div>
@@ -265,14 +265,14 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="relative">
-            <div className="w-16 h-1.5 orange-gradient mb-10 rounded-full"></div>
+            <div className="w-16 h-1.5 bg-gradient-to-br from-[#F97316] to-[#FB923C] mb-10 rounded-full"></div>
             <h2 className="text-5xl font-outfit font-black mb-8 tracking-tighter text-brand-primary lowercase">Built for the 1 in 5.</h2>
             <div className="space-y-6 text-xl text-text-muted leading-relaxed font-medium">
               <p>Hi, I&apos;m the creator of Form-Fit Learner. I spent years observing how standardized learning environments fail to address the nuance of individual physical needs.</p>
               <p>That&apos;s why I built Form-Fit. To bridge the gap between cutting-edge AI and practical classroom reality without wait times.</p>
             </div>
-            <div className="mt-12 p-10 premium-card bg-slate-50/50 border-none relative overflow-hidden group">
-               <div className="absolute top-0 right-0 w-32 h-32 orange-gradient opacity-10 rounded-full blur-3xl -translate-y-16 translate-x-16"></div>
+            <div className="mt-12 p-10 bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 bg-slate-50/50 border-none relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#F97316] to-[#FB923C] opacity-10 rounded-full blur-3xl -translate-y-16 translate-x-16"></div>
               <p className="text-xl text-brand-primary font-bold mb-6 italic leading-relaxed relative z-10">&quot;We&apos;re not just 3D printing plastic. We&apos;re printing access, comfort, and human focus.&quot;</p>
               <span className="text-brand-accent font-black not-italic uppercase tracking-[0.2em] text-xs">— Developer & Founder</span>
             </div>
@@ -281,7 +281,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="navy-gradient text-white py-24 px-8 border-t border-slate-800">
+      <footer className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white py-24 px-8 border-t border-slate-800">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex flex-col lg:flex-row justify-between gap-20 mb-20">
             <div className="max-w-[400px]">

@@ -14,26 +14,11 @@
 
   --font-outfit: var(--font-outfit), sans-serif;
   --font-inter: var(--font-inter), sans-serif;
+  --font-academic: 'Georgia', 'Times New Roman', serif;
 
   --animate-marquee: marquee 25s linear infinite;
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-delayed: float 6s ease-in-out 3s infinite;
-}
-
-.glass-morphism {
-  @apply bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)];
-}
-
-.premium-card {
-  @apply bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2;
-}
-
-.orange-gradient {
-  @apply bg-gradient-to-br from-[#F97316] to-[#FB923C];
-}
-
-.navy-gradient {
-  @apply bg-gradient-to-br from-[#0F172A] to-[#1E293B];
 }
 
 
@@ -107,29 +92,3 @@ body {
   scrollbar-width: none;
 }
 
-/* Premium Document View */
-.document-view {
-  @apply max-w-[850px] mx-auto bg-white p-16 md:px-24 md:py-28 shadow-[0_10px_50px_rgba(0,0,0,0.1)] border border-slate-200 rounded-[2px] min-h-[1150px] relative overflow-hidden flex flex-col gap-12 font-academic leading-relaxed text-slate-800;
-}
-
-.document-header {
-  @apply absolute top-0 left-0 w-full h-1.5 bg-brand-primary;
-}
-
-.document-meta {
-  @apply flex justify-between items-start border-b-2 border-slate-100 pb-10 opacity-70;
-}
-
-.document-footer {
-  @apply mt-auto pt-10 border-t border-slate-100 flex justify-between items-center opacity-40 italic text-[10px] tracking-widest uppercase;
-}
-
-/* Serif font for academic look */
-.font-academic {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-.prose-word {
-  @apply prose-headings:font-outfit prose-headings:font-black prose-headings:tracking-tight prose-headings:text-slate-900 prose-h1:text-4xl prose-h1:mb-12 prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-6 prose-h2:border-b prose-h2:border-slate-100 prose-h2:pb-2 prose-h3:text-lg prose-p:text-lg prose-p:mb-6 prose-p:leading-[1.8] prose-strong:text-slate-900 prose-li:text-lg prose-li:mb-2 prose-table:border-collapse prose-th:bg-slate-50 prose-th:p-4 prose-td:p-4 prose-td:border prose-td:border-slate-100;
-}

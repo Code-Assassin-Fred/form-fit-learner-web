@@ -47,7 +47,36 @@ export default function DashboardPage() {
 
   const cleanReportContent = (content) => {
     if (!content) return '';
-    return content.replace(/\\documentclass\{[\s\S]*?\\begin\{document\}/g, '').replace(/\\end\{document\}/g, '').trim();
+    
+    let processed = typeof content === 'string' ? content.trim() : String(content);
+
+    // Intelligent JSON detection: If it starts and ends with braces, try to parse it
+    if (processed.startsWith('{') && processed.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(processed);
+        // Extract the main report content if it exists in the standard fields
+        if (parsed.details) return cleanReportContent(parsed.details);
+        if (parsed.reportSummary) return cleanReportContent(parsed.reportSummary);
+        if (parsed.issue) return cleanReportContent(parsed.issue);
+      } catch (e) {
+        // Not valid JSON by JSON.parse standards, fallback to regex extraction
+        const detailsMatch = processed.match(/"details"\s*:\s*"([\s\S]*?)"(?=\s*\}|\s*,"[a-zA-Z]+"\s*:)/);
+        if (detailsMatch && detailsMatch[1]) {
+           let extracted = detailsMatch[1];
+           // Unescape common JSON escapes
+           extracted = extracted.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+           return cleanReportContent(extracted);
+        }
+      }
+    }
+
+    // Existing LaTeX document cleaning & fallback structural JSON stripping
+    return processed
+      .replace(/\\documentclass\{[\s\S]*?\\begin\{document\}/g, '')
+      .replace(/\\end\{document\}/g, '')
+      .replace(/^\{\s*"issue"\s*:.*?"details"\s*:\s*"/, '')
+      .replace(/"\s*,\s*"recommendedToolId".*?\}\s*$/, '')
+      .trim();
   };
 
   const showToast = (message, type = 'success') => {
@@ -392,7 +421,7 @@ export default function DashboardPage() {
                   { label: '3D Tools', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/10' },
                   { label: 'Classes', value: classes.length || 0, icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
                 ].map((stat, i) => (
-                  <div key={i} className="premium-card !rounded-2xl p-6 flex flex-col items-start gap-4">
+                  <div key={i} className="bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 !rounded-2xl p-6 flex flex-col items-start gap-4">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color} shadow-sm transition-transform group-hover:scale-110`}>
                        <stat.icon size={20} />
                     </div>
@@ -700,9 +729,9 @@ export default function DashboardPage() {
                         {isExpanded && (
                           <div className="animate-in slide-in-from-top duration-500">
                             <div className="p-4 md:p-12 border-t border-border-main bg-slate-50/30">
-                               <div className="document-view">
-                                  <div className="document-header"></div>
-                                  <div className="document-meta">
+                               <div className="max-w-[850px] mx-auto bg-white p-16 md:px-24 md:py-28 shadow-[0_10px_50px_rgba(0,0,0,0.1)] border border-slate-200 rounded-[2px] min-h-[1150px] relative overflow-hidden flex flex-col gap-12 font-[family:'Georgia','Times_New_Roman',serif] leading-relaxed text-slate-800">
+                                  <div className="absolute top-0 left-0 w-full h-1.5 bg-[#0F172A]"></div>
+                                  <div className="flex justify-between items-start border-b-2 border-slate-100 pb-10 opacity-70">
                                      <div className="flex items-center gap-2">
                                         <img src="/logo.png" alt="Logo" className="w-5 h-5" />
                                         <span className="font-outfit font-bold text-xs uppercase tracking-tighter">Form-Fit Learner</span>
@@ -710,18 +739,18 @@ export default function DashboardPage() {
                                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Confidential Kinematic Report</span>
                                   </div>
 
-                                  <div className="prose prose-slate prose-word max-w-none font-academic">
+                                  <div className="prose prose-slate [&_h1]:font-outfit [&_h1]:font-black [&_h1]:tracking-tight [&_h1]:text-slate-900 [&_h1]:text-4xl [&_h1]:mb-12 [&_h2]:font-outfit [&_h2]:font-black [&_h2]:tracking-tight [&_h2]:text-slate-900 [&_h2]:text-2xl [&_h2]:mt-10 [&_h2]:mb-6 [&_h2]:border-b [&_h2]:border-slate-100 [&_h2]:pb-2 [&_h3]:font-outfit [&_h3]:font-black [&_h3]:tracking-tight [&_h3]:text-slate-900 [&_h3]:text-lg [&_p]:text-lg [&_p]:mb-6 [&_p]:leading-[1.8] [&_strong]:text-slate-900 [&_li]:text-lg [&_li]:mb-2 [&_table]:border-collapse [&_th]:bg-slate-50 [&_th]:p-4 [&_td]:p-4 [&_td]:border [&_td]:border-slate-100 max-w-none">
                                      <ReactMarkdown 
                                        remarkPlugins={[remarkMath, remarkGfm]} 
                                        rehypePlugins={[rehypeKatex]}
                                      >
-                                       {(a.reportChunks && a.reportChunks.length > 0) 
+                                       {cleanReportContent((a.reportChunks && a.reportChunks.length > 0) 
                                          ? a.reportChunks.join('') 
-                                         : cleanReportContent(a.reportSummary || a.analysisResults?.details || 'Retrieving assessment data from AI core...')}
+                                         : (a.reportSummary || a.analysisResults?.details || 'Retrieving assessment data from AI core...'))}
                                      </ReactMarkdown>
                                   </div>
 
-                                  <div className="document-footer">
+                                  <div className="mt-auto pt-10 border-t border-slate-100 flex justify-between items-center opacity-40 italic text-[10px] tracking-widest uppercase">
                                      <span>Generated by Gemini 2.5 Flash</span>
                                      <span>© {new Date().getFullYear()} Form-Fit Assistive Tech</span>
                                   </div>
