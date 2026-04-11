@@ -6,7 +6,13 @@ import { Zap, ChevronRight, Play, Layout, Shield, Cpu } from 'lucide-react';
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const [toast, setToast] = useState(null);
   const router = useRouter();
+
+  const showToast = (message) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -72,7 +78,10 @@ export default function LandingPage() {
                 Start Assessment Free
                 <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="px-10 py-4 rounded-2xl font-black text-[0.9rem] bg-white border border-slate-200 text-brand-primary shadow-sm hover:bg-slate-50 active:scale-95 transition-all flex items-center gap-2">
+              <button 
+                onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                className="px-10 py-4 rounded-2xl font-black text-[0.9rem] bg-white border border-slate-200 text-brand-primary shadow-sm hover:bg-slate-50 active:scale-95 transition-all flex items-center gap-2"
+              >
                 <Play size={16} fill="currentColor" />
                 See How It Works
               </button>
@@ -149,7 +158,10 @@ export default function LandingPage() {
               <p>By combining mobile video capture with generative AI, we skip the supply chain entirely. What used to take months now takes minutes. From classroom recording directly to your school's 3D printer.</p>
             </div>
             <div className="mt-12 flex items-center gap-6">
-              <button className="px-8 py-3.5 rounded-xl bg-brand-primary text-white hover:bg-slate-800 shadow-lg shadow-brand-primary/10 transition-all font-bold text-[0.85rem] active:scale-95">
+              <button 
+                onClick={() => showToast("Whitepaper access is restricted to institutional partners.")}
+                className="px-8 py-3.5 rounded-xl bg-brand-primary text-white hover:bg-slate-800 shadow-lg shadow-brand-primary/10 transition-all font-bold text-[0.85rem] active:scale-95"
+              >
                 Read the Whitepaper
               </button>
               <div className="flex -space-x-3">
@@ -231,7 +243,10 @@ export default function LandingPage() {
                  <h3 className="text-3xl font-outfit font-black mb-4 tracking-tighter text-white lowercase">Mass Personalized Education</h3>
                  <p className="text-slate-400 text-lg leading-relaxed font-medium">Scalable software solutions for special-ed departments to provide individualized support at a fraction of standard costs.</p>
                </div>
-               <button className="mt-8 md:mt-0 px-8 py-3.5 rounded-xl bg-white text-brand-primary font-black text-[0.85rem] hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+               <button 
+                 onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                 className="mt-8 md:mt-0 px-8 py-3.5 rounded-xl bg-white text-brand-primary font-black text-[0.85rem] hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+               >
                  Explore the Model <ChevronRight size={18} />
                </button>
                <div className="absolute -right-10 -bottom-10 text-white/5 rotate-12 group-hover:scale-110 transition-transform duration-700">
@@ -294,7 +309,11 @@ export default function LandingPage() {
               <p className="text-slate-400 text-lg leading-relaxed font-medium mb-10 italic">Advanced assistive technology developed with compassion, code, and classroom reality in mind.</p>
               <div className="flex gap-4">
                  {[1, 2, 3, 4].map(i => (
-                   <div key={i} className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-brand-accent hover:border-brand-accent transition-all cursor-pointer group">
+                   <div 
+                     key={i} 
+                     onClick={() => showToast("Social media integration is setup for production only.")}
+                     className="w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-brand-accent hover:border-brand-accent transition-all cursor-pointer group"
+                   >
                       <div className="w-4 h-4 rounded-sm bg-slate-600 group-hover:bg-white transition-colors"></div>
                    </div>
                  ))}
@@ -304,21 +323,21 @@ export default function LandingPage() {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-16 lg:gap-24">
               <div className="flex flex-col gap-6">
                 <h4 className="text-sm font-black uppercase tracking-[0.3em] text-brand-accent">Platform</h4>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Dashboard</a>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">3D Library</a>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Resources</a>
+                <button onClick={() => router.push('/dashboard')} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Dashboard</button>
+                <button onClick={() => router.push('/dashboard')} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">3D Library</button>
+                <button onClick={() => showToast("Resources section is coming soon.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Resources</button>
               </div>
               <div className="flex flex-col gap-6">
                 <h4 className="text-sm font-black uppercase tracking-[0.3em] text-cyan-400">Security</h4>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Privacy Policy</a>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Compliance</a>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Terms</a>
+                <button onClick={() => showToast("Privacy Policy document is being finalized.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Privacy Policy</button>
+                <button onClick={() => showToast("Compliance certifications are pending.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Compliance</button>
+                <button onClick={() => showToast("Terms of Service are being updated.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Terms</button>
               </div>
               <div className="flex flex-col gap-6">
                 <h4 className="text-sm font-black uppercase tracking-[0.3em] text-slate-300">Company</h4>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Mission</a>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">About</a>
-                <a href="#" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Contact</a>
+                <a href="#mission" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Mission</a>
+                <a href="#creator" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">About</a>
+                <button onClick={() => showToast("Contact us at support@form-fit-learner.com")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Contact</button>
               </div>
             </div>
           </div>
@@ -332,6 +351,13 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Landing Page Toast */}
+      {toast && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] bg-slate-900/90 backdrop-blur-md text-white px-8 py-4 rounded-2xl shadow-2xl border border-white/20 font-bold text-sm animate-in slide-in-from-bottom-5 duration-500">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }

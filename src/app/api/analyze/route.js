@@ -2,6 +2,60 @@ import { NextResponse } from 'next/server';
 import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Helper to generate ASCII STL content based on parametric specs
+function generateSTL(specs) {
+  const { type, dimensions } = specs;
+  const name = specs.name || "assistive_tool";
+  let stl = `solid ${name.replace(/\s+/g, '_')}\n`;
+
+  const addFacet = (v1, v2, v3) => {
+    stl += "  facet normal 0 0 0\n    outer loop\n";
+    stl += `      vertex ${v1[0]} ${v1[1]} ${v1[2]}\n`;
+    stl += `      vertex ${v2[0]} ${v2[1]} ${v2[2]}\n`;
+    stl += `      vertex ${v3[0]} ${v3[1]} ${v3[2]}\n`;
+    stl += "    endloop\n  endfacet\n";
+  };
+
+  if (type === 'grip') {
+    const r = (dimensions.diameter || 25) / 2;
+    const h = dimensions.height || 40;
+    const sides = 8;
+    const vT = [], vB = [];
+    for (let i = 0; i < sides; i++) {
+      const a = (i / sides) * Math.PI * 2;
+      vB.push([r * Math.cos(a), r * Math.sin(a), 0]);
+      vT.push([r * Math.cos(a), r * Math.sin(a), h]);
+    }
+    for (let i = 1; i < sides - 1; i++) {
+       addFacet(vB[0], vB[i], vB[i+1]);
+       addFacet(vT[0], vT[i+1], vT[i]);
+    }
+    for (let i = 0; i < sides; i++) {
+       const nx = (i + 1) % sides;
+       addFacet(vB[i], vT[i], vT[nx]);
+       addFacet(vB[i], vT[nx], vB[nx]);
+    }
+  } else if (type === 'wedge') {
+    const l = dimensions.length || 50, w = dimensions.width || 40, h = dimensions.height || 20;
+    const v = [[0,0,0], [l,0,0], [l,w,0], [0,w,0], [0,0,h], [0,w,h]];
+    addFacet(v[0], v[3], v[2]); addFacet(v[0], v[2], v[1]);
+    addFacet(v[0], v[1], v[4]); addFacet(v[3], v[5], v[2]);
+    addFacet(v[1], v[2], v[5]); addFacet(v[1], v[5], v[4]);
+    addFacet(v[0], v[4], v[5]); addFacet(v[0], v[5], v[3]);
+  } else {
+    const x = dimensions.x || 30, y = dimensions.y || 30, z = dimensions.z || 10;
+    const v = [[0,0,0], [x,0,0], [x,y,0], [0,y,0], [0,0,z], [x,0,z], [x,y,z], [0,y,z]];
+    addFacet(v[0], v[3], v[2]); addFacet(v[0], v[2], v[1]);
+    addFacet(v[4], v[5], v[6]); addFacet(v[4], v[6], v[7]);
+    addFacet(v[0], v[1], v[5]); addFacet(v[0], v[5], v[4]);
+    addFacet(v[1], v[2], v[6]); addFacet(v[1], v[6], v[5]);
+    addFacet(v[2], v[3], v[7]); addFacet(v[2], v[7], v[6]);
+    addFacet(v[3], v[0], v[4]); addFacet(v[3], v[4], v[7]);
+  }
+  stl += `endsolid ${name.replace(/\s+/g, '_')}\n`;
+  return stl;
+}
+
 // Next.js Route Handler for SSE AI Analysis
 export async function POST(req) {
   const authHeader = req.headers.get('authorization');
@@ -24,7 +78,7 @@ export async function POST(req) {
   }
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
@@ -83,34 +137,30 @@ REPORT DEPTH REQUIREMENT:
 - Use a professional, academic, and empathetic tone.
 
 FORMATTING RULES (IMPORTANT):
-- Use Markdown Headers for structure: # for the main title, ## for major sections, ### for subsections.
-- DO NOT use LaTeX structural commands like \\section or \\subsection.
-- ONLY use LaTeX for mathematical formulas, angles, measurements, and scientific notation (using $ for inline and $$ for blocks).
-- Example: "The flexion angle is $45^{\circ}$" or "Formula: $$F = m \cdot a$$".
-- Use Markdown lists (- item) and Markdown tables (| Header |) for data.
+- Use Markdown Headers for structure: # Title, ## Section, ### Subsection.
+- DO NOT use LaTeX structural commands like \\section.
+- ONLY use LaTeX for mathematical formulas and measurements.
 
 The report MUST include:
 # Inclusion & Kinematic Research Report
 ## Executive Summary
-Multi-paragraph humanitarian impact overview.
 ## Physical Observation Table
-Markdown table [Category, Detailed Observation, Inclusion Impact].
 ## Research-Based Barrier Analysis
-Deep-dive (3+ paragraphs) into kinematic failures of standard tools.
-## 3D Printable Specification
-Description of the proposed tool with mathematical rationale in LaTeX.
+## 3D Printable Specification (Include mathematical rationale)
 ## Technical Specifications Table
-Markdown table [Metric, Specification, Rationale].
-## Implementation Strategy & Longitudinal Monitoring
-Multi-paragraph educator guide.
+## Implementation Strategy
 
 Return ONLY a valid JSON object with:
 {
   "issue": "Concise 1-sentence primary constraint.",
-  "details": "THE FULL REPORT (using Markdown for headers/lists and LaTeX for math).",
+  "details": "THE FULL MARKDOWN REPORT",
   "recommendedToolId": "snake_case_id",
-  "toolDescription": "Simple tool name (MAX 5 words)",
-  "category": "one of: 'grip', 'posture', 'stability', 'accessibility'"
+  "toolDescription": "Tool name",
+  "category": "grip|posture|stability|accessibility",
+  "stlSpecs": {
+    "type": "grip" | "wedge" | "mount",
+    "dimensions": { "diameter": 25, "height": 50, "hole_diameter": 10 } (example)
+  }
 }`;
 
         const solutionsResult = await model.generateContent(solutionsPrompt);
@@ -133,17 +183,19 @@ Return ONLY a valid JSON object with:
           }
         } catch (e) {
           console.error('[JSON PARSE ERROR]', e);
-          // Secondary fallback: if the whole thing is text, treat it as the report
           finalResults = {
             issue: 'Inclusion Assessment',
             details: solutionsText,
             recommendedToolId: 'custom_adaptation',
             toolDescription: 'Custom Adaptation',
-            category: 'accessibility'
+            category: 'accessibility',
+            stlSpecs: { type: 'mount', dimensions: { x: 40, y: 40, z: 5 } }
           };
         }
-
-        // Utility: Split text into chunks to avoid Firestore 1MB limit
+        const reportContent = finalResults?.details || 'Analysis completed with no detailed report.';
+        
+        // Generate actual STL data
+        const stlData = generateSTL(finalResults.stlSpecs || { type: 'mount', dimensions: { x: 40, y: 40, z: 10 } });
         const chunkContent = (text, size = 500000) => {
           if (!text) return [];
           const chunks = [];
@@ -152,8 +204,6 @@ Return ONLY a valid JSON object with:
           }
           return chunks;
         };
-
-        const reportContent = finalResults?.details || 'Analysis completed with no detailed report.';
         const reportChunks = chunkContent(reportContent);
 
         // Save to Firestore with defensive mapping to avoid undefined properties
@@ -162,12 +212,14 @@ Return ONLY a valid JSON object with:
           id: assessmentRef.id,
           learnerId: learnerId || 'unknown_learner',
           userId: user.uid,
-          mediaUrl: 'https://placeholder.com/media', // In production, upload to Firebase Storage
+          mediaUrl: 'https://placeholder.com/media',
           mediaType: mediaType || 'image',
           timestamp: new Date().toISOString(),
           analysisResults: finalResults || {},
-          reportSummary: reportContent.substring(0, 500), // Short summary for quick list views
-          reportChunks: reportChunks, // Full report stored in chunks for Firestore safety
+          reportSummary: reportContent.substring(0, 500),
+          reportChunks: reportChunks,
+          stlData: stlData,
+          stlParams: finalResults.stlSpecs || {},
           recommendedToolId: finalResults?.recommendedToolId || 'custom_adaptation',
           toolDescription: finalResults?.toolDescription || 'Custom Assistive Adaptation',
           status: 'completed'

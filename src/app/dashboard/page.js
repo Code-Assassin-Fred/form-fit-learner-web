@@ -30,7 +30,9 @@ export default function DashboardPage() {
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [fakeStep, setFakeStep] = useState('thinking...');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showAssessmentDeleteConfirm, setShowAssessmentDeleteConfirm] = useState(false);
   const [learnerToDelete, setLearnerToDelete] = useState(null);
+  const [assessmentToDelete, setAssessmentToDelete] = useState(null);
   const router = useRouter();
   const fileInputRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -50,32 +52,31 @@ export default function DashboardPage() {
     
     let processed = typeof content === 'string' ? content.trim() : String(content);
 
-    // Intelligent JSON detection: If it starts and ends with braces, try to parse it
-    if (processed.startsWith('{') && processed.endsWith('}')) {
+    // If it's a valid JSON string or looks like one, try to extract the "details"
+    if ((processed.startsWith('{') && processed.endsWith('}')) || processed.includes('"details"')) {
       try {
+        // Try parsing as JSON first
         const parsed = JSON.parse(processed);
-        // Extract the main report content if it exists in the standard fields
         if (parsed.details) return cleanReportContent(parsed.details);
-        if (parsed.reportSummary) return cleanReportContent(parsed.reportSummary);
-        if (parsed.issue) return cleanReportContent(parsed.issue);
       } catch (e) {
-        // Not valid JSON by JSON.parse standards, fallback to regex extraction
+        // Fallback: use regex to extract the "details" value if it's a partial/malformed JSON
         const detailsMatch = processed.match(/"details"\s*:\s*"([\s\S]*?)"(?=\s*\}|\s*,"[a-zA-Z]+"\s*:)/);
         if (detailsMatch && detailsMatch[1]) {
            let extracted = detailsMatch[1];
-           // Unescape common JSON escapes
            extracted = extracted.replace(/\\n/g, '\n').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
            return cleanReportContent(extracted);
         }
       }
     }
 
-    // Existing LaTeX document cleaning & fallback structural JSON stripping
+    // Clean up any remaining LaTeX structural tags if the model hallucinated them
     return processed
       .replace(/\\documentclass\{[\s\S]*?\\begin\{document\}/g, '')
       .replace(/\\end\{document\}/g, '')
-      .replace(/^\{\s*"issue"\s*:.*?"details"\s*:\s*"/, '')
-      .replace(/"\s*,\s*"recommendedToolId".*?\}\s*$/, '')
+      .replace(/\\section\*?\{/g, '## ')
+      .replace(/\\subsection\*?\{/g, '### ')
+      .replace(/\\textbf\{([\s\S]*?)\}/g, '**$1**')
+      .replace(/\\textit\{([\s\S]*?)\}/g, '*$1*')
       .trim();
   };
 
@@ -186,6 +187,27 @@ export default function DashboardPage() {
     }
   };
 
+  const handleDeleteAssessment = async () => {
+    if (!assessmentToDelete) return;
+    try {
+      const token = await user.getIdToken();
+      const response = await fetch(`/api/assessments/${assessmentToDelete.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (response.ok) {
+        showToast(`Assessment record removed.`);
+        setShowAssessmentDeleteConfirm(false);
+        setAssessmentToDelete(null);
+        fetchAllData(user);
+      } else {
+        showToast("Failed to delete.", 'error');
+      }
+    } catch (err) {
+      showToast("Error deleting assessment.", 'error');
+    }
+  };
+
   const runAssessment = async () => {
     if (abortControllerRef.current) abortControllerRef.current.abort();
     abortControllerRef.current = new AbortController();
@@ -274,12 +296,19 @@ export default function DashboardPage() {
     showToast("Analysis aborted.", "error");
   }, []);
 
-  const handleDownloadSTL = (toolId, toolName) => {
-    showToast(`Downloading STL: ${toolId}...`);
-    // Mock download mechanism
+  const handleDownloadSTL = (assessment) => {
+    if (!assessment || !assessment.stlData) {
+      showToast("STL data is still being processed.", "info");
+      return;
+    }
+    
+    const toolName = assessment.toolDescription || assessment.recommendedToolId || 'assistive_tool';
+    showToast(`Downloading STL: ${toolName}...`);
+    
     const element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent('STL binary placeholder'));
-    element.setAttribute('download', `${toolId}.stl`);
+    const blob = new Blob([assessment.stlData], { type: 'text/plain' });
+    element.href = URL.createObjectURL(blob);
+    element.setAttribute('download', `${toolName.toLowerCase().replace(/\s+/g, '_')}.stl`);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -367,14 +396,20 @@ export default function DashboardPage() {
           </div>
           
           <div className="flex items-center gap-6">
-            <div className="relative cursor-pointer group p-2 hover:bg-slate-50 rounded-xl transition-all">
+            <div 
+              className="relative cursor-pointer group p-2 hover:bg-slate-50 rounded-xl transition-all"
+              onClick={() => showToast("No new notifications.", "info")}
+            >
               <Bell size={22} className="text-slate-400 group-hover:text-brand-primary" />
               <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-brand-secondary rounded-full border-2 border-white ring-2 ring-transparent group-hover:ring-brand-secondary/20 transition-all"></div>
             </div>
             
             <div className="h-10 w-[1px] bg-slate-100 mx-1"></div>
             
-            <div className="flex items-center gap-4 pl-2 group cursor-pointer">
+            <div 
+              className="flex items-center gap-4 pl-2 group cursor-pointer"
+              onClick={() => showToast("Profile settings are being updated.", "info")}
+            >
               <div className="text-right hidden sm:block">
                 <p className="text-[0.9rem] font-bold text-slate-900 leading-tight group-hover:text-brand-primary transition-colors">{user?.email?.split('@')[0]}</p>
                 <div className="flex items-center justify-end gap-1.5 mt-0.5">
@@ -416,12 +451,22 @@ export default function DashboardPage() {
               {/* Stats Box */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { label: 'Learners', value: learners.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },
-                  { label: 'Assessments', value: assessments.length, icon: Zap, color: 'text-brand-secondary', bg: 'bg-brand-secondary/10' },
-                  { label: '3D Tools', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/10' },
-                  { label: 'Classes', value: classes.length || 0, icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+                  { id: 'learners', label: 'Learners', value: learners.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },
+                  { id: 'assessments', label: 'Assessments', value: assessments.length, icon: Zap, color: 'text-brand-secondary', bg: 'bg-brand-secondary/10' },
+                  { id: 'tools', label: '3D Tools', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/10' },
+                  { id: 'classes', label: 'Classes', value: classes.length || 0, icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 !rounded-2xl p-6 flex flex-col items-start gap-4">
+                  <div 
+                    key={i} 
+                    onClick={() => {
+                      if (stat.id === 'classes') {
+                        showToast("Classes management coming soon.", "info");
+                      } else {
+                        setActiveTab(stat.id);
+                      }
+                    }}
+                    className="bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[24px] cursor-pointer transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 p-6 flex flex-col items-start gap-4"
+                  >
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} ${stat.color} shadow-sm transition-transform group-hover:scale-110`}>
                        <stat.icon size={20} />
                     </div>
@@ -568,7 +613,7 @@ export default function DashboardPage() {
                     <h1 className="text-5xl font-outfit font-black text-slate-900 tracking-tighter lowercase leading-none">Kinematic log</h1>
                     <p className="text-slate-400 text-xl font-medium mt-4">AI-driven analysis of physical barriers and recommendations.</p>
                   </div>
-                  <button className="px-8 py-4 rounded-2xl bg-brand-primary text-white font-black text-lg shadow-xl shadow-brand-primary/20 hover:brightness-105 active:scale-95 transition-all" onClick={() => setShowNewAssessment(true)}>
+                  <button className="px-6 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-xl shadow-brand-primary/10 hover:brightness-105 active:scale-95 transition-all" onClick={() => setShowNewAssessment(true)}>
                     + Run New Analysis
                   </button>
                </div>
@@ -576,7 +621,10 @@ export default function DashboardPage() {
                <div className="bg-white border border-border-main rounded-[40px] overflow-hidden shadow-sm">
                   <div className="p-8 border-b border-slate-50 flex items-center justify-between bg-white">
                      <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 cursor-pointer hover:bg-slate-200 transition-all">
+                        <div 
+                          className="flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 cursor-pointer hover:bg-slate-200 transition-all"
+                          onClick={() => showToast("Filtering logic is being optimized.", "info")}
+                        >
                            <Filter size={14} /> Filter
                         </div>
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{assessments.length} Total Analysis Records</span>
@@ -590,6 +638,7 @@ export default function DashboardPage() {
                           <th className="px-10 py-6">AI Detection Outcome</th>
                           <th className="px-10 py-6">Proposed Tool</th>
                           <th className="px-10 py-6 text-right">Verification</th>
+                          <th className="px-10 py-6 text-right">Action</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-50">
@@ -613,9 +662,17 @@ export default function DashboardPage() {
                                </div>
                             </td>
                             <td className="px-6 py-5 text-right">
-                               <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest">
-                                  <CheckCircle size={12} /> Completed
-                               </span>
+                               <div className="flex items-center justify-end gap-2">
+                                 <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest">
+                                    <CheckCircle size={12} /> Completed
+                                 </span>
+                                 <button 
+                                   className="p-2 text-slate-300 hover:text-red-500 transition-all rounded-lg hover:bg-red-50"
+                                   onClick={(e) => { e.stopPropagation(); setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
+                                 >
+                                   <Trash2 size={16} />
+                                 </button>
+                               </div>
                             </td>
                           </tr>
                         ))}
@@ -644,6 +701,7 @@ export default function DashboardPage() {
                           <th className="px-10 py-6">Assigned Learner</th>
                           <th className="px-10 py-6">Category</th>
                           <th className="px-10 py-6 text-right">Resource</th>
+                          <th className="px-10 py-6 text-right">Action</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-50">
@@ -665,18 +723,26 @@ export default function DashboardPage() {
                                <span className="inline-flex items-center px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest">{a.analysisResults?.category || 'Accessibility'}</span>
                             </td>
                             <td className="px-10 py-6 text-right">
-                               <button 
-                                 className="px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-2 ml-auto"
-                                 onClick={() => handleDownloadSTL(a.recommendedToolId, a.toolDescription)}
-                               >
-                                 <Download size={14} /> Export STL
-                               </button>
+                               <div className="flex items-center justify-end gap-3">
+                                 <button 
+                                   className="px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-2"
+                                   onClick={() => handleDownloadSTL(a)}
+                                 >
+                                   <Download size={14} /> Export STL
+                                 </button>
+                                 <button 
+                                   className="p-2.5 text-slate-300 hover:text-red-500 transition-all rounded-xl border border-slate-100 hover:border-red-100 hover:bg-red-50"
+                                   onClick={() => { setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
+                                 >
+                                   <Trash2 size={16} />
+                                 </button>
+                               </div>
                             </td>
                           </tr>
                         ))}
                         {assessments.filter(a => a.recommendedToolId).length === 0 && (
                           <tr>
-                            <td colSpan="4" className="px-10 py-20 text-center">
+                            <td colSpan="5" className="px-10 py-20 text-center">
                                <div className="flex flex-col items-center gap-3 text-slate-300">
                                   <Printer size={48} />
                                   <p className="font-bold text-lg lowercase">No tools generated yet</p>
@@ -757,9 +823,15 @@ export default function DashboardPage() {
                                </div>
                             </div>
                             <div className="p-10 bg-slate-50 border-t border-border-main flex justify-between items-center no-print">
-                               <div className="flex gap-4">
-                                  <button className="px-8 py-4 rounded-2xl bg-brand-primary text-white font-black text-lg shadow-lg shadow-brand-primary/20 hover:brightness-105 transition-all">Export PDF</button>
-                                  <button className="px-8 py-4 rounded-2xl bg-white border border-slate-200 text-slate-900 font-bold hover:bg-slate-50 transition-all" onClick={() => setExpandedReportId(null)}>Collapse Focus</button>
+                               <div className="flex gap-3">
+                                  <button onClick={() => window.print()} className="px-6 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-md hover:brightness-105 transition-all">Export PDF</button>
+                                  <button className="px-6 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 font-bold text-sm hover:bg-slate-50 transition-all" onClick={() => setExpandedReportId(null)}>Collapse Focus</button>
+                                  <button 
+                                    className="px-6 py-3 rounded-xl bg-red-50 text-red-500 font-bold text-sm hover:bg-red-100 transition-all flex items-center gap-2"
+                                    onClick={() => { setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
+                                  >
+                                    <Trash2 size={16} /> Delete Report
+                                  </button>
                                </div>
                                <p className="text-xs font-black text-slate-300 uppercase tracking-widest">Verified by Form-Fit AI CORE v2.5 FLASH</p>
                             </div>
@@ -811,7 +883,10 @@ export default function DashboardPage() {
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Upload Media</span>
                         <input type="file" className="hidden" onChange={e => setAssessmentFile(e.target.files[0])} />
                       </label>
-                      <button className="flex flex-col items-center justify-center gap-3 p-6 border border-slate-100 rounded-xl hover:border-brand-primary hover:bg-slate-50 transition-all text-slate-300">
+                      <button 
+                        className="flex flex-col items-center justify-center gap-3 p-6 border border-slate-100 rounded-xl hover:border-brand-primary hover:bg-slate-50 transition-all text-slate-300"
+                        onClick={() => showToast("Live Camera Feed coming in beta v1.2", "info")}
+                      >
                         <Camera size={24} />
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Live Feed</span>
                       </button>
@@ -921,17 +996,30 @@ export default function DashboardPage() {
         {/* Delete Confirm Modal */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-300">
-             <div className="bg-white border border-border-main rounded-[40px] p-12 shadow-2xl w-full max-w-[500px] text-center animate-in zoom-in-95 duration-300">
-                <div className="w-24 h-24 bg-red-100 text-red-500 rounded-[35px] flex items-center justify-center mx-auto mb-8 shadow-lg shadow-red-100">
-                   <AlertCircle size={56} />
-                </div>
-                <h3 className="text-3xl font-outfit font-black text-slate-900 mb-4 lowercase tracking-tighter">Destroy Record?</h3>
-                <p className="text-slate-500 font-medium text-lg leading-relaxed mb-10 px-4">
+             <div className="bg-white border border-border-main rounded-3xl p-8 shadow-2xl w-full max-w-[440px] text-center animate-in zoom-in-95 duration-300">
+                <h3 className="text-2xl font-outfit font-black text-slate-900 mb-3 lowercase tracking-tighter">Destroy Record?</h3>
+                <p className="text-slate-500 font-medium text-sm leading-relaxed mb-8 px-4">
                   Are you sure you want to delete <strong>{learnerToDelete?.name}</strong>? This action is irreversible and will erase all kinematic data.
                 </p>
-                <div className="flex gap-4">
-                   <button className="flex-1 py-5 rounded-3xl bg-red-500 text-white font-black text-xl hover:bg-red-600 transition-all shadow-xl shadow-red-100 active:scale-95" onClick={handleDeleteLearner}>Confirm Destruction</button>
-                   <button className="flex-1 py-5 rounded-3xl bg-slate-100 text-slate-500 font-bold text-lg hover:bg-slate-200 transition-all" onClick={() => setShowDeleteConfirm(false)}>Keep Profile</button>
+                <div className="flex gap-3">
+                   <button className="flex-1 py-3.5 rounded-xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-100 active:scale-95" onClick={handleDeleteLearner}>Confirm Destruction</button>
+                   <button className="flex-1 py-3.5 rounded-xl bg-slate-100 text-slate-500 font-bold text-sm hover:bg-slate-200 transition-all" onClick={() => setShowDeleteConfirm(false)}>Keep Profile</button>
+                </div>
+             </div>
+          </div>
+        )}
+
+        {/* Assessment Delete Confirm Modal */}
+        {showAssessmentDeleteConfirm && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md animate-in fade-in duration-300">
+             <div className="bg-white border border-border-main rounded-3xl p-8 shadow-2xl w-full max-w-[440px] text-center animate-in zoom-in-95 duration-300">
+                <h3 className="text-2xl font-outfit font-black text-slate-900 mb-3 lowercase tracking-tighter">Remove Analysis?</h3>
+                <p className="text-slate-500 font-medium text-sm leading-relaxed mb-8 px-4">
+                  Permanently delete this assessment record? This will remove the report and associated 3D tool specifications.
+                </p>
+                <div className="flex gap-3">
+                   <button className="flex-1 py-3.5 rounded-xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-100 active:scale-95" onClick={handleDeleteAssessment}>Delete Record</button>
+                   <button className="flex-1 py-3.5 rounded-xl bg-slate-100 text-slate-500 font-bold text-sm hover:bg-slate-200 transition-all" onClick={() => {setShowAssessmentDeleteConfirm(false); setAssessmentToDelete(null);}}>Keep Record</button>
                 </div>
              </div>
           </div>
