@@ -13,7 +13,7 @@ import {
   LogOut, LayoutDashboard, Users, Search,
   Bell, Zap, GraduationCap,
   Printer, FileText, Upload,
-  Camera, X, CheckCircle, AlertCircle, Info,
+  Camera, X, CheckCircle, AlertCircle,
   ChevronDown, ChevronUp, Trash2, Globe, Clock,
   ArrowRight, Download, Filter, Menu
 } from 'lucide-react';
@@ -382,23 +382,11 @@ export default function DashboardPage() {
             </button>
           ))}
           <div className="h-[1px] bg-slate-50 my-2 mx-4"></div>
-          <button 
-            className="flex items-center gap-3 px-4 py-2.5 rounded-xl font-semibold text-slate-500 hover:bg-slate-50 hover:text-brand-accent transition-all"
-            onClick={() => { router.push('/#how-it-works'); setIsMobileMenuOpen(false); }}
-          >
-            <Info size={18} />
-            <span className="text-[0.85rem]">How it Works</span>
-          </button>
+
         </nav>
 
         <div className="p-4 border-t border-slate-50">
-          <div className="bg-slate-50 p-4 rounded-2xl mb-4">
-             <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Cloud Status</p>
-             <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 led-indicator"></div>
-                <span className="text-[10px] font-bold text-slate-600">Gemini Pro connected</span>
-             </div>
-          </div>
+
           <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-red-500 font-semibold transition-all hover:bg-red-50 text-sm" onClick={handleLogout}>
             <LogOut size={18} /> Logout
           </button>
@@ -803,9 +791,7 @@ export default function DashboardPage() {
                           onClick={() => setExpandedReportId(isExpanded ? null : a.id)}
                         >
                           <div className="flex items-center gap-6">
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${isExpanded ? 'bg-brand-primary text-white scale-110 shadow-lg shadow-brand-primary/30' : 'bg-brand-primary/10 text-brand-primary'}`}>
-                               <FileText size={28} />
-                            </div>
+
                             <div>
                                <h3 className="text-2xl font-black text-slate-900 lowercase tracking-tight">Report for {learners.find(l => l.id === a.learnerId)?.name || 'Student Profile'}</h3>
                                <p className="text-slate-400 font-bold text-sm mt-1">{new Date(a.timestamp).toLocaleDateString()} • {a.analysisResults?.issue || 'Physical Assessment'}</p>
@@ -820,7 +806,7 @@ export default function DashboardPage() {
                           <div className="animate-in slide-in-from-top duration-500">
                             <div className="p-4 md:p-12 border-t border-border-main bg-slate-50/30">
                                <div className="max-w-[850px] mx-auto bg-white p-16 md:px-24 md:py-28 shadow-[0_10px_50px_rgba(0,0,0,0.1)] border border-slate-200 rounded-[2px] min-h-[1150px] relative overflow-hidden flex flex-col gap-12 font-[family:'Georgia','Times_New_Roman',serif] leading-relaxed text-slate-800">
-                                  <div className="absolute top-0 left-0 w-full h-1.5 bg-[#0F172A]"></div>
+
                                   <div className="flex justify-between items-start border-b-2 border-slate-100 pb-10 opacity-70">
                                      <div className="flex items-center gap-2">
                                         <img src="/logo.png" alt="Logo" className="w-5 h-5" />
