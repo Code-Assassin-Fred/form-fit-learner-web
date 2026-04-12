@@ -22,7 +22,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-bg-main text-text-main font-inter selection:bg-brand-accent selection:text-white">
+    <div className="bg-bg-main text-text-main font-inter selection:bg-brand-accent selection:text-white w-full overflow-x-hidden">
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 h-20 z-[100] flex items-center transition-all duration-700 ${scrolled ? 'bg-gradient-to-br from-[#0F172A] to-[#1E293B] border-b border-slate-800' : 'bg-transparent'}`}>
         <div className="w-full max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[0.9rem]">
@@ -94,7 +94,7 @@ export default function LandingPage() {
 
         <div className="max-w-[1400px] w-full flex flex-col items-center">
           <div className="text-center max-w-[900px] mb-20 relative z-10">
-            <h1 className="text-5xl md:text-[5.5rem] font-outfit font-black leading-[1] mb-10 tracking-tighter text-brand-primary lowercase px-4">
+            <h1 className="text-[2.6rem] md:text-[5.5rem] font-outfit font-black leading-[1] mb-10 tracking-tighter text-brand-primary lowercase px-4">
               inclusive classrooms.<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#F97316] to-[#FB923C]">ai-driven comfort.</span>
             </h1>
@@ -135,7 +135,7 @@ export default function LandingPage() {
                </div>
                
                {/* Floating Badges */}
-                <div className="absolute -left-6 md:-left-12 bottom-[15%] bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)] p-6 md:p-8 rounded-[32px] shadow-2xl animate-float">
+                <div className="absolute -left-4 md:-left-12 bottom-[15%] bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)] p-6 md:p-8 rounded-[32px] shadow-2xl animate-float">
                    <div className="flex flex-col items-start gap-1">
                      <span className="text-[0.65rem] font-black text-brand-accent uppercase tracking-widest">Kinematics</span>
                      <p className="text-2xl md:text-4xl font-black text-brand-primary">99.8%</p>
@@ -143,7 +143,7 @@ export default function LandingPage() {
                    </div>
                 </div>
                 
-                <div className="absolute -right-6 md:-right-12 top-[15%] bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)] p-6 md:p-8 rounded-[32px] shadow-2xl animate-float-delayed">
+                <div className="absolute -right-4 md:-right-12 top-[15%] bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(15,23,42,0.06)] p-6 md:p-8 rounded-[32px] shadow-2xl animate-float-delayed">
                    <div className="flex items-center gap-5">
                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-[#F97316] to-[#FB923C] text-white flex items-center justify-center shadow-lg shadow-brand-accent/20">
                         <Cpu size={28} />
@@ -318,7 +318,7 @@ export default function LandingPage() {
           <div className="relative aspect-square max-w-[500px] mx-auto w-full group">
             <div className="absolute inset-0 bg-gradient-to-br from-[#F97316] to-[#FB923C] rounded-[64px] rotate-12 blur-[60px] opacity-10 group-hover:rotate-6 transition-transform duration-700"></div>
             <div className="w-full h-full rounded-[64px] overflow-hidden border-[12px] border-white shadow-[0_40px_80px_-15px_rgba(15,23,42,0.1)] relative z-10">
-              <img src="/Image 5.png" alt="Vincent Gesora" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]" />
+              <img src="/Founder.jpeg" alt="Vincent Gesora" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]" />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/20 to-transparent"></div>
             </div>
             {/* Floating Info */}

@@ -396,40 +396,40 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full overflow-y-auto no-scrollbar scroll-smooth">
         {/* Custom Nav Bar */}
-        <header className="h-[80px] md:h-[130px] pt-0 md:pt-10 px-6 md:px-12 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 transition-all duration-500">
+        <header className="h-[90px] md:h-[130px] pt-2 md:pt-10 px-6 md:px-12 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-40 transition-all duration-500">
           <div className="flex items-center gap-4">
-            <button className="lg:hidden p-2 -ml-2 text-slate-600" onClick={() => setIsMobileMenuOpen(true)}>
-              <Menu size={24} />
+            <button className="lg:hidden p-2 -ml-2 text-slate-600 hover:bg-slate-50 rounded-xl transition-all" onClick={() => setIsMobileMenuOpen(true)}>
+              <Menu size={26} />
             </button>
-            <div className="flex items-center gap-4 bg-slate-50/20 md:bg-slate-50/50 rounded-2xl px-4 md:px-6 py-2.5 md:py-3.5 w-[50px] md:w-full md:max-w-[440px] border border-transparent md:border-slate-100 focus-within:border-brand-primary/30 focus-within:bg-white focus-within:shadow-xl focus-within:shadow-brand-primary/5 transition-all group overflow-hidden">
-              <Search size={18} className="text-slate-400 group-focus-within:text-brand-primary flex-shrink-0" />
+            <div className="flex items-center gap-4 bg-slate-50/20 md:bg-slate-50/50 rounded-2xl px-5 md:px-6 py-3 md:py-3.5 w-[60px] md:w-full md:max-w-[440px] border border-transparent md:border-slate-100 focus-within:border-brand-primary/30 focus-within:bg-white focus-within:shadow-xl focus-within:shadow-brand-primary/5 transition-all group overflow-hidden">
+              <Search size={20} className="text-slate-400 group-focus-within:text-brand-primary flex-shrink-0" />
               <input type="text" placeholder="Search..." className="hidden md:block bg-transparent border-none outline-none text-[0.9rem] font-medium w-full text-slate-900 placeholder:text-slate-400" />
             </div>
           </div>
           
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
             <div 
-              className="relative cursor-pointer group p-2 hover:bg-slate-50 rounded-xl transition-all"
+              className="relative cursor-pointer group p-3 hover:bg-slate-50 rounded-xl transition-all"
               onClick={() => showToast("No new notifications.", "info")}
             >
-              <Bell size={22} className="text-slate-400 group-hover:text-brand-primary" />
-              <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-brand-secondary rounded-full border-2 border-white ring-2 ring-transparent group-hover:ring-brand-secondary/20 transition-all"></div>
+              <Bell size={24} className="text-slate-400 group-hover:text-brand-primary" />
+              <div className="absolute top-3 right-3 w-2.5 h-2.5 bg-brand-secondary rounded-full border-2 border-white ring-2 ring-transparent group-hover:ring-brand-secondary/20 transition-all"></div>
             </div>
             
-            <div className="h-10 w-[1px] bg-slate-100 mx-1"></div>
+            <div className="h-10 w-[1px] bg-slate-100 mx-2 hidden sm:block"></div>
             
             <div 
-              className="flex items-center gap-4 pl-2 group cursor-pointer"
+              className="flex items-center gap-4 pl-3 group cursor-pointer"
               onClick={() => showToast("Profile settings are being updated.", "info")}
             >
-              <div className="text-right hidden sm:block">
+              <div className="text-right hidden md:block">
                 <p className="text-[0.9rem] font-bold text-slate-900 leading-tight group-hover:text-brand-primary transition-colors">{user?.email?.split('@')[0]}</p>
                 <div className="flex items-center justify-end gap-1.5 mt-0.5">
                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Admin</p>
                 </div>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center font-bold text-white text-base shadow-lg shadow-brand-primary/20 group-hover:scale-105 transition-all">
+              <div className="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent flex items-center justify-center font-bold text-white text-base shadow-xl shadow-brand-primary/10 group-hover:scale-105 transition-all">
                 {user?.email?.[0].toUpperCase()}
               </div>
             </div>
@@ -498,42 +498,44 @@ export default function DashboardPage() {
                        <h3 className="text-2xl font-outfit font-black text-slate-900 lowercase tracking-tighter">Recent assessments</h3>
                        <button className="text-brand-primary font-bold hover:underline" onClick={() => setActiveTab('assessments')}>View Log</button>
                     </div>
-                    <div className="bg-white border border-border-main rounded-[40px] overflow-hidden shadow-sm">
-                       <table className="w-full">
-                          <thead>
-                             <tr className="bg-slate-50 border-b border-border-main text-left">
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Learner</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Analysis</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Status</th>
-                             </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-50">
-                             {assessments.slice(0, 5).map(a => (
-                               <tr key={a.id} className="hover:bg-slate-50 transition-colors group cursor-pointer text-sm" onClick={() => {setActiveTab('reports'); setExpandedReportId(a.id);}}>
-                                  <td className="px-6 py-4">
-                                     <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400 text-xs">U</div>
-                                        <div>
-                                           <p className="font-bold text-slate-900 leading-none">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
-                                           <p className="text-[10px] text-slate-400 mt-1">ID: {a.learnerId.substring(0, 6)}</p>
+                    <div className="bg-white border border-border-main rounded-[30px] md:rounded-[40px] overflow-hidden shadow-sm">
+                       <div className="overflow-x-auto no-scrollbar">
+                          <table className="w-full">
+                             <thead>
+                                <tr className="bg-slate-50 border-b border-border-main text-left">
+                                   <th className="px-5 md:px-8 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400">Learner</th>
+                                   <th className="hidden md:table-cell px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Analysis</th>
+                                   <th className="px-5 md:px-8 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Status</th>
+                                </tr>
+                             </thead>
+                             <tbody className="divide-y divide-slate-50">
+                                {assessments.slice(0, 5).map(a => (
+                                  <tr key={a.id} className="hover:bg-slate-50 transition-colors group cursor-pointer text-sm" onClick={() => {setActiveTab('reports'); setExpandedReportId(a.id);}}>
+                                     <td className="px-4 md:px-6 py-3 md:py-4">
+                                        <div className="flex items-center gap-2 md:gap-3">
+                                           <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400 text-[10px] md:text-xs">U</div>
+                                           <div>
+                                              <p className="font-bold text-slate-900 leading-none text-xs md:text-sm">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
+                                              <p className="text-[8px] md:text-[10px] text-slate-400 mt-0.5 md:mt-1 font-medium">ID: {a.id.substring(0, 4)}</p>
+                                           </div>
                                         </div>
-                                     </div>
-                                  </td>
-                                  <td className="px-6 py-4">
-                                     <p className="text-xs font-medium text-slate-500 line-clamp-1 italic">{a.analysisResults?.issue || 'Processing...'}</p>
-                                  </td>
-                                  <td className="px-6 py-4 text-right">
-                                     <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                                        Completed
-                                     </span>
-                                  </td>
-                               </tr>
-                             ))}
-                             {assessments.length === 0 && (
-                               <tr><td colSpan="3" className="py-20 text-center text-slate-400 font-bold italic">No assessment records found.</td></tr>
-                             )}
-                          </tbody>
-                       </table>
+                                     </td>
+                                     <td className="hidden md:table-cell px-8 py-4">
+                                        <p className="text-xs font-medium text-slate-500 line-clamp-1 italic">{a.analysisResults?.issue || 'Processing...'}</p>
+                                     </td>
+                                     <td className="px-4 md:px-6 py-3 md:py-4 text-right">
+                                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 px-2 md:px-3 py-1 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-wider">
+                                           OK
+                                        </span>
+                                     </td>
+                                  </tr>
+                                ))}
+                                {assessments.length === 0 && (
+                                  <tr><td colSpan="3" className="py-20 text-center text-slate-400 font-bold italic">No assessment records found.</td></tr>
+                                )}
+                             </tbody>
+                          </table>
+                       </div>
                     </div>
                  </div>
                  
@@ -578,27 +580,27 @@ export default function DashboardPage() {
                    </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                    {learners.map(l => (
-                     <div key={l.id} className="bg-white border border-border-main rounded-2xl p-6 shadow-sm hover:shadow-md transition-all group relative overflow-hidden text-left">
+                     <div key={l.id} className="bg-white border border-border-main rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-all group relative overflow-hidden text-left">
                         <div className="relative z-10">
                            <div className="flex justify-between items-start mb-4">
-                              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-xl font-bold text-brand-primary uppercase">
+                              <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-lg md:text-xl font-bold text-brand-primary uppercase">
                                 {l.name[0]}
                               </div>
-                              <button className="p-2 text-slate-300 hover:text-red-500 rounded-lg transition-all" onClick={() => {setLearnerToDelete(l); setShowDeleteConfirm(true);}}>
-                                <Trash2 size={20} />
+                              <button className="p-1.5 md:p-2 text-slate-300 hover:text-red-500 rounded-lg transition-all" onClick={() => {setLearnerToDelete(l); setShowDeleteConfirm(true);}}>
+                                <Trash2 size={18} className="md:w-5 md:h-5" />
                               </button>
                            </div>
-                           <h4 className="text-lg font-bold text-slate-900 mb-1 lowercase tracking-tight">{l.name}</h4>
-                           <p className="text-slate-400 font-bold text-[9px] uppercase tracking-widest italic mb-4">Age {l.age}</p>
+                           <h4 className="text-base md:text-lg font-bold text-slate-900 mb-1 lowercase tracking-tight">{l.name}</h4>
+                           <p className="text-slate-400 font-bold text-[8px] md:text-[9px] uppercase tracking-widest italic mb-4">Age {l.age}</p>
                            
                            <div className="space-y-4 pt-4 border-t border-slate-50">
                               <div>
-                                 <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Constraints</p>
-                                 <p className="text-xs font-medium text-slate-600 line-clamp-2 leading-relaxed">{l.disabilityInfo || 'Review required.'}</p>
+                                 <p className="text-[7px] md:text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Constraints</p>
+                                 <p className="text-[11px] md:text-xs font-medium text-slate-600 line-clamp-2 leading-relaxed">{l.disabilityInfo || 'Review required.'}</p>
                               </div>
-                              <button className="w-full py-2.5 rounded-lg border border-slate-100 text-slate-500 font-bold text-[10px] hover:border-brand-primary hover:text-brand-primary transition-all flex items-center justify-center gap-2 group/btn uppercase tracking-widest text-center" onClick={() => {setSelectedLearnerId(l.id); setShowNewAssessment(true);}}>
+                              <button className="w-full py-2.5 rounded-lg border border-slate-100 text-slate-500 font-bold text-[9px] md:text-[10px] hover:border-brand-primary hover:text-brand-primary transition-all flex items-center justify-center gap-2 group/btn uppercase tracking-widest text-center" onClick={() => {setSelectedLearnerId(l.id); setShowNewAssessment(true);}}>
                                  Start Analysis <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform" />
                               </button>
                            </div>
@@ -630,24 +632,26 @@ export default function DashboardPage() {
                   </button>
                </div>
 
-               <div className="bg-white border border-border-main rounded-[40px] overflow-hidden shadow-sm">
-                  <div className="p-8 border-b border-slate-50 flex items-center justify-between bg-white">
-                     <div className="flex items-center gap-6">
+               <div className="bg-white border border-border-main rounded-[30px] md:rounded-[40px] overflow-hidden shadow-sm">
+                  <div className="p-6 md:p-8 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white">
+                     <div className="flex items-center gap-4 md:gap-6">
                         <div 
-                          className="flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 cursor-pointer hover:bg-slate-200 transition-all"
+                          className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-slate-100 border border-slate-200 rounded-xl text-[10px] md:text-xs font-bold text-slate-600 cursor-pointer hover:bg-slate-200 transition-all"
                           onClick={() => showToast("Filtering logic is being optimized.", "info")}
                         >
                            <Filter size={14} /> Filter
                         </div>
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{assessments.length} Total Analysis Records</span>
+                        <span className="text-[9px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">{assessments.length} Records</span>
                      </div>
                   </div>
-                  <div className="overflow-x-auto">
+                  
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
                     <table className="w-full text-left">
                       <thead>
                         <tr className="bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">
                           <th className="px-10 py-6">Student</th>
-                          <th className="px-10 py-6">AI Detection Outcome</th>
+                          <th className="px-10 py-6">Outcome</th>
                           <th className="px-10 py-6">Proposed Tool</th>
                           <th className="px-10 py-6 text-right">Verification</th>
                           <th className="px-10 py-6 text-right">Action</th>
@@ -671,25 +675,62 @@ export default function DashboardPage() {
                             <td className="px-6 py-5">
                                <div className="inline-flex items-center gap-2 bg-slate-50 text-brand-primary px-3 py-1 rounded-lg text-[10px] font-bold border border-slate-100 uppercase tracking-widest">
                                   {a.toolDescription || a.recommendedToolId || 'Evaluating...'}
-                               </div>
+                                </div>
                             </td>
                             <td className="px-6 py-5 text-right">
-                               <div className="flex items-center justify-end gap-2">
-                                 <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest">
-                                    <CheckCircle size={12} /> Completed
-                                 </span>
-                                 <button 
-                                   className="p-2 text-slate-300 hover:text-red-500 transition-all rounded-lg hover:bg-red-50"
-                                   onClick={(e) => { e.stopPropagation(); setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
-                                 >
-                                   <Trash2 size={16} />
-                                 </button>
-                               </div>
+                               <span className="inline-flex items-center gap-1.5 bg-brand-primary/10 text-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest">
+                                  <CheckCircle size={12} /> Completed
+                               </span>
+                            </td>
+                            <td className="px-6 py-5 text-right">
+                               <button 
+                                 className="p-2 text-slate-300 hover:text-red-500 transition-all rounded-lg hover:bg-red-50"
+                                 onClick={(e) => { e.stopPropagation(); setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
+                               >
+                                 <Trash2 size={16} />
+                               </button>
                             </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden divide-y divide-slate-50">
+                    {assessments.map(a => (
+                      <div key={`mobile-${a.id}`} className="p-6 space-y-4" onClick={() => {setExpandedReportId(a.id); setActiveTab('reports');}}>
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-3">
+                             <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center font-bold text-brand-primary">L</div>
+                             <div>
+                                <p className="font-bold text-slate-900 text-sm leading-none">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
+                                <p className="text-[9px] text-slate-400 font-bold mt-1 uppercase tracking-[0.2em]">{new Date(a.timestamp).toLocaleDateString()}</p>
+                             </div>
+                          </div>
+                          <button 
+                            className="p-2 text-slate-300 hover:text-red-500"
+                            onClick={(e) => { e.stopPropagation(); setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                        <p className="text-[11px] font-medium text-slate-500 italic line-clamp-2 leading-relaxed bg-slate-50/50 p-3 rounded-xl border border-dashed border-slate-100">
+                          {a.analysisResults?.issue || 'Analysis processing...'}
+                        </p>
+                        <div className="flex items-center justify-between pt-2">
+                           <div className="inline-flex items-center gap-2 bg-brand-primary/5 text-brand-primary px-3 py-1.5 rounded-lg text-[9px] font-black border border-brand-primary/10 uppercase tracking-widest truncate max-w-[150px]">
+                              {a.toolDescription || a.recommendedToolId || 'Evaluatng...'}
+                           </div>
+                           <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-1">
+                              <CheckCircle size={10} /> Verified
+                           </span>
+                        </div>
+                      </div>
+                    ))}
+                    {assessments.length === 0 && (
+                      <div className="py-20 text-center text-slate-300 font-bold text-sm italic lowercase">Safe records empty.</div>
+                    )}
                   </div>
                </div>
             </div>
@@ -704,8 +745,9 @@ export default function DashboardPage() {
                   </div>
                </div>
 
-               <div className="bg-white border border-border-main rounded-[32px] overflow-hidden shadow-sm">
-                  <div className="overflow-x-auto no-scrollbar">
+               <div className="bg-white border border-border-main rounded-[30px] md:rounded-[32px] overflow-hidden shadow-sm">
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto no-scrollbar">
                     <table className="w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-50">
@@ -735,36 +777,73 @@ export default function DashboardPage() {
                                <span className="inline-flex items-center px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest">{a.analysisResults?.category || 'Accessibility'}</span>
                             </td>
                             <td className="px-10 py-6 text-right">
-                               <div className="flex items-center justify-end gap-3">
-                                 <button 
-                                   className="px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-2"
-                                   onClick={() => handleDownloadSTL(a)}
-                                 >
-                                   <Download size={14} /> Export STL
-                                 </button>
-                                 <button 
-                                   className="p-2.5 text-slate-300 hover:text-red-500 transition-all rounded-xl border border-slate-100 hover:border-red-100 hover:bg-red-50"
-                                   onClick={() => { setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
-                                 >
-                                   <Trash2 size={16} />
-                                 </button>
-                               </div>
+                               <button 
+                                 className="px-6 py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-black transition-all flex items-center gap-2 ml-auto"
+                                 onClick={() => handleDownloadSTL(a)}
+                               >
+                                 <Download size={14} /> Export STL
+                               </button>
+                            </td>
+                            <td className="px-10 py-6 text-right">
+                               <button 
+                                 className="p-2.5 text-slate-300 hover:text-red-500 transition-all rounded-xl border border-slate-100 hover:border-red-100 hover:bg-red-50"
+                                 onClick={() => { setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
+                               >
+                                 <Trash2 size={16} />
+                               </button>
                             </td>
                           </tr>
                         ))}
-                        {assessments.filter(a => a.recommendedToolId).length === 0 && (
-                          <tr>
-                            <td colSpan="5" className="px-10 py-20 text-center">
-                               <div className="flex flex-col items-center gap-3 text-slate-300">
-                                  <Printer size={48} />
-                                  <p className="font-bold text-lg lowercase">No tools generated yet</p>
-                               </div>
-                            </td>
-                          </tr>
-                        )}
                       </tbody>
                     </table>
                   </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden divide-y divide-slate-50">
+                    {assessments.filter(a => a.recommendedToolId).map(a => (
+                      <div key={`tool-mobile-${a.id}`} className="p-6 space-y-5">
+                         <div className="flex justify-between items-start">
+                            <div className="flex items-center gap-4">
+                               <div className="w-10 h-10 rounded-xl bg-brand-primary/5 text-brand-primary flex items-center justify-center font-bold text-sm">T</div>
+                               <div>
+                                  <p className="font-bold text-slate-900 leading-tight text-xs lowercase truncate max-w-[160px]">{a.toolDescription || a.recommendedToolId.replace('_', ' ')}</p>
+                                  <p className="text-[9px] text-slate-400 font-black mt-1 uppercase tracking-widest">v2.1 Stable</p>
+                               </div>
+                            </div>
+                            <button 
+                              className="p-2 text-slate-300 hover:text-red-500"
+                              onClick={() => { setAssessmentToDelete(a); setShowAssessmentDeleteConfirm(true); }}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                         </div>
+                         
+                         <div className="flex items-center justify-between text-[10px]">
+                            <div className="flex flex-col gap-1">
+                               <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Assigned Learner</span>
+                               <span className="font-bold text-slate-700">{learners.find(l => l.id === a.learnerId)?.name || 'General Access'}</span>
+                            </div>
+                            <span className="inline-flex items-center px-2 py-1 rounded-md bg-slate-50 text-slate-400 font-black uppercase tracking-tighter text-[8px]">{a.analysisResults?.category || 'Accessibility'}</span>
+                         </div>
+
+                         <button 
+                           className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-slate-200 hover:bg-black transition-all flex items-center justify-center gap-2"
+                           onClick={() => handleDownloadSTL(a)}
+                         >
+                           <Download size={14} /> Export STL Blueprint
+                         </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {assessments.filter(a => a.recommendedToolId).length === 0 && (
+                    <div className="px-10 py-20 text-center">
+                       <div className="flex flex-col items-center gap-3 text-slate-300">
+                          <Printer size={48} />
+                          <p className="font-bold text-lg lowercase">No tools generated yet</p>
+                       </div>
+                    </div>
+                  )}
                </div>
             </div>
           )}
@@ -793,8 +872,15 @@ export default function DashboardPage() {
                           <div className="flex items-center gap-6">
 
                             <div>
-                               <h3 className="text-2xl font-black text-slate-900 lowercase tracking-tight">Report for {learners.find(l => l.id === a.learnerId)?.name || 'Student Profile'}</h3>
-                               <p className="text-slate-400 font-bold text-sm mt-1">{new Date(a.timestamp).toLocaleDateString()} • {a.analysisResults?.issue || 'Physical Assessment'}</p>
+                               <h3 className="text-xl md:text-2xl font-black text-slate-900 lowercase tracking-tight">Report for {learners.find(l => l.id === a.learnerId)?.name || 'Student Profile'}</h3>
+                               <p className="text-slate-400 font-bold text-[10px] md:text-sm mt-1 uppercase tracking-wider">
+                                 {new Date(a.timestamp).toLocaleDateString()}
+                                 {isExpanded && a.analysisResults?.issue && (
+                                   <span className="block mt-2 normal-case font-medium text-slate-400 leading-relaxed max-w-[600px]">
+                                     {a.analysisResults.issue}
+                                   </span>
+                                 )}
+                               </p>
                             </div>
                           </div>
                           <div className={`w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center transition-transform duration-500 ${isExpanded ? 'rotate-180 bg-brand-primary/10 text-brand-primary' : ''}`}>
@@ -804,16 +890,17 @@ export default function DashboardPage() {
 
                         {isExpanded && (
                           <div className="animate-in slide-in-from-top duration-500">
-                            <div className="p-4 md:p-12 border-t border-border-main bg-slate-50/30">
-                               <div className="max-w-[850px] mx-auto bg-white p-16 md:px-24 md:py-28 shadow-[0_10px_50px_rgba(0,0,0,0.1)] border border-slate-200 rounded-[2px] min-h-[1150px] relative overflow-hidden flex flex-col gap-12 font-[family:'Georgia','Times_New_Roman',serif] leading-relaxed text-slate-800">
+                            <div className="p-0 sm:p-4 md:p-12 border-t border-border-main bg-slate-50/30">
+                               <div className="w-full max-w-[850px] mx-auto bg-white px-6 py-12 md:px-24 md:py-28 shadow-[0_10px_50px_rgba(0,0,0,0.1)] border border-slate-200 rounded-[2px] min-h-[1150px] relative overflow-hidden flex flex-col gap-8 md:gap-12 font-[family:'Georgia','Times_New_Roman',serif] leading-relaxed text-slate-800">
 
-                                  <div className="flex justify-between items-start border-b-2 border-slate-100 pb-10 opacity-70">
+                                  <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4 border-b-2 border-slate-100 pb-10 opacity-70">
                                      <div className="flex items-center gap-2">
                                         <img src="/logo.png" alt="Logo" className="w-5 h-5" />
                                         <span className="font-outfit font-bold text-xs uppercase tracking-tighter">Form-Fit Learner</span>
                                      </div>
-                                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Confidential Kinematic Report</span>
+                                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center sm:text-right">Confidential Kinematic Report</span>
                                   </div>
+
 
                                   <div className="prose prose-slate [&_h1]:font-outfit [&_h1]:font-black [&_h1]:tracking-tight [&_h1]:text-slate-900 [&_h1]:text-4xl [&_h1]:mb-12 [&_h2]:font-outfit [&_h2]:font-black [&_h2]:tracking-tight [&_h2]:text-slate-900 [&_h2]:text-2xl [&_h2]:mt-10 [&_h2]:mb-6 [&_h2]:border-b [&_h2]:border-slate-100 [&_h2]:pb-2 [&_h3]:font-outfit [&_h3]:font-black [&_h3]:tracking-tight [&_h3]:text-slate-900 [&_h3]:text-lg [&_p]:text-lg [&_p]:mb-6 [&_p]:leading-[1.8] [&_strong]:text-slate-900 [&_li]:text-lg [&_li]:mb-2 [&_table]:border-collapse [&_th]:bg-slate-50 [&_th]:p-4 [&_td]:p-4 [&_td]:border [&_td]:border-slate-100 max-w-none">
                                      <ReactMarkdown 

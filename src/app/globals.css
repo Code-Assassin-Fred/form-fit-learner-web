@@ -61,7 +61,11 @@
 }
 
 body {
-  @apply bg-bg-main text-text-main antialiased font-inter;
+  @apply bg-bg-main text-text-main antialiased font-inter overflow-x-hidden;
+}
+
+html {
+  @apply overflow-x-hidden;
 }
 
 /* Custom Scrollbar */
