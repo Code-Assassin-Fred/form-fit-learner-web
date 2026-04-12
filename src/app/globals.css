@@ -62,10 +62,15 @@
 
 body {
   @apply bg-bg-main text-text-main antialiased font-inter overflow-x-hidden;
+  max-width: 100%;
+  width: 100%;
+  position: relative;
 }
 
 html {
   @apply overflow-x-hidden;
+  max-width: 100%;
+  width: 100%;
 }
 
 /* Custom Scrollbar */

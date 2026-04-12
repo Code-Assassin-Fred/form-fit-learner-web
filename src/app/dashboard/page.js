@@ -318,7 +318,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col h-screen w-screen items-center justify-center bg-bg-main gap-6">
+      <div className="flex flex-col h-screen w-full items-center justify-center bg-bg-main gap-6">
         <div className="relative w-16 h-16 flex items-center justify-center">
             <div className="absolute inset-0 border-4 border-slate-200 rounded-full"></div>
             <div className="absolute inset-0 border-4 border-transparent border-t-brand-primary rounded-full animate-spin"></div>

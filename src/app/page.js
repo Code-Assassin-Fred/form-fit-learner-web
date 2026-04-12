@@ -25,7 +25,7 @@ export default function LandingPage() {
     <div className="bg-bg-main text-text-main font-inter selection:bg-brand-accent selection:text-white w-full overflow-x-hidden">
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 h-20 z-[100] flex items-center transition-all duration-700 ${scrolled ? 'bg-gradient-to-br from-[#0F172A] to-[#1E293B] border-b border-slate-800' : 'bg-transparent'}`}>
-        <div className="w-full max-w-[1400px] mx-auto px-8 flex justify-between items-center text-[0.9rem]">
+        <div className="w-full max-w-[1400px] mx-auto px-6 md:px-8 flex justify-between items-center text-[0.9rem]">
           <div className="flex items-center gap-3 group cursor-pointer" onClick={() => router.push('/')}>
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform duration-500">
               <img src="/logo.png" alt="Logo" className="h-6 w-auto" />
@@ -177,7 +177,7 @@ export default function LandingPage() {
         </div>
       </div>
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-32 px-8 max-w-[1400px] mx-auto w-full">
+      <section id="how-it-works" className="py-32 px-6 md:px-8 max-w-[1400px] mx-auto w-full overflow-x-hidden">
         <div className="text-center mb-24">
            <p className="text-text-muted text-lg font-medium max-w-[600px] mx-auto leading-relaxed">
              A seamless transition from physical assessment to custom digital fabrication in four steps.
@@ -206,7 +206,7 @@ export default function LandingPage() {
       </section>
 
       {/* Mission Section */}
-      <section id="mission" className="py-20 md:py-32 px-6 md:px-8 max-w-[1400px] mx-auto w-full">
+      <section id="mission" className="py-20 md:py-32 px-6 md:px-8 max-w-[1400px] mx-auto w-full overflow-x-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center">
           <div className="relative group text-center lg:text-left flex flex-col items-center lg:items-start">
             <div className="w-16 h-1.5 bg-gradient-to-br from-[#F97316] to-[#FB923C] mb-10 rounded-full"></div>
@@ -313,9 +313,9 @@ export default function LandingPage() {
       </section>
 
       {/* Creator Section */}
-      <section id="creator" className="py-32 px-8 max-w-[1400px] mx-auto w-full">
+      <section id="creator" className="py-32 px-6 md:px-8 max-w-[1400px] mx-auto w-full overflow-x-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-          <div className="relative aspect-square max-w-[500px] mx-auto w-full group">
+          <div className="relative aspect-square max-w-[500px] mx-auto w-full group overflow-hidden md:overflow-visible">
             <div className="absolute inset-0 bg-gradient-to-br from-[#F97316] to-[#FB923C] rounded-[64px] rotate-12 blur-[60px] opacity-10 group-hover:rotate-6 transition-transform duration-700"></div>
             <div className="w-full h-full rounded-[64px] overflow-hidden border-[12px] border-white shadow-[0_40px_80px_-15px_rgba(15,23,42,0.1)] relative z-10">
               <img src="/Founder.jpeg" alt="Vincent Gesora" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.05]" />
