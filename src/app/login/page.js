@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { LogIn, Mail, Lock, Globe, UserPlus, ArrowLeft, Zap } from 'lucide-react';
 
@@ -111,14 +111,14 @@ export default function LoginPage() {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
-            <div className="relative flex justify-center text-[10px] uppercase font-black"><span className="bg-white px-6 text-slate-300 tracking-[4px]">or sign in with email</span></div>
+            <div className="relative flex justify-center text-[10px] uppercase font-black"><span className="bg-white px-6 text-slate-500 tracking-[4px]">or sign in with email</span></div>
           </div>
 
           <form onSubmit={handleEmailAuth} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-black text-slate-400 ml-1 uppercase tracking-widest" htmlFor="email">Email Address</label>
+              <label className="text-xs font-black text-slate-600 ml-1 uppercase tracking-widest" htmlFor="email">Email Address</label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brand-primary transition-colors" size={20} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors" size={20} />
                 <input 
                   type="email" 
                   id="email" 
@@ -132,9 +132,9 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-black text-slate-400 ml-1 uppercase tracking-widest" htmlFor="password">Password</label>
+              <label className="text-xs font-black text-slate-600 ml-1 uppercase tracking-widest" htmlFor="password">Password</label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brand-primary transition-colors" size={20} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors" size={20} />
                 <input 
                   type="password" 
                   id="password" 
@@ -149,9 +149,9 @@ export default function LoginPage() {
  
             {isSignUp && (
               <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
-                <label className="text-xs font-black text-slate-400 ml-1 uppercase tracking-widest" htmlFor="confirmPassword">Confirm Password</label>
+                <label className="text-xs font-black text-slate-600 ml-1 uppercase tracking-widest" htmlFor="confirmPassword">Confirm Password</label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-brand-primary transition-colors" size={20} />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors" size={20} />
                   <input 
                     type="password" 
                     id="confirmPassword" 

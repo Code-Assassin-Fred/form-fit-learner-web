@@ -110,7 +110,7 @@ export default function OnboardingPage() {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-6">
         <div className="w-8 h-8 border-2 border-slate-100 border-t-brand-primary rounded-full animate-spin"></div>
-        <p className="font-outfit font-bold text-slate-400 uppercase tracking-widest text-[10px]">Syncing workstation</p>
+        <p className="font-outfit font-bold text-slate-600 uppercase tracking-widest text-[10px]">Syncing workstation</p>
       </div>
     );
   }
@@ -146,12 +146,12 @@ export default function OnboardingPage() {
               <div className="space-y-2">
                 <span className="inline-block px-2.5 py-1 rounded-md bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest mb-2">Step 01</span>
                 <h1 className="text-3xl font-outfit font-black tracking-tight leading-none text-slate-900 lowercase">identity registry</h1>
-                <p className="text-slate-500 text-sm font-medium">Basic authentication data for your profile workstation.</p>
+                <p className="text-slate-700 text-sm font-medium">Basic authentication data for your profile workstation.</p>
               </div>
 
               <div className="space-y-5">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                  <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">Full Name</label>
                   <input 
                     type="text" 
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-5 text-slate-900 focus:outline-none focus:border-brand-primary focus:bg-white transition-all font-semibold text-sm"
@@ -162,17 +162,17 @@ export default function OnboardingPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                  <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">Email Address</label>
                   <input 
                     type="email" 
                     readOnly
-                    className="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-3 px-5 text-slate-400 cursor-not-allowed font-semibold text-sm"
+                    className="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-3 px-5 text-slate-500 cursor-not-allowed font-semibold text-sm"
                     value={formData.email}
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Gender Identity</label>
+                  <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">Gender Identity</label>
                   <div className="grid grid-cols-3 gap-2">
                     {['Male', 'Female', 'Other'].map(g => (
                       <button 
@@ -181,7 +181,7 @@ export default function OnboardingPage() {
                         className={`py-3 rounded-xl border font-bold text-xs transition-all ${
                           formData.gender === g 
                           ? 'bg-brand-primary border-brand-primary text-white shadow-lg shadow-brand-primary/10' 
-                          : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
+                          : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                         }`}
                       >
                         {g}
@@ -207,17 +207,17 @@ export default function OnboardingPage() {
               <div className="space-y-2">
                 <span className="inline-block px-2.5 py-1 rounded-md bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest mb-2">Step 02</span>
                 <h1 className="text-3xl font-outfit font-black tracking-tight leading-none text-slate-900 lowercase">regional context</h1>
-                <p className="text-slate-500 text-sm font-medium">Syncing with local fabrication and ergonomic standards.</p>
+                <p className="text-slate-700 text-sm font-medium">Syncing with local fabrication and ergonomic standards.</p>
               </div>
 
               <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 space-y-5">
                 <div className="flex flex-col gap-1">
-                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Automatic Detection</p>
+                   <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Automatic Detection</p>
                    <p className="text-lg font-bold text-slate-900">{formData.location || 'Locating...'}</p>
                 </div>
                 
                 <div className="space-y-1.5 pt-4 border-t border-slate-200">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Manual Override</label>
+                  <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Manual Override</label>
                   <input 
                     type="text" 
                     className="w-full bg-white border border-slate-200 rounded-xl py-2.5 px-4 text-slate-900 focus:outline-none focus:border-brand-primary text-sm font-semibold"
@@ -231,7 +231,7 @@ export default function OnboardingPage() {
               <div className="flex gap-2">
                 <button 
                   onClick={handleBack}
-                  className="px-6 py-3.5 rounded-xl bg-white text-slate-500 font-bold border border-slate-200 hover:bg-slate-50 transition-all text-xs"
+                  className="px-6 py-3.5 rounded-xl bg-white text-slate-700 font-bold border border-slate-200 hover:bg-slate-50 transition-all text-xs"
                 >
                   Back
                 </button>
@@ -252,12 +252,12 @@ export default function OnboardingPage() {
               <div className="space-y-2">
                 <span className="inline-block px-2.5 py-1 rounded-md bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest mb-2">Step 03</span>
                 <h1 className="text-3xl font-outfit font-black tracking-tight leading-none text-slate-900 lowercase">professional bio</h1>
-                <p className="text-slate-500 text-sm font-medium">Your background helps us refine AI ergonomic models.</p>
+                <p className="text-slate-700 text-sm font-medium">Your background helps us refine AI ergonomic models.</p>
               </div>
 
               <div className="space-y-5">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Case Context or Professional Field</label>
+                  <label className="text-[9px] font-black text-slate-600 uppercase tracking-widest ml-1">Case Context or Professional Field</label>
                   <textarea 
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl p-5 text-slate-900 h-32 resize-none focus:outline-none focus:border-brand-primary focus:bg-white transition-all font-semibold text-sm"
                     placeholder="Clinician, researcher, educator, or independent client..."
@@ -274,7 +274,7 @@ export default function OnboardingPage() {
               </div>
 
               <div className="flex gap-2">
-                <button onClick={handleBack} className="px-6 py-3.5 rounded-xl bg-white text-slate-500 font-bold border border-slate-200 hover:bg-slate-50 transition-all text-xs">Back</button>
+                <button onClick={handleBack} className="px-6 py-3.5 rounded-xl bg-white text-slate-700 font-bold border border-slate-200 hover:bg-slate-50 transition-all text-xs">Back</button>
                 <button 
                   disabled={!formData.bio}
                   onClick={handleNext}
@@ -291,7 +291,7 @@ export default function OnboardingPage() {
             <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
               <div className="text-center space-y-2">
                 <h1 className="text-3xl font-outfit font-black tracking-tight lowercase text-slate-900">ready for deployment</h1>
-                <p className="text-slate-500 text-sm font-medium text-center">Verify your identity summary before launch.</p>
+                <p className="text-slate-700 text-sm font-medium text-center">Verify your identity summary before launch.</p>
               </div>
 
               <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5 shadow-sm">
@@ -302,7 +302,7 @@ export default function OnboardingPage() {
                     </div>
                     <div>
                       <p className="font-bold text-sm text-slate-900">{formData.name}</p>
-                      <p className="text-[10px] text-slate-400 font-semibold">{formData.email}</p>
+                      <p className="text-[10px] text-slate-600 font-semibold">{formData.email}</p>
                     </div>
                   </div>
                   <button onClick={() => setStep(1)} className="text-[9px] font-black text-brand-primary hover:underline uppercase tracking-widest">Edit</button>
@@ -310,11 +310,11 @@ export default function OnboardingPage() {
 
                 <div className="grid grid-cols-2 gap-6">
                    <div>
-                     <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Region</p>
+                     <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest mb-1">Region</p>
                      <p className="font-bold text-slate-700 text-sm">{formData.location}</p>
                    </div>
                    <div>
-                     <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Identity</p>
+                     <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest mb-1">Identity</p>
                      <p className="font-bold text-slate-700 text-sm">{formData.gender}</p>
                    </div>
                 </div>
@@ -327,7 +327,7 @@ export default function OnboardingPage() {
                     onChange={e => setFormData({...formData, newsletter: e.target.checked})}
                     className="w-4 h-4 rounded-md accent-brand-primary"
                   />
-                  <label htmlFor="news" className="text-[10px] text-slate-400 font-bold uppercase tracking-wide cursor-pointer">Subscribe to research updates</label>
+                  <label htmlFor="news" className="text-[10px] text-slate-600 font-bold uppercase tracking-wide cursor-pointer">Subscribe to research updates</label>
                 </div>
               </div>
 

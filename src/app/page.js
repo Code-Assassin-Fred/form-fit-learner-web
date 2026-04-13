@@ -167,11 +167,11 @@ export default function LandingPage() {
         <div className="w-full overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
           <div className="flex w-max gap-32 px-10 animate-marquee">
             {['React.js', 'Firebase', 'Gemini AI Pro', '3D Printing', 'STL Design', 'Kinematics'].map((tech, i) => (
-              <span key={i} className="text-3xl font-outfit font-black text-slate-300 hover:text-brand-accent transition-all duration-500 cursor-default select-none uppercase tracking-tighter">{tech}</span>
+              <span key={i} className="text-3xl font-outfit font-black text-slate-500 hover:text-brand-accent transition-all duration-500 cursor-default select-none uppercase tracking-tighter">{tech}</span>
             ))}
             {/* DUPLICATE */}
             {['React.js', 'Firebase', 'Gemini AI Pro', '3D Printing', 'STL Design', 'Kinematics'].map((tech, i) => (
-              <span key={i+10} className="text-3xl font-outfit font-black text-slate-300 hover:text-brand-accent transition-all duration-500 cursor-default select-none uppercase tracking-tighter">{tech}</span>
+              <span key={i+10} className="text-3xl font-outfit font-black text-slate-500 hover:text-brand-accent transition-all duration-500 cursor-default select-none uppercase tracking-tighter">{tech}</span>
             ))}
           </div>
         </div>
@@ -192,7 +192,7 @@ export default function LandingPage() {
              { step: '04', title: 'Fabricate', desc: 'Export STL files to any 3D printer and download professional inclusion reports.', icon: Printer, color: 'bg-slate-900' }
            ].map((item, i) => (
              <div key={i} className="group relative p-10 rounded-[40px] bg-white border border-slate-100 hover:shadow-2xl hover:shadow-brand-primary/5 transition-all duration-500 hover:-translate-y-2">
-                <div className="absolute top-8 right-8 text-4xl font-outfit font-black text-slate-100 group-hover:text-brand-primary/10 transition-colors uppercase tracking-widest">
+                <div className="absolute top-8 right-8 text-4xl font-outfit font-black text-slate-200 group-hover:text-brand-primary/10 transition-colors uppercase tracking-widest">
                   {item.step}
                 </div>
                 <div className={`w-16 h-16 ${item.color} text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-brand-primary/10`}>
@@ -328,7 +328,7 @@ export default function LandingPage() {
                      <img src="/logo.png" alt="Mini Logo" className="w-5" />
                  </div>
                  <div>
-                   <p className="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">Visionary</p>
+                   <p className="text-[0.65rem] font-black text-slate-500 uppercase tracking-widest">Visionary</p>
                    <p className="text-sm font-black text-brand-primary">Vincent Gesora</p>
                  </div>
                </div>
@@ -361,28 +361,28 @@ export default function LandingPage() {
                 </div>
                 <span className="font-outfit font-black text-3xl tracking-tighter lowercase">form-fit</span>
               </div>
-              <p className="text-slate-400 text-lg leading-relaxed font-medium mb-10 italic">Advanced assistive technology developed with compassion, code, and classroom reality in mind.</p>
+              <p className="text-slate-500 text-lg leading-relaxed font-medium mb-10 italic">Advanced assistive technology developed with compassion, code, and classroom reality in mind.</p>
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-16 lg:gap-24">
               <div className="flex flex-col gap-6">
                 <h4 className="text-sm font-black uppercase tracking-[0.3em] text-brand-accent">Platform</h4>
-                <button onClick={() => router.push('/dashboard')} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Dashboard</button>
-                <button onClick={() => router.push('/dashboard')} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">3D Library</button>
-                <button onClick={() => showToast("Resources section is coming soon.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Resources</button>
+                <button onClick={() => router.push('/dashboard')} className="text-left text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">Dashboard</button>
+                <button onClick={() => router.push('/dashboard')} className="text-left text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">3D Library</button>
+                <button onClick={() => showToast("Resources section is coming soon.")} className="text-left text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">Resources</button>
               </div>
               <div className="flex flex-col gap-6">
                 <h4 className="text-sm font-black uppercase tracking-[0.3em] text-cyan-400">Security</h4>
-                <button onClick={() => showToast("Privacy Policy document is being finalized.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Privacy Policy</button>
-                <button onClick={() => showToast("Compliance certifications are pending.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Compliance</button>
-                <button onClick={() => showToast("Terms of Service are being updated.")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Terms</button>
+                <button onClick={() => showToast("Privacy Policy document is being finalized.")} className="text-left text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">Privacy Policy</button>
+                <button onClick={() => showToast("Compliance certifications are pending.")} className="text-left text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">Compliance</button>
+                <button onClick={() => showToast("Terms of Service are being updated.")} className="text-left text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">Terms</button>
               </div>
               <div className="flex flex-col gap-6">
                 <h4 className="text-sm font-black uppercase tracking-[0.3em] text-slate-300">Company</h4>
-                <a href="#mission" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Mission</a>
-                <a href="#creator" className="text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">About</a>
+                <a href="#mission" className="text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">Mission</a>
+                <a href="#creator" className="text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">About</a>
                 <div className="flex flex-col gap-1">
-                  <button onClick={() => showToast("Contact us at support@form-fit-learner.com")} className="text-left text-slate-400 hover:text-white transition-colors font-semibold text-[0.95rem]">Contact</button>
+                  <button onClick={() => showToast("Contact us at support@form-fit-learner.com")} className="text-left text-slate-500 hover:text-white transition-colors font-semibold text-[0.95rem]">Contact</button>
                   <a href="tel:+254711495258" className="text-[0.8rem] font-bold text-brand-accent hover:text-white transition-colors">+254 711495258</a>
                 </div>
               </div>

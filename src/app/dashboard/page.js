@@ -413,7 +413,7 @@ export default function DashboardPage() {
             <button
               key={tab.id}
               onClick={() => { setActiveTab(tab.id); setIsMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold text-sm transition-all ${activeTab === tab.id ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-slate-400 hover:text-slate-900 hover:bg-slate-50'}`}
+              className={`w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl font-bold text-sm transition-all ${activeTab === tab.id ? 'bg-slate-900 text-white shadow-lg shadow-slate-200' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
             >
               <tab.icon size={20} />
               {tab.label}
@@ -440,7 +440,7 @@ export default function DashboardPage() {
                 <Menu size={24} />
              </button>
              <div className="relative hidden md:block">
-               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                <input 
                  type="text" 
                  placeholder="Search registry..." 
@@ -450,7 +450,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-6">
-            <button className="text-slate-300 hover:text-slate-500 transition-colors relative">
+            <button className="text-slate-400 hover:text-slate-500 transition-colors relative">
                <Bell size={22} />
                <div className="absolute top-0 right-0 w-2 h-2 bg-brand-primary rounded-full border-2 border-white"></div>
             </button>
@@ -485,10 +485,10 @@ export default function DashboardPage() {
                           <div className={`p-3 rounded-2xl bg-slate-50 ${stat.color} group-hover:scale-110 transition-transform`}>
                              <stat.icon size={24} />
                           </div>
-                          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Live Sync</span>
+                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Live Sync</span>
                        </div>
                        <p className="text-3xl font-black text-slate-900 mb-1">{stat.value}</p>
-                       <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{stat.label}</p>
+                       <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">{stat.label}</p>
                     </div>
                   ))}
                </div>
@@ -504,10 +504,10 @@ export default function DashboardPage() {
                            <table className="w-full text-left">
                               <thead>
                                  <tr className="border-b border-slate-50">
-                                    <th className="px-8 py-5 text-[10px] font-black text-slate-300 uppercase tracking-widest">Client</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-slate-300 uppercase tracking-widest">Date</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-slate-300 uppercase tracking-widest">Assessment Issue</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-slate-300 uppercase tracking-widest">Status</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Client</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Date</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Assessment Issue</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</th>
                                  </tr>
                               </thead>
                               <tbody className="divide-y divide-slate-50">
@@ -521,7 +521,7 @@ export default function DashboardPage() {
                                              <span className="font-bold text-sm text-slate-700">{clients.find(l => l.id === a.learnerId)?.name}</span>
                                           </div>
                                        </td>
-                                       <td className="px-8 py-5 text-slate-500 font-medium text-xs">{new Date(a.timestamp).toLocaleDateString()}</td>
+                                       <td className="px-8 py-5 text-slate-600 font-medium text-xs">{new Date(a.timestamp).toLocaleDateString()}</td>
                                        <td className="px-8 py-5">
                                           <span className="text-xs font-bold text-slate-900 line-clamp-1 max-w-[200px]">{a.analysisResults?.issue || 'Initial Analysis'}</span>
                                        </td>
@@ -551,7 +551,7 @@ export default function DashboardPage() {
                         <div className="relative z-10">
                            <p className="text-[10px] font-black text-brand-accent uppercase tracking-[0.3em] mb-4">Core Engine Active</p>
                            <h3 className="text-3xl font-outfit font-black tracking-tighter leading-none lowercase mb-6">Analyze. Print.<br />Empower.</h3>
-                           <p className="text-white/40 text-sm font-medium leading-relaxed mb-10">Launch the kinematic workstation to analyze new client recordings and generate custom 3D printable assistive tools.</p>
+                           <p className="text-white/70 text-sm font-medium leading-relaxed mb-10">Launch the kinematic workstation to analyze new client recordings and generate custom 3D printable assistive tools.</p>
                            <button 
                              onClick={() => setShowNewAssessment(true)}
                              className="w-full py-4 rounded-2xl bg-white text-slate-900 font-black text-sm shadow-xl hover:scale-[1.02] transition-all flex items-center justify-center gap-3"
@@ -570,7 +570,7 @@ export default function DashboardPage() {
                <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
                   <div>
                     <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">Client Registry</h1>
-                    <p className="text-slate-400 text-sm font-medium mt-1">Manage all client profiles and kinematic data.</p>
+                    <p className="text-slate-600 text-sm font-medium mt-1">Manage all client profiles and kinematic data.</p>
                   </div>
                   <button onClick={() => setShowAddClient(true)} className="px-6 py-3.5 rounded-2xl bg-slate-900 text-white font-bold text-sm shadow-lg shadow-slate-200 hover:bg-black transition-all flex items-center gap-2 justify-center">
                     <Users size={20} /> Register Client
@@ -590,15 +590,15 @@ export default function DashboardPage() {
                             {l.name[0]}
                          </div>
                          <h3 className="text-lg font-bold text-slate-900 truncate w-full">{l.name}</h3>
-                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Age: {l.age || 'N/A'}</p>
-                         <p className="text-[10px] font-medium text-slate-400 mt-4 line-clamp-2">{l.disabilityInfo || 'No bio provided.'}</p>
+                         <p className="text-xs font-bold text-slate-600 uppercase tracking-widest mt-1">Age: {l.age || 'N/A'}</p>
+                         <p className="text-[10px] font-medium text-slate-600 mt-4 line-clamp-2">{l.disabilityInfo || 'No bio provided.'}</p>
                          
                          <div className="mt-8 pt-8 border-t border-slate-50 w-full flex justify-between items-center">
                             <div className="text-left">
-                               <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">Assessments</p>
+                               <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Assessments</p>
                                <p className="font-bold text-slate-900">{assessments.filter(a => a.learnerId === l.id).length}</p>
                             </div>
-                            <button onClick={() => { setActiveTab('reports'); setSearchTerm?.(l.name); }} className="p-3 rounded-xl bg-slate-50 text-slate-400 hover:text-brand-primary transition-colors">
+                            <button onClick={() => { setActiveTab('reports'); setSearchTerm?.(l.name); }} className="p-3 rounded-xl bg-slate-50 text-slate-600 hover:text-brand-primary transition-colors">
                                <ArrowRight size={20} />
                             </button>
                          </div>
@@ -627,7 +627,7 @@ export default function DashboardPage() {
                <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
                   <div>
                     <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">3D Blueprint Lab</h1>
-                    <p className="text-slate-400 text-sm font-medium mt-1">Export parametric STL designs for local fabrication.</p>
+                    <p className="text-slate-600 text-sm font-medium mt-1">Export parametric STL designs for local fabrication.</p>
                   </div>
                </div>
 
@@ -643,17 +643,17 @@ export default function DashboardPage() {
                                <Printer size={24} />
                              </div>
                              <h3 className="text-2xl font-black text-slate-900 lowercase tracking-tighter pt-2">{a.toolDescription}</h3>
-                             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{a.analysisResults?.stlSpecs?.type || 'Grip'} Adaptation</p>
+                             <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">{a.analysisResults?.stlSpecs?.type || 'Grip'} Adaptation</p>
                           </div>
 
                           <div className="bg-slate-50 rounded-2xl p-6 flex flex-col gap-3">
-                             <div className="flex justify-between items-center text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                             <div className="flex justify-between items-center text-[10px] font-black text-slate-500 uppercase tracking-widest">
                                 <span>Parametric Specs</span>
                                 <span>STL v{a.id.substring(0,4)}</span>
                              </div>
                              <div className="flex flex-wrap gap-2 pt-2">
                                 {Object.entries(a.analysisResults?.stlSpecs?.dimensions || {}).slice(0, 3).map(([key, val]) => (
-                                   <div key={key} className="px-3 py-1.5 rounded-lg bg-white border border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+                                   <div key={key} className="px-3 py-1.5 rounded-lg bg-white border border-slate-100 text-[10px] font-bold text-slate-700 uppercase tracking-tight">
                                       {key}: {val}mm
                                    </div>
                                 ))}
@@ -662,10 +662,10 @@ export default function DashboardPage() {
 
                           <div className="flex items-center justify-between text-[10px]">
                               <div className="flex flex-col gap-1">
-                                 <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Assigned Client</span>
+                                 <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Assigned Client</span>
                                  <span className="font-bold text-slate-700">{clients.find(l => l.id === a.learnerId)?.name || 'General Access'}</span>
                               </div>
-                              <span className="inline-flex items-center px-2 py-1 rounded-md bg-slate-50 text-slate-400 font-black uppercase tracking-tighter text-[8px]">{a.analysisResults?.category || 'Accessibility'}</span>
+                              <span className="inline-flex items-center px-2 py-1 rounded-md bg-slate-50 text-slate-600 font-black uppercase tracking-tighter text-[8px]">{a.analysisResults?.category || 'Accessibility'}</span>
                           </div>
 
                           <button 
@@ -695,7 +695,7 @@ export default function DashboardPage() {
                <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
                   <div>
                     <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">Inclusion Reports</h1>
-                    <p className="text-slate-400 text-sm font-medium mt-1">Full documentation of ergonomic assessments.</p>
+                    <p className="text-slate-600 text-sm font-medium mt-1">Full documentation of ergonomic assessments.</p>
                   </div>
                   <button className="px-6 py-3 rounded-xl bg-slate-900 text-white font-bold text-sm shadow-md hover:bg-black transition-all flex items-center gap-2 justify-center" onClick={() => window.print()}>
                     <Printer size={16} /> Print All
@@ -714,10 +714,10 @@ export default function DashboardPage() {
                           <div className="flex items-center gap-6">
                              <div>
                                 <h3 className="text-xl md:text-2xl font-black text-slate-900 lowercase tracking-tight">Report for {clients.find(l => l.id === a.learnerId)?.name || 'Client Profile'}</h3>
-                                <p className="text-slate-400 font-bold text-[10px] md:text-sm mt-1 uppercase tracking-wider">
+                                <p className="text-slate-500 font-bold text-[10px] md:text-sm mt-1 uppercase tracking-wider">
                                   {new Date(a.timestamp).toLocaleDateString()}
                                   {isExpanded && a.analysisResults?.issue && (
-                                    <span className="block mt-2 normal-case font-medium text-slate-400 leading-relaxed max-w-[600px]">
+                                    <span className="block mt-2 normal-case font-medium text-slate-600 leading-relaxed max-w-[600px]">
                                       {a.analysisResults.issue}
                                     </span>
                                   )}
@@ -738,7 +738,7 @@ export default function DashboardPage() {
                                          <img src="/logo.png" alt="Logo" className="w-5 h-5" />
                                          <span className="font-outfit font-bold text-xs uppercase tracking-tighter">Form-Fit Client</span>
                                       </div>
-                                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center sm:text-right">Confidential Kinematic Report</span>
+                                      <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest text-center sm:text-right">Confidential Kinematic Report</span>
                                    </div>
 
                                    {/* AI Proposed Device Preview */}
@@ -765,7 +765,7 @@ export default function DashboardPage() {
                                            </div>
                                          </div>
                                        </div>
-                                       <p className="text-xs text-slate-400 font-medium italic text-center">**Disclaimer**: This image is an AI-generated approximation of the structural proposal for visualization purposes.</p>
+                                       <p className="text-xs text-slate-500 font-medium italic text-center">**Disclaimer**: This image is an AI-generated approximation of the structural proposal for visualization purposes.</p>
                                      </div>
                                    )}
 
@@ -788,9 +788,9 @@ export default function DashboardPage() {
                                       <div className="w-1.5 h-6 bg-brand-primary rounded-full"></div>
                                       <h4 className="font-outfit font-black text-slate-900 uppercase tracking-widest text-sm">Collaborative Review</h4>
                                    </div>
-                                   <p className="text-slate-400 text-sm font-medium">You can refine the model below by submitting your specific design suggestions.</p>
+                                   <p className="text-slate-500 text-sm font-medium">You can refine the model below by submitting your specific design suggestions.</p>
                                    <textarea 
-                                     className="w-full bg-slate-50 border border-slate-200 rounded-3xl p-6 md:p-8 font-inter font-medium text-slate-900 text-sm md:text-base outline-none focus:border-brand-primary transition-all min-h-[140px] resize-none placeholder:text-slate-300"
+                                     className="w-full bg-slate-50 border border-slate-200 rounded-3xl p-6 md:p-8 font-inter font-medium text-slate-900 text-sm md:text-base outline-none focus:border-brand-primary transition-all min-h-[140px] resize-none placeholder:text-slate-400"
                                      placeholder="Suggested improvements (e.g. 'increase grip diameter by 5mm', 'add ventilation slots', 'soften the edges')..."
                                      value={a.clientFeedback || ''}
                                      onChange={(e) => {

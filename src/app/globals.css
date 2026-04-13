@@ -9,7 +9,7 @@
   --color-bg-main: #F8FAFC; /* Light Slate / Off-White */
   --color-bg-card: #FFFFFF;
   --color-text-main: #0F172A;
-  --color-text-muted: #475569;
+  --color-text-muted: #334155; /* Darker Slate for better visibility */
   --color-border-main: #E2E8F0;
 
   --font-outfit: var(--font-outfit), sans-serif;
