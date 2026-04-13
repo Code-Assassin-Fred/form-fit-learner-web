@@ -2,13 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { auth, db } from '@/lib/firebase';
+import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { 
-  User, MapPin, CheckCircle, ChevronRight, 
-  ArrowRight, Globe, Info, Zap, Mail,
-  Target, Shield, Award 
-} from 'lucide-react';
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
@@ -113,95 +108,80 @@ export default function OnboardingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center gap-6">
-        <div className="w-12 h-12 border-4 border-white/10 border-t-brand-accent rounded-full animate-spin"></div>
-        <p className="font-outfit font-black text-white/40 uppercase tracking-[0.3em] text-xs">Authenticating Profile</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-6">
+        <div className="w-8 h-8 border-2 border-slate-100 border-t-brand-primary rounded-full animate-spin"></div>
+        <p className="font-outfit font-bold text-slate-400 uppercase tracking-widest text-[10px]">Syncing workstation</p>
       </div>
     );
   }
 
-  const steps = [
-    { title: 'Personal Profile', icon: User },
-    { title: 'Regional Context', icon: MapPin },
-    { title: 'Professional Bio', icon: Info },
-    { title: 'Complete', icon: CheckCircle },
-  ];
+  const steps = ['Identity', 'Region', 'Bio', 'Summary'];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-inter overflow-hidden relative selection:bg-brand-accent selection:text-white">
-      {/* Background elements */}
-      <div className="absolute top-[-20%] right-[-10%] w-[1000px] h-[1000px] bg-brand-primary/20 blur-[180px] rounded-full -z-10 animate-pulse"></div>
-      <div className="absolute bottom-[-10%] left-[-5%] w-[800px] h-[800px] bg-brand-accent/10 blur-[160px] rounded-full -z-10 animate-pulse delay-1000"></div>
-
+    <div className="min-h-screen bg-white text-slate-900 font-inter selection:bg-brand-primary/10 selection:text-brand-primary">
       {/* Nav */}
-      <header className="fixed top-0 left-0 right-0 p-8 flex justify-between items-center z-50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-            <img src="/logo.png" alt="Logo" className="w-6" />
+      <header className="fixed top-0 left-0 right-0 p-8 flex justify-between items-center z-50 bg-white/80 backdrop-blur-md border-b border-slate-50">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center border border-slate-100 shadow-sm">
+            <img src="/logo.png" alt="Logo" className="w-5" />
           </div>
-          <span className="font-outfit font-black text-2xl tracking-tighter">form-fit</span>
+          <span className="font-outfit font-black text-xl tracking-tighter lowercase">form-fit</span>
         </div>
-        <div className="flex gap-2">
-          {steps.map((s, i) => (
+        <div className="flex gap-1.5">
+          {steps.map((_, i) => (
             <div 
               key={i} 
-              className={`h-1.5 rounded-full transition-all duration-500 ${step > i ? 'bg-brand-accent w-12' : 'bg-white/10 w-4'}`}
+              className={`h-1 rounded-full transition-all duration-500 ${step > i ? 'bg-brand-primary w-8' : 'bg-slate-100 w-3'}`}
             />
           ))}
         </div>
       </header>
 
-      <main className="min-h-screen pt-32 pb-20 px-6 flex items-center justify-center">
-        <div className="w-full max-w-[580px] relative">
+      <main className="min-h-screen pt-40 pb-20 px-6 flex items-start justify-center">
+        <div className="w-full max-w-[450px] relative">
           
           {/* Step 1: Personal Profile */}
           {step === 1 && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
-              <div className="space-y-3">
-                <span className="px-3 py-1 rounded-full bg-brand-accent/20 text-brand-accent text-[10px] font-black uppercase tracking-widest">Step 01</span>
-                <h1 className="text-5xl font-outfit font-black tracking-tighter lowercase leading-tight">Setting up your identity.</h1>
-                <p className="text-white/50 text-lg font-medium">Let&apos;s start with the basics to personalize your workstation.</p>
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-2">
+                <span className="inline-block px-2.5 py-1 rounded-md bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest mb-2">Step 01</span>
+                <h1 className="text-3xl font-outfit font-black tracking-tight leading-none text-slate-900 lowercase">identity registry</h1>
+                <p className="text-slate-500 text-sm font-medium">Basic authentication data for your profile workstation.</p>
               </div>
 
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-1">Full Name</label>
-                  <div className="relative group">
-                    <User className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-brand-accent transition-colors" size={20} />
-                    <input 
-                      type="text" 
-                      className="w-full bg-white/5 border border-white/10 rounded-[22px] py-4 pl-14 pr-6 text-white focus:outline-none focus:border-brand-accent/50 focus:ring-4 focus:ring-brand-accent/5 transition-all font-medium"
-                      placeholder="Enter your name"
-                      value={formData.name}
-                      onChange={e => setFormData({...formData, name: e.target.value})}
-                    />
-                  </div>
+              <div className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                  <input 
+                    type="text" 
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-5 text-slate-900 focus:outline-none focus:border-brand-primary focus:bg-white transition-all font-semibold text-sm"
+                    placeholder="Enter your name"
+                    value={formData.name}
+                    onChange={e => setFormData({...formData, name: e.target.value})}
+                  />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-1">Email Address</label>
-                  <div className="relative group opacity-60">
-                    <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20" size={20} />
-                    <input 
-                      type="email" 
-                      readOnly
-                      className="w-full bg-white/5 border border-white/10 rounded-[22px] py-4 pl-14 pr-6 text-white/50 cursor-not-allowed font-medium"
-                      value={formData.email}
-                    />
-                  </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                  <input 
+                    type="email" 
+                    readOnly
+                    className="w-full bg-slate-50/50 border border-slate-100 rounded-xl py-3 px-5 text-slate-400 cursor-not-allowed font-semibold text-sm"
+                    value={formData.email}
+                  />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-1">Gender Identity</label>
-                  <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Gender Identity</label>
+                  <div className="grid grid-cols-3 gap-2">
                     {['Male', 'Female', 'Other'].map(g => (
                       <button 
                         key={g}
                         onClick={() => setFormData({...formData, gender: g})}
-                        className={`py-4 rounded-[22px] border font-bold text-sm transition-all ${
+                        className={`py-3 rounded-xl border font-bold text-xs transition-all ${
                           formData.gender === g 
-                          ? 'bg-brand-accent border-brand-accent text-white shadow-xl shadow-brand-accent/20' 
-                          : 'bg-white/5 border-white/10 text-white/40 hover:bg-white/10'
+                          ? 'bg-brand-primary border-brand-primary text-white shadow-lg shadow-brand-primary/10' 
+                          : 'bg-white border-slate-200 text-slate-400 hover:border-slate-300'
                         }`}
                       >
                         {g}
@@ -214,63 +194,53 @@ export default function OnboardingPage() {
               <button 
                 disabled={!formData.name || !formData.gender}
                 onClick={handleNext}
-                className="w-full py-5 rounded-[24px] bg-white text-slate-950 font-black text-lg flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-30"
+                className="w-full py-3.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-20"
               >
-                Continue to Location <ArrowRight size={24} />
+                Proceed to Localization
               </button>
             </div>
           )}
 
           {/* Step 2: Regional Context */}
           {step === 2 && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-right-8 duration-700">
-              <div className="space-y-3">
-                <span className="px-3 py-1 rounded-full bg-brand-accent/20 text-brand-accent text-[10px] font-black uppercase tracking-widest">Step 02</span>
-                <h1 className="text-5xl font-outfit font-black tracking-tighter lowercase leading-tight">Where are you based?</h1>
-                <p className="text-white/50 text-lg font-medium">We use your location to sync with local fabrication standards.</p>
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-2">
+                <span className="inline-block px-2.5 py-1 rounded-md bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest mb-2">Step 02</span>
+                <h1 className="text-3xl font-outfit font-black tracking-tight leading-none text-slate-900 lowercase">regional context</h1>
+                <p className="text-slate-500 text-sm font-medium">Syncing with local fabrication and ergonomic standards.</p>
               </div>
 
-              <div className="relative p-8 rounded-[32px] bg-white/5 border border-white/10 overflow-hidden group">
-                <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                   <Globe size={120} />
+              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 space-y-5">
+                <div className="flex flex-col gap-1">
+                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Automatic Detection</p>
+                   <p className="text-lg font-bold text-slate-900">{formData.location || 'Locating...'}</p>
                 </div>
-                <div className="relative z-10 space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-brand-accent/20 text-brand-accent flex items-center justify-center">
-                      <MapPin size={24} />
-                    </div>
-                    <div>
-                       <p className="text-[10px] font-black text-white/30 uppercase tracking-widest">Current Location</p>
-                       <p className="text-xl font-bold">{formData.location || 'Detecting...'}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-white/30 uppercase tracking-widest">Manual Override</label>
-                    <input 
-                      type="text" 
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-5 text-white/70 focus:outline-none focus:border-brand-accent/40 font-medium"
-                      placeholder="e.g. Nairobi, Kenya"
-                      value={formData.location}
-                      onChange={e => setFormData({...formData, location: e.target.value})}
-                    />
-                  </div>
+                
+                <div className="space-y-1.5 pt-4 border-t border-slate-200">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Manual Override</label>
+                  <input 
+                    type="text" 
+                    className="w-full bg-white border border-slate-200 rounded-xl py-2.5 px-4 text-slate-900 focus:outline-none focus:border-brand-primary text-sm font-semibold"
+                    placeholder="City, Country"
+                    value={formData.location}
+                    onChange={e => setFormData({...formData, location: e.target.value})}
+                  />
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-2">
                 <button 
                   onClick={handleBack}
-                  className="px-8 py-5 rounded-[24px] bg-white/5 text-white font-bold border border-white/10 hover:bg-white/10 transition-all"
+                  className="px-6 py-3.5 rounded-xl bg-white text-slate-500 font-bold border border-slate-200 hover:bg-slate-50 transition-all text-xs"
                 >
                   Back
                 </button>
                 <button 
                   disabled={!formData.location}
                   onClick={handleNext}
-                  className="flex-1 py-5 rounded-[24px] bg-white text-slate-950 font-black text-lg flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  className="flex-1 py-3.5 rounded-xl bg-slate-900 text-white font-bold text-sm hover:brightness-110 transition-all"
                 >
-                  Next Step <ArrowRight size={24} />
+                  Confirm Region
                 </button>
               </div>
             </div>
@@ -278,45 +248,39 @@ export default function OnboardingPage() {
 
           {/* Step 3: Bio & Expertise */}
           {step === 3 && (
-            <div className="space-y-10 animate-in fade-in slide-in-from-right-8 duration-700">
-              <div className="space-y-3">
-                <span className="px-3 py-1 rounded-full bg-brand-accent/20 text-brand-accent text-[10px] font-black uppercase tracking-widest">Step 03</span>
-                <h1 className="text-5xl font-outfit font-black tracking-tighter lowercase leading-tight">Tell us your focus.</h1>
-                <p className="text-white/50 text-lg font-medium">Briefly describe your interest or professional background in inclusion.</p>
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-2">
+                <span className="inline-block px-2.5 py-1 rounded-md bg-slate-900 text-white text-[9px] font-black uppercase tracking-widest mb-2">Step 03</span>
+                <h1 className="text-3xl font-outfit font-black tracking-tight leading-none text-slate-900 lowercase">professional bio</h1>
+                <p className="text-slate-500 text-sm font-medium">Your background helps us refine AI ergonomic models.</p>
               </div>
 
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] ml-1">Professional / Personal Bio</label>
+              <div className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Case Context or Professional Field</label>
                   <textarea 
-                    className="w-full bg-white/5 border border-white/10 rounded-[24px] p-6 text-white h-32 resize-none focus:outline-none focus:border-brand-accent/50 transition-all font-medium"
-                    placeholder="Physical therapist, inclusive educator, researcher..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-5 text-slate-900 h-32 resize-none focus:outline-none focus:border-brand-primary focus:bg-white transition-all font-semibold text-sm"
+                    placeholder="Clinician, researcher, educator, or independent client..."
                     value={formData.bio}
                     onChange={e => setFormData({...formData, bio: e.target.value})}
                   />
                 </div>
 
-                <div className="p-6 rounded-[24px] bg-brand-accent/5 border border-brand-accent/10 flex items-start gap-4">
-                  <Shield size={20} className="text-brand-accent mt-1 shrink-0" />
-                  <p className="text-xs text-brand-accent/80 font-medium leading-relaxed uppercase tracking-wider">
-                    Data is handled per FERPA standards. Your bio helps us refine the AI recommendations for your specific use cases.
+                <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                  <p className="text-[10px] text-blue-600 font-bold leading-relaxed uppercase tracking-wide">
+                    Encrypted profile data ensures HIPAA-level security for all kinematic recordings.
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-4">
-                <button 
-                  onClick={handleBack}
-                  className="px-8 py-5 rounded-[24px] bg-white/5 text-white font-bold border border-white/10 hover:bg-white/10 transition-all"
-                >
-                  Back
-                </button>
+              <div className="flex gap-2">
+                <button onClick={handleBack} className="px-6 py-3.5 rounded-xl bg-white text-slate-500 font-bold border border-slate-200 hover:bg-slate-50 transition-all text-xs">Back</button>
                 <button 
                   disabled={!formData.bio}
                   onClick={handleNext}
-                  className="flex-1 py-5 rounded-[24px] bg-brand-accent text-white font-black text-lg flex items-center justify-center gap-3 hover:shadow-2xl hover:shadow-brand-accent/20 transition-all"
+                  className="flex-1 py-3.5 rounded-xl bg-brand-primary text-white font-bold text-sm hover:brightness-105 shadow-xl shadow-brand-primary/10 transition-all"
                 >
-                  Review Summary <ChevronRight size={24} />
+                  Review Application
                 </button>
               </div>
             </div>
@@ -324,83 +288,60 @@ export default function OnboardingPage() {
 
           {/* Step 4: Final Review */}
           {step === 4 && (
-            <div className="space-y-10 animate-in fade-in zoom-in-95 duration-700">
-              <div className="text-center space-y-4">
-                <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle size={48} />
-                </div>
-                <h1 className="text-5xl font-outfit font-black tracking-tighter lowercase">All systems ready.</h1>
-                <p className="text-white/50 text-lg font-medium">Verify your profile summary before launching your AI Workstation.</p>
+            <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+              <div className="text-center space-y-2">
+                <h1 className="text-3xl font-outfit font-black tracking-tight lowercase text-slate-900">ready for deployment</h1>
+                <p className="text-slate-500 text-sm font-medium text-center">Verify your identity summary before launch.</p>
               </div>
 
-              <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 space-y-6">
-                <div className="flex justify-between items-center pb-6 border-b border-white/5">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-brand-accent text-white flex items-center justify-center font-black text-xl">
+              <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-5 shadow-sm">
+                <div className="flex justify-between items-center pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-black text-lg">
                       {formData.name[0]}
                     </div>
                     <div>
-                      <p className="font-bold text-lg">{formData.name}</p>
-                      <p className="text-sm text-white/40">{formData.email}</p>
+                      <p className="font-bold text-sm text-slate-900">{formData.name}</p>
+                      <p className="text-[10px] text-slate-400 font-semibold">{formData.email}</p>
                     </div>
                   </div>
-                  <button onClick={() => setStep(1)} className="text-[10px] font-black text-brand-accent hover:underline uppercase tracking-widest">Edit</button>
+                  <button onClick={() => setStep(1)} className="text-[9px] font-black text-brand-primary hover:underline uppercase tracking-widest">Edit</button>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-2 gap-6">
                    <div>
-                     <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Region</p>
-                     <p className="font-bold text-white/80">{formData.location}</p>
+                     <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Region</p>
+                     <p className="font-bold text-slate-700 text-sm">{formData.location}</p>
                    </div>
                    <div>
-                     <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] mb-1">Identity</p>
-                     <p className="font-bold text-white/80">{formData.gender}</p>
+                     <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Identity</p>
+                     <p className="font-bold text-slate-700 text-sm">{formData.gender}</p>
                    </div>
                 </div>
 
-                <div className="pt-6 border-t border-white/5 flex items-center gap-4">
+                <div className="pt-4 border-t border-slate-100 flex items-center gap-3">
                   <input 
                     type="checkbox" 
                     id="news" 
                     checked={formData.newsletter} 
                     onChange={e => setFormData({...formData, newsletter: e.target.checked})}
-                    className="w-5 h-5 rounded-lg accent-brand-accent"
+                    className="w-4 h-4 rounded-md accent-brand-primary"
                   />
-                  <label htmlFor="news" className="text-xs text-white/50 font-medium">Join the monthly research newsletter for inclusion tech.</label>
+                  <label htmlFor="news" className="text-[10px] text-slate-400 font-bold uppercase tracking-wide cursor-pointer">Subscribe to research updates</label>
                 </div>
               </div>
 
               <button 
                 disabled={saving}
                 onClick={handleSubmit}
-                className="w-full py-6 rounded-[28px] bg-white text-slate-950 font-black text-xl flex items-center justify-center gap-4 hover:scale-[1.02] transition-all shadow-2xl shadow-white/5"
+                className="w-full py-4 rounded-xl bg-slate-900 text-white font-black text-base flex items-center justify-center gap-3 hover:brightness-110 transition-all shadow-xl shadow-slate-200"
               >
-                {saving ? 'Initializing AI Core...' : 'Launch Workstation'}
-                <Zap size={24} className="fill-current" />
+                {saving ? 'Syncing...' : 'Complete Registry'}
               </button>
             </div>
           )}
         </div>
       </main>
-
-      {/* Floating Decorative Stats */}
-      {step < 4 && (
-        <div className="fixed bottom-10 right-10 hidden xl:flex flex-col gap-4 animate-in slide-in-from-right-10 duration-1000">
-           {[
-             { label: 'Latency', val: '24ms', icon: Zap },
-             { label: 'Sync', val: 'Active', icon: Globe },
-             { label: 'Encryp', val: 'AES-256', icon: Shield }
-           ].map((s, i) => (
-             <div key={i} className="bg-white/5 backdrop-blur-md border border-white/10 p-4 rounded-2xl flex items-center gap-4">
-                <s.icon size={16} className="text-white/30" />
-                <div>
-                   <p className="text-[8px] font-black text-white/20 uppercase tracking-widest">{s.label}</p>
-                   <p className="text-xs font-bold">{s.val}</p>
-                </div>
-             </div>
-           ))}
-        </div>
-      )}
     </div>
   );
 }
