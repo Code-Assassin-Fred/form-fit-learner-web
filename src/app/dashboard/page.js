@@ -56,6 +56,7 @@ export default function DashboardPage() {
   const [activities, setActivities] = useState([]);
   const [assessments, setAssessments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [user, setUser] = useState(null);
   const [toast, setToast] = useState(null);
   const [expandedReportId, setExpandedReportId] = useState(null);
@@ -126,20 +127,27 @@ export default function DashboardPage() {
     }
   }, []);
 
+
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
       if (currentUser) {
-        const token = await currentUser.getIdToken();
-        const res = await fetch('/api/profile', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (!data.onboardingComplete) {
-          router.push('/onboarding');
-          return;
+        try {
+          setUser(currentUser);
+          const token = await currentUser.getIdToken();
+          const res = await fetch('/api/profile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          const data = await res.json();
+          if (!data.onboardingComplete) {
+            router.push('/onboarding');
+          } else {
+            setCheckingAuth(false);
+            fetchAllData(currentUser);
+          }
+        } catch (err) {
+          console.error("Auth check error:", err);
+          router.push('/login');
         }
-        fetchAllData(currentUser);
       } else {
         router.push('/login');
       }
@@ -372,11 +380,13 @@ export default function DashboardPage() {
     showToast("STL Blueprint exported.");
   };
 
-  if (loading) {
+  if (checkingAuth || loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-6">
         <div className="w-12 h-12 border-4 border-slate-200 border-t-brand-primary rounded-full animate-spin"></div>
-        <p className="font-outfit font-black text-slate-300 uppercase tracking-[0.3em] text-xs">Syncing Core Data</p>
+        <p className="font-outfit font-black text-slate-300 uppercase tracking-[0.3em] text-xs">
+          {checkingAuth ? 'Verifying Workstation' : 'Syncing Core Data'}
+        </p>
       </div>
     );
   }
