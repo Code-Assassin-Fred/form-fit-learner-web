@@ -33,8 +33,8 @@ export default function LoginPage() {
         console.log('Signing in...');
         await signInWithEmailAndPassword(auth, email, password);
       }
-      console.log('Auth successful, redirecting...');
-      router.push('/dashboard');
+      console.log('Auth successful, redirecting to onboarding...');
+      router.push('/onboarding');
     } catch (err) {
       console.error('Auth error:', err);
       setError(isSignUp ? 'Sign up failed. Try a different email.' : 'Invalid email or password. Please try again.');
@@ -47,7 +47,7 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      router.push('/dashboard');
+      router.push('/onboarding');
     } catch (err) {
       setError('Google Sign-In failed.');
       console.error(err);

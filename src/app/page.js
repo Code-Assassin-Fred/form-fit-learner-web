@@ -100,7 +100,7 @@ export default function LandingPage() {
             </h1>
             
             <p className="text-lg md:text-xl text-text-muted max-w-[700px] mx-auto mb-14 leading-relaxed font-medium px-4">
-              advanced ai analyzes physical inabilities to generate custom, 3d-printable assistive tools. empowering every learner to reach their full potential.
+              advanced ai analyzes physical inabilities to generate custom, 3d-printable assistive tools. empowering every client to reach their full potential.
             </p>
             
             <div className="flex flex-wrap gap-5 justify-center">
@@ -186,7 +186,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
            {[
-             { step: '01', title: 'Record', desc: 'Capture high-resolution images or videos of the learner performing physical tasks.', icon: Camera, color: 'bg-orange-500' },
+             { step: '01', title: 'Record', desc: 'Capture high-resolution images or videos of the client performing physical tasks.', icon: Camera, color: 'bg-orange-500' },
              { step: '02', title: 'Analyze', desc: 'Our AI workstation identifies anatomical constraints and kinematic offsets.', icon: Zap, color: 'bg-brand-primary' },
              { step: '03', title: 'Generate', desc: 'Custom STL blueprints and doctoral-level kinematic reports are automatically designed.', icon: Layout, color: 'bg-brand-secondary' },
              { step: '04', title: 'Fabricate', desc: 'Export STL files to any 3D printer and download professional inclusion reports.', icon: Printer, color: 'bg-slate-900' }
@@ -338,7 +338,7 @@ export default function LandingPage() {
             <div className="w-16 h-1.5 bg-gradient-to-br from-[#F97316] to-[#FB923C] mb-10 rounded-full"></div>
             <h2 className="text-5xl font-outfit font-black mb-8 tracking-tighter text-brand-primary lowercase">Built for the 1 in 5.</h2>
             <div className="space-y-6 text-xl text-text-muted leading-relaxed font-medium">
-              <p>Hi, I&apos;m Vincent Gesora, the creator of Form-Fit Learner and founder of Avi Disability and Rehab. I spent years observing how standardized learning environments fail to address the nuance of individual physical needs.</p>
+              <p>Hi, I&apos;m Vincent Gesora, the creator of Form-Fit and founder of Avi Disability and Rehab. I spent years observing how standardized learning environments fail to address the nuance of individual physical needs.</p>
               <p>That&apos;s why I built Form-Fit. To bridge the gap between cutting-edge AI and practical classroom reality without wait times.</p>
             </div>
             <div className="mt-12 p-10 bg-white border border-slate-200/60 shadow-[0_8px_30px_rgb(15,23,42,0.04)] rounded-[32px] transition-all duration-500 hover:shadow-[0_40px_80px_-15px_rgba(15,23,42,0.08)] hover:-translate-y-2 bg-slate-50/50 border-none relative overflow-hidden group">
@@ -390,7 +390,7 @@ export default function LandingPage() {
           </div>
           
           <div className="pt-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-slate-500 text-sm font-medium">&copy; 2026 Form-Fit Learner. All rights reserved.</p>
+            <p className="text-slate-500 text-sm font-medium">&copy; 2026 Form-Fit. All rights reserved.</p>
           </div>
         </div>
       </footer>

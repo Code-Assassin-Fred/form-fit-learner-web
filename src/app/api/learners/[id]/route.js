@@ -32,7 +32,7 @@ export async function DELETE(req, { params }) {
     }
 
     // 2. Delete learner
-    await adminDb.collection('learners').doc(id).delete();
+    await adminDb.collection('clients').doc(id).delete();
     
     return NextResponse.json({ status: 'success' });
   } catch (err) {

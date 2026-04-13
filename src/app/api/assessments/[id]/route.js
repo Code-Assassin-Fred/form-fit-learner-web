@@ -46,3 +46,29 @@ export async function DELETE(req, { params }) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+
+export async function PATCH(req, { params }) {
+  const user = await verifyAuth(req);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const { id } = await params;
+  const { clientFeedback } = await req.json();
+
+  try {
+    const docRef = adminDb.collection('assessments').doc(id);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      return NextResponse.json({ error: 'Assessment not found' }, { status: 404 });
+    }
+
+    if (doc.data().userId !== user.uid) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    await docRef.update({ clientFeedback });
+    return NextResponse.json({ message: 'Feedback updated successfully' });
+  } catch (err) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}

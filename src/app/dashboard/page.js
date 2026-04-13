@@ -15,30 +15,31 @@ import {
   Printer, FileText, Upload,
   Camera, X, CheckCircle, AlertCircle,
   ChevronDown, ChevronUp, Trash2, Globe, Clock,
-  ArrowRight, Download, Filter, Menu
+  ArrowRight, Download, Filter, Menu, UserCheck
 } from 'lucide-react';
+import { db } from '@/lib/firebase';
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [showAddLearner, setShowAddLearner] = useState(false);
+  const [showAddClient, setShowAddClient] = useState(false);
   const [showNewAssessment, setShowNewAssessment] = useState(false);
-  const [newLearnerData, setNewLearnerData] = useState({ name: '', age: '', disabilityInfo: '' });
+  const [newClientData, setNewClientData] = useState({ name: '', age: '', disabilityInfo: '' });
   const [assessmentFile, setAssessmentFile] = useState(null);
-  const [selectedLearnerId, setSelectedLearnerId] = useState('');
+  const [selectedClientId, setSelectedClientId] = useState('');
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState('');
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [fakeStep, setFakeStep] = useState('thinking...');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showAssessmentDeleteConfirm, setShowAssessmentDeleteConfirm] = useState(false);
-  const [learnerToDelete, setLearnerToDelete] = useState(null);
+  const [clientToDelete, setClientToDelete] = useState(null);
   const [assessmentToDelete, setAssessmentToDelete] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
   const fileInputRef = useRef(null);
   const abortControllerRef = useRef(null);
 
-  const [learners, setLearners] = useState([]);
+  const [clients, setClients] = useState([]);
   const [classes, setClasses] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -92,7 +93,7 @@ export default function DashboardPage() {
       const token = await currentUser.getIdToken();
       const headers = { 'Authorization': `Bearer ${token}` };
 
-      const [learnersRes, assessmentsRes, classesRes, tasksRes, activitiesRes] = await Promise.all([
+      const [clientsRes, assessmentsRes, classesRes, tasksRes, activitiesRes] = await Promise.all([
         fetch('/api/learners', { headers }),
         fetch('/api/assessments', { headers }),
         fetch('/api/classes', { headers }),
@@ -100,7 +101,7 @@ export default function DashboardPage() {
         fetch('/api/activities', { headers }),
       ]);
 
-      if (learnersRes.ok) setLearners(await learnersRes.json());
+      if (clientsRes.ok) setClients(await clientsRes.json());
       if (assessmentsRes.ok) setAssessments(await assessmentsRes.json());
       if (classesRes.ok) setClasses(await classesRes.json());
       if (tasksRes.ok) setTasks(await tasksRes.json());
@@ -114,9 +115,20 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (currentUser) => {
+    const unsubAuth = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
+        // Check onboarding via API (Admin SDK)
+        const token = await currentUser.getIdToken();
+        const res = await fetch('/api/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+
+        if (!data.onboardingComplete) {
+          router.push('/onboarding');
+          return;
+        }
         fetchAllData(currentUser);
       } else {
         router.push('/login');
@@ -151,40 +163,40 @@ export default function DashboardPage() {
     router.push('/login');
   };
 
-  const handleAddLearner = async (e) => {
+  const handleAddClient = async (e) => {
     e.preventDefault();
     const token = await user.getIdToken();
     const response = await fetch('/api/learners', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-      body: JSON.stringify(newLearnerData),
+      body: JSON.stringify(newClientData),
     });
     if (response.ok) {
-      showToast("Learner added!");
-      setShowAddLearner(false);
-      setNewLearnerData({ name: '', age: '', disabilityInfo: '' });
+      showToast("Client added!");
+      setShowAddClient(false);
+      setNewClientData({ name: '', age: '', disabilityInfo: '' });
       fetchAllData(user);
     }
   };
 
-  const handleDeleteLearner = async () => {
-    if (!learnerToDelete) return;
+  const handleDeleteClient = async () => {
+    if (!clientToDelete) return;
     try {
       const token = await user.getIdToken();
-      const response = await fetch(`/api/learners/${learnerToDelete.id}`, {
+      const response = await fetch(`/api/learners/${clientToDelete.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (response.ok) {
-        showToast(`Learner ${learnerToDelete.name} deleted.`);
+        showToast(`Client ${clientToDelete.name} deleted.`);
         setShowDeleteConfirm(false);
-        setLearnerToDelete(null);
+        setClientToDelete(null);
         fetchAllData(user);
       } else {
         showToast("Failed to delete.", 'error');
       }
     } catch (err) {
-      showToast("Error deleting learner.", 'error');
+      showToast("Error deleting client.", 'error');
     }
   };
 
@@ -226,7 +238,7 @@ export default function DashboardPage() {
         mediaBase64,
         mimeType: assessmentFile.type,
         mediaType: assessmentFile.type.includes('video') ? 'video' : 'image',
-        learnerId: selectedLearnerId
+        clientId: selectedClientId
       }),
       signal: abortControllerRef.current.signal
     });
@@ -363,7 +375,7 @@ export default function DashboardPage() {
         <nav className="flex-1 px-4 py-2 flex flex-col gap-1">
           {[
             { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-            { id: 'learners', label: 'Learners', icon: Users },
+            { id: 'clients', label: 'Clients', icon: Users },
             { id: 'assessments', label: 'Assessments', icon: Search },
             { id: 'tools', label: '3D Tools', icon: Printer },
             { id: 'reports', label: 'Reports', icon: FileText },
@@ -463,7 +475,7 @@ export default function DashboardPage() {
               {/* Stats Box */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { id: 'learners', label: 'Learners', value: learners.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },
+                  { id: 'clients', label: 'Clients', value: clients.length, icon: GraduationCap, color: 'text-brand-primary', bg: 'bg-brand-primary/10' },
                   { id: 'assessments', label: 'Assessments', value: assessments.length, icon: Zap, color: 'text-brand-secondary', bg: 'bg-brand-secondary/10' },
                   { id: 'tools', label: '3D Tools', value: assessments.filter(a => a.recommendedToolId).length, icon: Printer, color: 'text-brand-accent', bg: 'bg-brand-accent/10' },
                   { id: 'classes', label: 'Classes', value: classes.length || 0, icon: Globe, color: 'text-indigo-600', bg: 'bg-indigo-50' },
@@ -503,7 +515,7 @@ export default function DashboardPage() {
                           <table className="w-full">
                              <thead>
                                 <tr className="bg-slate-50 border-b border-border-main text-left">
-                                   <th className="px-5 md:px-8 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400">Learner</th>
+                                   <th className="px-5 md:px-8 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400">Client</th>
                                    <th className="hidden md:table-cell px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Analysis</th>
                                    <th className="px-5 md:px-8 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Status</th>
                                 </tr>
@@ -515,7 +527,7 @@ export default function DashboardPage() {
                                         <div className="flex items-center gap-2 md:gap-3">
                                            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-400 text-[10px] md:text-xs">U</div>
                                            <div>
-                                              <p className="font-bold text-slate-900 leading-none text-xs md:text-sm">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
+                                              <p className="font-bold text-slate-900 leading-none text-xs md:text-sm">{clients.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
                                               <p className="text-[8px] md:text-[10px] text-slate-400 mt-0.5 md:mt-1 font-medium">ID: {a.id.substring(0, 4)}</p>
                                            </div>
                                         </div>
@@ -565,30 +577,30 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {activeTab === 'learners' && (
+                  {activeTab === 'clients' && (
             <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6">
                    <div>
-                     <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">Learner Core</h1>
-                     <p className="text-slate-400 text-sm font-medium mt-1">Management of student profiles and physical constraints.</p>
+                     <h1 className="text-3xl font-outfit font-bold text-slate-900 tracking-tight lowercase">Client Core</h1>
+                     <p className="text-slate-400 text-sm font-medium mt-1">Management of client profiles and physical constraints.</p>
                    </div>
                    <button 
                      className="px-6 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-md hover:brightness-105 transition-all text-center" 
-                     onClick={() => setShowAddLearner(true)}
+                     onClick={() => setShowAddClient(true)}
                    >
-                     + Registry Learner
+                     + Registry Client
                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                   {learners.map(l => (
+                   {clients.map(l => (
                      <div key={l.id} className="bg-white border border-border-main rounded-2xl p-4 md:p-6 shadow-sm hover:shadow-md transition-all group relative overflow-hidden text-left">
                         <div className="relative z-10">
                            <div className="flex justify-between items-start mb-4">
                               <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-lg md:text-xl font-bold text-brand-primary uppercase">
                                 {l.name[0]}
                               </div>
-                              <button className="p-1.5 md:p-2 text-slate-300 hover:text-red-500 rounded-lg transition-all" onClick={() => {setLearnerToDelete(l); setShowDeleteConfirm(true);}}>
+                              <button className="p-1.5 md:p-2 text-slate-300 hover:text-red-500 rounded-lg transition-all" onClick={() => {setClientToDelete(l); setShowDeleteConfirm(true);}}>
                                 <Trash2 size={18} className="md:w-5 md:h-5" />
                               </button>
                            </div>
@@ -600,19 +612,19 @@ export default function DashboardPage() {
                                  <p className="text-[7px] md:text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Constraints</p>
                                  <p className="text-[11px] md:text-xs font-medium text-slate-600 line-clamp-2 leading-relaxed">{l.disabilityInfo || 'Review required.'}</p>
                               </div>
-                              <button className="w-full py-2.5 rounded-lg border border-slate-100 text-slate-500 font-bold text-[9px] md:text-[10px] hover:border-brand-primary hover:text-brand-primary transition-all flex items-center justify-center gap-2 group/btn uppercase tracking-widest text-center" onClick={() => {setSelectedLearnerId(l.id); setShowNewAssessment(true);}}>
+                              <button className="w-full py-2.5 rounded-lg border border-slate-100 text-slate-500 font-bold text-[9px] md:text-[10px] hover:border-brand-primary hover:text-brand-primary transition-all flex items-center justify-center gap-2 group/btn uppercase tracking-widest text-center" onClick={() => {setSelectedClientId(l.id); setShowNewAssessment(true);}}>
                                  Start Analysis <ArrowRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform" />
                               </button>
                            </div>
                         </div>
                      </div>
                    ))}
-                  {learners.length === 0 && (
+                  {clients.length === 0 && (
                     <div className="col-span-full py-24 bg-slate-50 rounded-[40px] border-2 border-dashed border-slate-100 flex flex-col items-center justify-center gap-6">
                        <GraduationCap size={64} className="text-slate-200" />
                        <div className="text-center">
-                          <p className="text-xl font-bold text-slate-400">No learners registered.</p>
-                          <button className="mt-4 text-brand-primary font-black hover:underline" onClick={() => setShowAddLearner(true)}>Add your first student profile</button>
+                          <p className="text-xl font-bold text-slate-400">No clients registered.</p>
+                          <button className="mt-4 text-brand-primary font-black hover:underline" onClick={() => setShowAddClient(true)}>Add your first client profile</button>
                        </div>
                     </div>
                   )}
@@ -650,7 +662,7 @@ export default function DashboardPage() {
                     <table className="w-full text-left">
                       <thead>
                         <tr className="bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                          <th className="px-10 py-6">Student</th>
+                          <th className="px-10 py-6">Client</th>
                           <th className="px-10 py-6">Outcome</th>
                           <th className="px-10 py-6">Proposed Tool</th>
                           <th className="px-10 py-6 text-right">Verification</th>
@@ -664,7 +676,7 @@ export default function DashboardPage() {
                                <div className="flex items-center gap-3">
                                   <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center font-bold text-brand-primary">L</div>
                                   <div>
-                                     <p className="font-bold text-slate-900 leading-none">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
+                                     <p className="font-bold text-slate-900 leading-none">{clients.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
                                      <p className="text-[9px] text-slate-400 font-bold mt-1 uppercase tracking-widest">ID {a.id.substring(0, 8)}</p>
                                   </div>
                                </div>
@@ -704,7 +716,7 @@ export default function DashboardPage() {
                           <div className="flex items-center gap-3">
                              <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center font-bold text-brand-primary">L</div>
                              <div>
-                                <p className="font-bold text-slate-900 text-sm leading-none">{learners.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
+                                <p className="font-bold text-slate-900 text-sm leading-none">{clients.find(l => l.id === a.learnerId)?.name || 'Unknown'}</p>
                                 <p className="text-[9px] text-slate-400 font-bold mt-1 uppercase tracking-[0.2em]">{new Date(a.timestamp).toLocaleDateString()}</p>
                              </div>
                           </div>
@@ -752,7 +764,7 @@ export default function DashboardPage() {
                       <thead>
                         <tr className="bg-slate-50/50 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] border-b border-slate-50">
                           <th className="px-10 py-6">Inclusion Tool</th>
-                          <th className="px-10 py-6">Assigned Learner</th>
+                          <th className="px-10 py-6">Assigned Client</th>
                           <th className="px-10 py-6">Category</th>
                           <th className="px-10 py-6 text-right">Resource</th>
                           <th className="px-10 py-6 text-right">Action</th>
@@ -771,7 +783,7 @@ export default function DashboardPage() {
                                </div>
                             </td>
                             <td className="px-10 py-6">
-                               <span className="font-semibold text-slate-600">{learners.find(l => l.id === a.learnerId)?.name || 'General Access'}</span>
+                               <span className="font-semibold text-slate-600">{clients.find(l => l.id === a.learnerId)?.name || 'General Access'}</span>
                             </td>
                             <td className="px-10 py-6">
                                <span className="inline-flex items-center px-3 py-1 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest">{a.analysisResults?.category || 'Accessibility'}</span>
@@ -819,11 +831,11 @@ export default function DashboardPage() {
                          </div>
                          
                          <div className="flex items-center justify-between text-[10px]">
-                            <div className="flex flex-col gap-1">
-                               <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Assigned Learner</span>
-                               <span className="font-bold text-slate-700">{learners.find(l => l.id === a.learnerId)?.name || 'General Access'}</span>
-                            </div>
-                            <span className="inline-flex items-center px-2 py-1 rounded-md bg-slate-50 text-slate-400 font-black uppercase tracking-tighter text-[8px]">{a.analysisResults?.category || 'Accessibility'}</span>
+                             <div className="flex flex-col gap-1">
+                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Assigned Client</span>
+                                <span className="font-bold text-slate-700">{clients.find(l => l.id === a.learnerId)?.name || 'General Access'}</span>
+                             </div>
+                             <span className="inline-flex items-center px-2 py-1 rounded-md bg-slate-50 text-slate-400 font-black uppercase tracking-tighter text-[8px]">{a.analysisResults?.category || 'Accessibility'}</span>
                          </div>
 
                          <button 
@@ -872,7 +884,7 @@ export default function DashboardPage() {
                           <div className="flex items-center gap-6">
 
                             <div>
-                               <h3 className="text-xl md:text-2xl font-black text-slate-900 lowercase tracking-tight">Report for {learners.find(l => l.id === a.learnerId)?.name || 'Student Profile'}</h3>
+                               <h3 className="text-xl md:text-2xl font-black text-slate-900 lowercase tracking-tight">Report for {clients.find(l => l.id === a.learnerId)?.name || 'Client Profile'}</h3>
                                <p className="text-slate-400 font-bold text-[10px] md:text-sm mt-1 uppercase tracking-wider">
                                  {new Date(a.timestamp).toLocaleDateString()}
                                  {isExpanded && a.analysisResults?.issue && (
@@ -896,11 +908,38 @@ export default function DashboardPage() {
                                   <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4 border-b-2 border-slate-100 pb-10 opacity-70">
                                      <div className="flex items-center gap-2">
                                         <img src="/logo.png" alt="Logo" className="w-5 h-5" />
-                                        <span className="font-outfit font-bold text-xs uppercase tracking-tighter">Form-Fit Learner</span>
+                                        <span className="font-outfit font-bold text-xs uppercase tracking-tighter">Form-Fit Client</span>
                                      </div>
                                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center sm:text-right">Confidential Kinematic Report</span>
                                   </div>
 
+                                  {/* AI Proposed Device Preview */}
+                                  {a.previewImage && (
+                                    <div className="space-y-4 animate-in fade-in duration-1000">
+                                      <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></div>
+                                        <span className="text-[10px] font-black text-brand-accent uppercase tracking-[0.2em]">AI Structural Visualization</span>
+                                      </div>
+                                      <div className="relative group rounded-[32px] overflow-hidden border border-slate-200 bg-slate-50 aspect-video md:aspect-[21/9] shadow-inner">
+                                        <img 
+                                          src={a.previewImage} 
+                                          alt="Proposed Device Preview" 
+                                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+                                        <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end text-white">
+                                          <div>
+                                             <p className="font-outfit font-black text-lg md:text-2xl leading-none lowercase tracking-tighter">{a.toolDescription || 'Assistive Prototype'}</p>
+                                             <p className="text-[10px] md:text-sm font-bold opacity-80 uppercase tracking-widest mt-2">V3.0 Imagen Prototype</p>
+                                          </div>
+                                          <div className="px-3 py-1.5 rounded-lg bg-white/20 backdrop-blur-md border border-white/20 text-[10px] font-black uppercase tracking-widest">
+                                             Sample Proposal
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <p className="text-xs text-slate-400 font-medium italic text-center">**Disclaimer**: This image is an AI-generated approximation of the structural proposal for visualization purposes.</p>
+                                    </div>
+                                  )}
 
                                   <div className="prose prose-slate [&_h1]:font-outfit [&_h1]:font-black [&_h1]:tracking-tight [&_h1]:text-slate-900 [&_h1]:text-4xl [&_h1]:mb-12 [&_h2]:font-outfit [&_h2]:font-black [&_h2]:tracking-tight [&_h2]:text-slate-900 [&_h2]:text-2xl [&_h2]:mt-10 [&_h2]:mb-6 [&_h2]:border-b [&_h2]:border-slate-100 [&_h2]:pb-2 [&_h3]:font-outfit [&_h3]:font-black [&_h3]:tracking-tight [&_h3]:text-slate-900 [&_h3]:text-lg [&_p]:text-lg [&_p]:mb-6 [&_p]:leading-[1.8] [&_strong]:text-slate-900 [&_li]:text-lg [&_li]:mb-2 [&_table]:border-collapse [&_th]:bg-slate-50 [&_th]:p-4 [&_td]:p-4 [&_td]:border [&_td]:border-slate-100 max-w-none">
                                      <ReactMarkdown 
@@ -916,6 +955,49 @@ export default function DashboardPage() {
                                   <div className="mt-auto pt-10 border-t border-slate-100 flex justify-between items-center opacity-40 italic text-[10px] tracking-widest uppercase">
                                      <span>Generated by Gemini 2.5 Flash</span>
                                      <span>© {new Date().getFullYear()} Form-Fit Assistive Tech</span>
+                                  </div>
+                               </div>
+
+                               {/* Client Feedback Section */}
+                               <div className="mt-10 p-10 bg-brand-primary text-white rounded-[40px] shadow-2xl overflow-hidden relative group">
+                                  <div className="absolute top-0 right-0 p-12 text-white/5 group-hover:text-white/10 transition-colors">
+                                     <Zap size={160} />
+                                  </div>
+                                  <div className="relative z-10 space-y-8">
+                                     <div>
+                                        <h4 className="text-3xl font-outfit font-black tracking-tighter lowercase mb-2">Collaborative Review</h4>
+                                        <p className="text-slate-400 text-lg font-medium leading-relaxed max-w-[500px]">Review the AI proposal and provide your technical suggestions or refinements for the final STL design.</p>
+                                     </div>
+
+                                     <div className="space-y-4">
+                                        <label className="text-[10px] font-black text-brand-accent uppercase tracking-[0.3em] ml-1">Client Suggestions</label>
+                                        <textarea 
+                                          className="w-full bg-white/10 border border-white/20 rounded-[28px] p-8 text-white h-40 resize-none focus:outline-none focus:border-brand-accent transition-all font-medium text-lg placeholder:text-white/20"
+                                          placeholder="Type your design adjustments or clinical feedback here..."
+                                          defaultValue={a.clientFeedback || ''}
+                                          onBlur={async (e) => {
+                                            const feedback = e.target.value;
+                                            if (feedback === a.clientFeedback) return;
+                                            
+                                            // Save feedback
+                                            const token = await user.getIdToken();
+                                            const res = await fetch(`/api/assessments/${a.id}`, {
+                                              method: 'PATCH',
+                                              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                                              body: JSON.stringify({ clientFeedback: feedback })
+                                            });
+                                            if (res.ok) {
+                                              showToast("Feedback synced!");
+                                              fetchAllData(user);
+                                            }
+                                          }}
+                                        />
+                                     </div>
+
+                                     <div className="flex items-center gap-4 text-xs font-black text-brand-accent uppercase tracking-widest">
+                                        <CheckCircle size={20} />
+                                        <span>Feedback is synchronized in real-time with the fabrication lab.</span>
+                                     </div>
                                   </div>
                                </div>
                             </div>
@@ -961,14 +1043,14 @@ export default function DashboardPage() {
               {!analyzing ? (
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target Student</label>
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Target Client</label>
                     <select 
                       className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary" 
-                      value={selectedLearnerId}
-                      onChange={e => setSelectedLearnerId(e.target.value)}
+                      value={selectedClientId}
+                      onChange={e => setSelectedClientId(e.target.value)}
                     >
                       <option value="">Select Profile...</option>
-                      {learners.map(l => <option key={l.id} value={l.id}>{l.name} (Age {l.age})</option>)}
+                      {clients.map(l => <option key={l.id} value={l.id}>{l.name} (Age {l.age})</option>)}
                     </select>
                   </div>
                   
@@ -1009,7 +1091,7 @@ export default function DashboardPage() {
                     <button 
                       className="flex-1 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-md hover:brightness-105 disabled:opacity-50" 
                       onClick={runAssessment}
-                      disabled={!selectedLearnerId || !assessmentFile}
+                      disabled={!selectedClientId || !assessmentFile}
                     >
                       Process Workstation
                     </button>
@@ -1061,29 +1143,29 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Add Learner Modal */}
-        {showAddLearner && (
+        {/* Add Client Modal */}
+        {showAddClient && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in">
             <div className="bg-white border border-border-main rounded-2xl p-8 shadow-2xl w-full max-w-[500px] animate-in zoom-in-95">
               <div className="flex justify-between items-center mb-8">
-                <h3 className="text-xl font-bold text-slate-900 tracking-tight">Student Registry</h3>
-                <button onClick={() => setShowAddLearner(false)} className="text-slate-400 hover:text-red-500 transition-colors"><X size={24} /></button>
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight">Client Registry</h3>
+                <button onClick={() => setShowAddClient(false)} className="text-slate-400 hover:text-red-500 transition-colors"><X size={24} /></button>
               </div>
-              <form onSubmit={handleAddLearner} className="flex flex-col gap-6">
+              <form onSubmit={handleAddClient} className="flex flex-col gap-6">
                 <div className="space-y-4">
                   <div className="flex flex-col gap-2">
                     <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Personal Profile</label>
-                    <input className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all" placeholder="Full Name" onChange={e => setNewLearnerData({ ...newLearnerData, name: e.target.value })} required />
-                    <input className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all" type="number" placeholder="Age" onChange={e => setNewLearnerData({ ...newLearnerData, age: e.target.value })} required />
+                    <input className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all" placeholder="Full Name" onChange={e => setNewClientData({ ...newClientData, name: e.target.value })} required />
+                    <input className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all" type="number" placeholder="Age" onChange={e => setNewClientData({ ...newClientData, age: e.target.value })} required />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Kinematic constraints</label>
-                    <textarea className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all min-h-[120px] resize-none" placeholder="Detailed physical needs..." onChange={e => setNewLearnerData({ ...newLearnerData, disabilityInfo: e.target.value })} required />
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Physical constraints</label>
+                    <textarea className="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 px-4 text-slate-900 font-semibold text-sm outline-none focus:border-brand-primary transition-all min-h-[120px] resize-none" placeholder="Detailed physical needs..." onChange={e => setNewClientData({ ...newClientData, disabilityInfo: e.target.value })} required />
                   </div>
                 </div>
                 <div className="flex gap-3 mt-2">
                   <button className="flex-1 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm shadow-md hover:brightness-105 active:scale-95 transition-all" type="submit">Complete Registry</button>
-                  <button className="px-6 py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-sm hover:bg-slate-100 transition-all font-outfit" type="button" onClick={() => setShowAddLearner(false)}>Cancel</button>
+                  <button className="px-6 py-3 rounded-xl bg-slate-50 text-slate-500 font-bold text-sm hover:bg-slate-100 transition-all font-outfit" type="button" onClick={() => setShowAddClient(false)}>Cancel</button>
                 </div>
               </form>
             </div>

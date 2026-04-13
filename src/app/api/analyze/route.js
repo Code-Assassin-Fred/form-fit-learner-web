@@ -71,10 +71,10 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
   }
 
-  const { mediaBase64, mimeType, mediaType, learnerId } = await req.json();
+  const { mediaBase64, mimeType, mediaType, clientId } = await req.json();
 
-  if (!mediaBase64 || !learnerId) {
-    return NextResponse.json({ error: 'mediaBase64 and learnerId are required' }, { status: 400 });
+  if (!mediaBase64 || !clientId) {
+    return NextResponse.json({ error: 'mediaBase64 and clientId are required' }, { status: 400 });
   }
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -97,7 +97,7 @@ export async function POST(req) {
 Your task is to provide a PRECISE, EMPATHETIC, and OBJECTIVE observation of the user's physical interactions in this ${mediaType}.
 Focus strictly on:
 - **Human Capability & Physical Barriers**: Identify specific physical inabilities (e.g., missing limbs, paralyzed areas) and physical constrictions (e.g., limited range of motion, tremors).
-- **Interactive Obstacles**: Describe specific difficulties the learner faces when trying to perform educational tasks (writing, typing, gripping).
+- **Interactive Obstacles**: Describe specific difficulties the client faces when trying to perform educational tasks (writing, typing, gripping).
 - **Kinematic Data**: Note observable angles of flexion or range of motion limits.
 Avoid focusing on furniture or room setup unless it's an immediate physical hazard. Be extremely specific.`;
 
@@ -128,7 +128,7 @@ Observations: "${observations}"
 Analysis: "${analysis}"
 
 Your task:
-1. Recommend exactly ONE specific 3D printable assistive tool tailored to this learner's specific physical inability or constriction.
+1. Recommend exactly ONE specific 3D printable assistive tool tailored to this client's specific physical inability or constriction.
 2. Generate a comprehensive "Inclusion & Kinematic Research Report" in a professional layout.
 
 REPORT DEPTH REQUIREMENT:
@@ -206,11 +206,47 @@ Return ONLY a valid JSON object with:
         };
         const reportChunks = chunkContent(reportContent);
 
-        // Save to Firestore with defensive mapping to avoid undefined properties
+        // AGENT 4: Visual Agent (Gemini 3 Pro Image Preview)
+        sendProgress('visualizing', 90, 'Simulating 3D visual prototype...');
+        let previewImageUrl = null;
+        try {
+          // Using a refined prompt for the visual representation of the tool
+          const visualPrompt = `A high-quality, photorealistic 3D rendering of a custom assistive device: ${finalResults.toolDescription}. 
+          Designed for ${finalResults.category} assistance. 
+          The tool is ${finalResults.stlSpecs?.type || 'ergonomic'} shaped. 
+          Studio lighting, white background, technical product photography, 4k resolution.`;
+          
+          const imageRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: visualPrompt }] }]
+            })
+          });
+
+          if (imageRes.ok) {
+            const imageData = await imageRes.json();
+            // Extract image from parts[1].inlineData or wherever it is in the response
+            const parts = imageData.candidates?.[0]?.content?.parts;
+            if (parts) {
+              const imagePart = parts.find(p => p.inlineData);
+              if (imagePart) {
+                previewImageUrl = `data:${imagePart.inlineData.mimeType};base64,${imagePart.inlineData.data}`;
+              } else {
+                // Fallback: check if it's text-based image data (some versions return it differently)
+                console.log('[VISUAL] No inlineData found, checking other parts');
+              }
+            }
+          }
+        } catch (visErr) {
+          console.error('[VISUAL ERROR]', visErr);
+        }
+
+        // Save to Firestore
         const assessmentRef = adminDb.collection('assessments').doc();
         const newAssessment = {
           id: assessmentRef.id,
-          learnerId: learnerId || 'unknown_learner',
+          learnerId: clientId || 'unknown_client',
           userId: user.uid,
           mediaUrl: 'https://placeholder.com/media',
           mediaType: mediaType || 'image',
@@ -222,6 +258,7 @@ Return ONLY a valid JSON object with:
           stlParams: finalResults.stlSpecs || {},
           recommendedToolId: finalResults?.recommendedToolId || 'custom_adaptation',
           toolDescription: finalResults?.toolDescription || 'Custom Assistive Adaptation',
+          previewImage: previewImageUrl,
           status: 'completed'
         };
 

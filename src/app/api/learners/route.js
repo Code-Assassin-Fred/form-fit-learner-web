@@ -21,9 +21,9 @@ export async function GET(req) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    const snapshot = await adminDb.collection('learners').where('userId', '==', user.uid).get();
-    const learners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return NextResponse.json(learners);
+    const snapshot = await adminDb.collection('clients').where('userId', '==', user.uid).get();
+    const clients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return NextResponse.json(clients);
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
@@ -39,9 +39,9 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Name and age are required' }, { status: 400 });
     }
 
-    const learnerRef = adminDb.collection('learners').doc();
-    const newLearner = {
-      id: learnerRef.id,
+    const clientRef = adminDb.collection('clients').doc();
+    const newClient = {
+      id: clientRef.id,
       userId: user.uid,
       name: String(name),
       age: parseInt(age),
@@ -49,8 +49,8 @@ export async function POST(req) {
       createdAt: new Date().toISOString(),
     };
 
-    await learnerRef.set(newLearner);
-    return NextResponse.json({ status: 'success', learnerId: learnerRef.id }, { status: 201 });
+    await clientRef.set(newClient);
+    return NextResponse.json({ status: 'success', clientId: clientRef.id }, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
